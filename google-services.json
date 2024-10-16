@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "929526950979",
+    "project_id": "rent-app-v2",
+    "storage_bucket": "rent-app-v2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929526950979:android:6010eb5a4436eeb56e38f6",
+        "android_client_info": {
+          "package_name": "com.tatvlogs0312.rentalappv2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn5tGlrhbkDVe0ddE5Z81eAGSmByNgrQM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
