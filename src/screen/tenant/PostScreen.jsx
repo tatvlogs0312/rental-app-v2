@@ -213,6 +213,7 @@ const PostScreen = ({ navigation }) => {
           <View>
             <Text>Diện tích</Text>
           </View>
+          
         </ModalContent>
       </Modal>
     </SafeAreaView>

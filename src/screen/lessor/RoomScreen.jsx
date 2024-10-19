@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Pressable, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Button } from "@rneui/themed";
 import { useAuth } from "../../hook/AuthProvider";
 import { apiCall } from "../../api/ApiManager";
 import { COLOR } from "../../constants/COLORS";
 import { heighScreen } from "../../utils/Utils";
 import { useLoading } from "../../hook/LoadingProvider";
+import axios from "axios";
+import { DOMAIN } from "../../constants/URL";
 
 const RoomScreen = ({ navigation }) => {
   const auth = useAuth();
@@ -20,21 +22,29 @@ const RoomScreen = ({ navigation }) => {
   const [district, setDistrict] = useState("");
   const [province, setProvince] = useState("");
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(10);
+  const [size, setSize] = useState(6);
 
   const [refreshing, setRefreshing] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
-    fetchData();
+    fetchDataV2();
   }, [auth.token]);
 
-  const fetchData = async () => {
-    if (!auth.token) return;
+  const loadMoreItem = () => {
+    console.log(page+1);
+    
+    fetchData();
+    setPage(page + 1);
+  };
 
-    try {
-      const data = await apiCall(
-        "/room/search",
-        "POST",
+  const fetchData = () => {
+    setIsLoading(true);
+
+    axios
+      .post(
+        DOMAIN + "/room/search",
         {
           status: "",
           roomTypeId: "",
@@ -42,22 +52,87 @@ const RoomScreen = ({ navigation }) => {
           ward: "",
           district: "",
           province: "",
-          page: page,
+          page: page + 1,
           size: size,
         },
-        {},
-        auth.token,
-      );
-      setRooms(data.data);
-    } catch (error) {
-      console.log(error);
-    }
+        {
+          headers: {
+            Authorization: auth.token,
+          },
+        },
+      )
+      .then((res) => setRooms([...rooms, ...res.data.data]))
+      .catch((error) => console.log(error));
+
+    setIsLoading(false);
   };
 
-  const refresh = async () => {
+  const fetchDataV2 = () => {
+    if (!auth.token) return;
+
+    axios
+      .post(
+        DOMAIN + "/room/search",
+        {
+          status: "",
+          roomTypeId: "",
+          position: "",
+          ward: "",
+          district: "",
+          province: "",
+          page: 0,
+          size: size,
+        },
+        {
+          headers: {
+            Authorization: auth.token,
+          },
+        },
+      )
+      .then((res) => {
+        console.log(res.data);
+        setRooms(res.data.data);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const refresh = () => {
     setRefreshing(true);
-    await fetchData();
+    fetchDataV2();
     setRefreshing(false);
+    setPage(0);
+  };
+
+  const renderLoader = () => {
+    return isLoading ? (
+      <View style={styles.loaderStyle}>
+        <ActivityIndicator size="large" color="#aaa" />
+      </View>
+    ) : null;
+  };
+
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.itemStyle} key={item.roomId}>
+        <Text style={{ fontSize: 17, fontWeight: "600", color: COLOR.lightBlue }}>{item.roomCode + " - " + item.typeName}</Text>
+        <Text style={{ marginVertical: 3 }}>{`${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}</Text>
+        <Text style={{}}>{`Trạng thái: ${item.roomStatus.trim() === "EMPTY" ? "Còn trống" : "Đã cho thuê"}`}</Text>
+        <View style={{ marginTop: 10, flexDirection: "row", justifyContent: "flex-end", alignContent: "flex-end" }}>
+          <Pressable>
+            <Text style={{ marginRight: 15, color: COLOR.lightBlue }}>Đăng bài</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              navigation.navigate("RoomDetail", {
+                id: item.roomId,
+              });
+            }}
+          >
+            <Text style={{ color: COLOR.lightBlue }}>Xem chi tiết</Text>
+          </Pressable>
+        </View>
+      </View>
+    );
   };
 
   return (
@@ -66,29 +141,15 @@ const RoomScreen = ({ navigation }) => {
         <View>
           <Text style={{ fontSize: 22, textAlign: "center", marginBottom: 10, fontWeight: "800", color: COLOR.lightBlue }}>Danh sách phòng của bạn</Text>
         </View>
-        <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}>
-          {rooms.map((item) => (
-            <View style={styles.itemStyle} key={item.roomId}>
-              <Text style={{ fontSize: 17, fontWeight: "600", color: COLOR.lightBlue }}>{item.roomCode + " - " + item.typeName}</Text>
-              <Text style={{ marginVertical: 3 }}>{`${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}</Text>
-              <Text style={{}}>{`Trạng thái: ${item.roomStatus.trim() === "EMPTY" ? "Còn trống" : "Đã cho thuê"}`}</Text>
-              <View style={{ marginTop: 10, flexDirection: "row", justifyContent: "flex-end", alignContent: "flex-end" }}>
-                <Pressable>
-                  <Text style={{ marginRight: 15, color: COLOR.lightBlue }}>Đăng bài</Text>
-                </Pressable>
-                <Pressable
-                  onPress={() => {
-                    navigation.navigate("RoomDetail", {
-                      id: item.roomId,
-                    });
-                  }}
-                >
-                  <Text style={{ color: COLOR.lightBlue }}>Xem chi tiết</Text>
-                </Pressable>
-              </View>
-            </View>
-          ))}
-        </ScrollView>
+        <FlatList
+          data={rooms}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.roomId}
+          ListFooterComponent={renderLoader}
+          onEndReached={loadMoreItem}
+          onEndReachedThreshold={0}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
+        />
       </View>
       <View>
         <Button
