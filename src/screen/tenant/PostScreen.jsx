@@ -213,7 +213,17 @@ const PostScreen = ({ navigation }) => {
           <View>
             <Text>Diện tích</Text>
           </View>
-          
+          <ScrollView>
+            <Pressable>
+              <Text style={styles.modalRoomType}>1</Text>
+            </Pressable>
+            <Pressable>
+              <Text style={styles.modalRoomType}>2</Text>
+            </Pressable>
+            <Pressable>
+              <Text style={styles.modalRoomType}>3</Text>
+            </Pressable>
+          </ScrollView>
         </ModalContent>
       </Modal>
     </SafeAreaView>

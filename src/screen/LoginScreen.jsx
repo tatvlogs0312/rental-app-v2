@@ -13,6 +13,7 @@ const LoginScreen = ({ navigation }) => {
   const auth = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   const [msgUsername, setMsgUsername] = useState("");
   const [msgPassword, setMsgPassword] = useState("");
 
@@ -64,7 +65,6 @@ const LoginScreen = ({ navigation }) => {
         backgroundColor: "#fff",
       }}
     >
-      {/* <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={100} behavior={Platform.OS === "ios" ? "padding" : undefined}> */}
       <Text style={styles.loginTxt}>Đăng nhập</Text>
       <View style={styles.form}>
         <View>
@@ -154,7 +154,6 @@ const LoginScreen = ({ navigation }) => {
           </Text>
         </View>
       </HideWithKeyboard>
-      {/* </KeyboardAvoidingView> */}
     </SafeAreaView>
   );
 };

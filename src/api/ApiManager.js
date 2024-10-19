@@ -42,6 +42,8 @@ export const apiCall = async (endpoint, method, body, params, token) => {
       textBody: errorMessage,
       title: "Lỗi",
     });
+
+    throw new Error(error);
   }
 };
 
@@ -80,6 +82,8 @@ export const post = async (endpoint, body, token) => {
       textBody: errorMessage,
       title: "Lỗi",
     });
+
+    throw new Error(error);
   }
 };
 
@@ -119,5 +123,7 @@ export const get = async (endpoint, params, token) => {
       textBody: errorMessage,
       title: "Lỗi",
     });
+
+    throw new Error(error);
   }
 };
