@@ -46,3 +46,8 @@ export const TimeAgo = (dateString) => {
 export const witdhScreen = Dimensions.get("window").width;
 
 export const heighScreen = Dimensions.get("window").height;
+
+export const validateEmail = (email) => {
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return regex.test(email);
+};

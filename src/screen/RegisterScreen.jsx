@@ -8,15 +8,35 @@ import Facebook from "../../assets/svg/facebook.svg";
 import TwitterSVG from "../../assets/svg/twitter.svg";
 import InputField from "../components/InputField";
 import { CheckBox } from "@rneui/themed";
+import { apiCall } from "../api/ApiManager";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import { useLoading } from "../hook/LoadingProvider";
+import LoadingModal from "react-native-loading-modal";
 
 const RegisterScreen = ({ navigation }) => {
+  const load = useLoading();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("TENANT");
+
+  const [lessorCheck, setLessorCheck] = useState(false);
+  const [tenantCheck, setTenantCheck] = useState(true);
 
   const [msgUsername, setMsgUsername] = useState("");
   const [msgPassword, setMsgPassword] = useState("");
   const [msgConfirmPassword, setMsgConfirmPassword] = useState("");
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {});
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {});
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const setInputUsername = (text) => {
     setUsername(text);
@@ -33,15 +53,50 @@ const RegisterScreen = ({ navigation }) => {
     setMsgConfirmPassword("");
   };
 
-  useEffect(() => {
-    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {});
-    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {});
+  const checkRole = (role) => {
+    setRole(role);
+    if (role === "LESSOR") {
+      setLessorCheck(true);
+      setTenantCheck(false);
+    } else if (role === "TENANT") {
+      setLessorCheck(false);
+      setTenantCheck(true);
+    }
+  };
 
-    return () => {
-      showSubscription.remove();
-      hideSubscription.remove();
-    };
-  }, []);
+  const registerApp = async () => {
+    if (username === "") {
+      setMsgUsername("Vui lòng nhập tài khoản");
+    }
+
+    if (password === "") {
+      setMsgPassword("Vui lòng nhập mật khẩu");
+    }
+
+    if (confirmPassword === "") {
+      setMsgConfirmPassword("Vui lòng nhập lại mật khẩu");
+    }
+
+    if (password !== "" && confirmPassword !== "" && password !== confirmPassword) {
+      setMsgConfirmPassword("Mật khẩu không trùng khớp");
+    }
+
+    if (username !== "" && password !== "" && confirmPassword !== "" && password === confirmPassword) {
+      load.isLoading();
+      try {
+        var data = await apiCall("/auth/register", "POST", { username: username, password: password, role: role }, {}, null);
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          textBody: "Đăng ký tài khoản thành công",
+          title: "Thông báo",
+        });
+        navigation.navigate("Login");
+      } catch (error) {
+        console.log(error);
+      }
+      load.nonLoading();
+    }
+  };
 
   return (
     <SafeAreaView
@@ -52,6 +107,7 @@ const RegisterScreen = ({ navigation }) => {
         backgroundColor: "#fff",
       }}
     >
+      <LoadingModal modalVisible={load.loading} />
       <Text style={styles.loginTxt}>Đăng ký tài khoản</Text>
       <View style={styles.form}>
         <View>
@@ -77,12 +133,12 @@ const RegisterScreen = ({ navigation }) => {
 
           <View style={{ marginTop: 20, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
             <Text>Bạn là: </Text>
-            <CheckBox title={"Chủ trọ"} />
-            <CheckBox title={"Khách thuê"} />
+            <CheckBox title={"Khách thuê"} checked={tenantCheck} onPress={() => checkRole("TENANT")} />
+            <CheckBox title={"Chủ trọ"} checked={lessorCheck} onPress={() => checkRole("LESSOR")} />
           </View>
         </View>
 
-        <TouchableOpacity style={styles.btnLogin}>
+        <TouchableOpacity style={styles.btnLogin} onPress={registerApp}>
           <View>
             <Text style={{ color: COLOR.lightBlue, fontSize: 17, fontWeight: "600" }}>Đăng ký</Text>
           </View>

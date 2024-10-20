@@ -8,9 +8,12 @@ import Facebook from "../../assets/svg/facebook.svg";
 import TwitterSVG from "../../assets/svg/twitter.svg";
 import { useAuth } from "../hook/AuthProvider";
 import { apiCall } from "../api/ApiManager";
+import { useLoading } from "../hook/LoadingProvider";
 
 const LoginScreen = ({ navigation }) => {
   const auth = useAuth();
+  const load = useLoading();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -39,7 +42,13 @@ const LoginScreen = ({ navigation }) => {
     if (username !== "" && password !== "") {
       try {
         var data = await apiCall("/auth/login", "POST", { username: username, password: password }, {}, auth.token);
-        auth.login(data);
+        if (data.status === "ACTIVE") {
+          auth.login(data);
+        } else {
+          navigation.navigate("CompleteInfo", {
+            user: data,
+          });
+        }
       } catch (error) {
         console.log(error);
       }
