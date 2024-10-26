@@ -1,1 +1,2 @@
-build and deploy: eas build --profile development --platform android
+build dev: eas build --profile development --platform android
+deploy prod: eas build --profile production --platform android
