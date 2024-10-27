@@ -6,8 +6,12 @@ import { LoadingProvider } from "./src/hook/LoadingProvider";
 import { ModalPortal } from "react-native-modals";
 import messaging from "@react-native-firebase/messaging";
 import { useEffect } from "react";
+import { useFcm } from "./src/hook/FcmProvider";
 
 export default function App() {
+
+  const fcm = useFcm();
+
   const requestUserPerrmission = async () => {
     const authStatus = await messaging().requestPermission();
     const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
@@ -20,7 +24,10 @@ export default function App() {
     if (requestUserPerrmission) {
       messaging()
         .getToken()
-        .then((token) => console.log(token));
+        .then((token) => {
+          console.log(token);
+          fcm.saveDeviceId(token);
+        });
     } else {
       console.log("Permission not granted", authStatus);
     }
@@ -28,11 +35,13 @@ export default function App() {
     messaging()
       .getInitialNotification()
       .then(async (remoteMessage) => {
-        remoteMessage.notification;
+        if (remoteMessage) {
+          console.log(remoteMessage.notification);
+        }
       });
 
     messaging().onNotificationOpenedApp((remoteMessage) => {
-      remoteMessage.notification;
+      console.log(remoteMessage.notification);
     });
 
     messaging().setBackgroundMessageHandler((remoteMessage) => {
@@ -40,7 +49,7 @@ export default function App() {
     });
 
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      console.log("message!", JSON.stringify(messaging));
+      console.log("message!", JSON.stringify(remoteMessage));
     });
 
     return unsubscribe;
