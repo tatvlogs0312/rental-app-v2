@@ -9,6 +9,7 @@ import Modal, { ModalContent } from "react-native-modals";
 import { post } from "../../api/ApiManager";
 import LoadingModal from "react-native-loading-modal";
 import { useLoading } from "../../hook/LoadingProvider";
+import { useAuth } from "../../hook/AuthProvider";
 
 const PostScreen = ({ navigation }) => {
   const [roomTypes, setRoomTypes] = useState([]);
@@ -26,6 +27,7 @@ const PostScreen = ({ navigation }) => {
   const [acreageVisiable, setAcreageVisiable] = useState(false);
 
   const loading = useLoading();
+  const auth = useAuth();
 
   useEffect(() => {
     callSearchPostV2();

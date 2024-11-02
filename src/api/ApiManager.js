@@ -26,7 +26,7 @@ export const apiCall = async (endpoint, method, body, params, token) => {
 
     return response.data;
   } catch (error) {
-    console.log(error.response);
+    console.log(JSON.stringify(error));
 
     let errorMessage = "Đã có lỗi xảy ra, vui lòng thử lại sau.";
 
