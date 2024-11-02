@@ -6,6 +6,7 @@ export const FcmProvider = ({ children }) => {
   const [deviceId, setDeviceId] = useState("");
 
   const saveDeviceId = (token) => {
+    console.log("device: " + token);
     setDeviceId(token);
   };
 
@@ -13,6 +14,5 @@ export const FcmProvider = ({ children }) => {
 };
 
 export const useFcm = () => {
-    return useContext(FcmContext);
-  };
-  
+  return useContext(FcmContext);
+};

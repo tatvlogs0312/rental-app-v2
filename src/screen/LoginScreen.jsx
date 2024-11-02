@@ -9,10 +9,12 @@ import TwitterSVG from "../../assets/svg/twitter.svg";
 import { useAuth } from "../hook/AuthProvider";
 import { apiCall } from "../api/ApiManager";
 import { useLoading } from "../hook/LoadingProvider";
+import { useFcm } from "../hook/FcmProvider";
 
 const LoginScreen = ({ navigation }) => {
   const auth = useAuth();
   const load = useLoading();
+  const fcm = useFcm();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -31,6 +33,8 @@ const LoginScreen = ({ navigation }) => {
   }, []);
 
   const loginApp = async () => {
+    console.log(fcm.deviceId);
+
     if (username === "") {
       setMsgUsername("Vui lòng nhập tài khoản");
     }
@@ -41,7 +45,7 @@ const LoginScreen = ({ navigation }) => {
 
     if (username !== "" && password !== "") {
       try {
-        var data = await apiCall("/auth/login", "POST", { username: username, password: password }, {}, auth.token);
+        var data = await apiCall("/auth/login", "POST", { username: username, password: password, device: fcm.deviceId }, {}, auth.token);
         if (data.status === "ACTIVE") {
           auth.login(data);
         } else {

@@ -1,2 +1,4 @@
 build dev: eas build --profile development --platform android
 deploy prod: eas build --profile production --platform android
+preview: eas build --profile preview --platform android
+run android: npm expo run:android --device
