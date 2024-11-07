@@ -16,8 +16,8 @@ const HomeStack = () => {
     <Stack.Navigator initialRouteName="LessorDashboard" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="LessorDashboard" component={LessorDashboradScreen} />
       <Stack.Screen name="Room" component={RoomScreen} />
-      <Stack.Screen name="RoomAdd" component={RoomAddScreen} options={{ title: "Thêm phòng" }} />
-      <Stack.Screen name="RoomDetail" component={RoomDetailScreen} options={{ title: "Xem chi tiết" }} />
+      <Stack.Screen name="RoomAdd" component={RoomAddScreen} />
+      <Stack.Screen name="RoomDetail" component={RoomDetailScreen} />
       <Stack.Screen name="LessorBook" component={LessorBookScreen} />
     </Stack.Navigator>
   );
