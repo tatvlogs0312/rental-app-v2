@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Pressable, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Pressable, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { Button, Input } from "@rneui/themed";
 import { useAuth } from "../../hook/AuthProvider";
 import { apiCall } from "../../api/ApiManager";
@@ -10,6 +10,8 @@ import axios from "axios";
 import { DOMAIN } from "../../constants/URL";
 import Modal, { ModalContent } from "react-native-modals";
 import AddPostModal from "../../components/post/AddPostModal";
+import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
+import { TouchableOpacity } from "react-native";
 
 const RoomScreen = ({ navigation }) => {
   const auth = useAuth();
@@ -18,7 +20,7 @@ const RoomScreen = ({ navigation }) => {
   const [rooms, setRooms] = useState([]);
 
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(6);
+  const [size, setSize] = useState(7);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -110,29 +112,43 @@ const RoomScreen = ({ navigation }) => {
 
   const renderItem = ({ item }) => {
     return (
-      <View style={styles.itemStyle} key={item.roomId}>
-        <Text style={{ fontSize: 17, fontWeight: "600", color: COLOR.lightBlue }}>{item.roomCode + " - " + item.typeName}</Text>
-        <Text style={{ marginVertical: 3 }}>{`${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}</Text>
-        <Text style={{}}>{`Trạng thái: ${item.roomStatus.trim() === "EMPTY" ? "Còn trống" : "Đã cho thuê"}`}</Text>
-        <View style={{ marginTop: 10, flexDirection: "row", justifyContent: "flex-end", alignContent: "flex-end" }}>
-          <Pressable
-            onPress={() => {
-              setPostVisiable(true);
-              setRoomId(item.roomId);
-            }}
-          >
-            <Text style={{ marginRight: 15, color: COLOR.lightBlue }}>Đăng bài</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => {
-              navigation.navigate("RoomDetail", {
-                id: item.roomId,
-              });
-            }}
-          >
-            <Text style={{ color: COLOR.lightBlue }}>Xem chi tiết</Text>
-          </Pressable>
+      <View style={{ backgroundColor: COLOR.white, marginVertical: 5, padding: 10, borderRadius: 20, elevation: 2 }}>
+        <View style={{ borderBottomWidth: 0.5, borderBottomColor: "grey", flexDirection: "row" }}>
+          <Text style={{ color: "white", backgroundColor: "#079992", padding: 5, borderRadius: 10, marginBottom: 5, fontWeight: "600" }}>
+            {item.typeName + " - " + item.roomCode}
+          </Text>
+          <Text style={{ color: "white", backgroundColor: "#0a3d62", padding: 5, borderRadius: 10, marginBottom: 5, marginLeft: 2, fontWeight: "600" }}>{`${
+            item.roomStatus.trim() === "EMPTY" ? "Còn trống" : "Đã cho thuê"
+          }`}</Text>
         </View>
+        <View>
+          <View>
+            <Text style={{ marginVertical: 3, fontSize: 15 }}>
+              <FontAwesome6 name="location-dot" size={15} />
+              {` ${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  const SeachBar = () => {
+    return (
+      <View style={styles.container}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Pressable onPress={() => navigation.goBack()} style={{ marginHorizontal: 5 }}>
+            <FontAwesome6 name="arrow-left" size={20} color="#7e8c99" />
+          </Pressable>
+          <Text style={{ marginLeft: 10, fontSize: 18 }}>Danh sách phòng</Text>
+        </View>
+        <TouchableOpacity
+          style={{ alignItems: "center", padding: 6, backgroundColor: "black", flexDirection: "row", borderRadius: 15 }}
+          onPress={() => navigation.navigate("RoomAdd")}
+        >
+          <FontAwesome6 name="plus" size={20} color="white" style={{ marginRight: 5 }} />
+          <Text style={{ color: "white" }}>Thêm phòng</Text>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -140,11 +156,13 @@ const RoomScreen = ({ navigation }) => {
   return (
     <>
       <SafeAreaView style={{ marginHorizontal: 0, marginTop: 0, marginBottom: 150, height: heighScreen - 130 }}>
-        <View style={{ flexDirection: "column", justifyContent: "space-between", marginHorizontal: 10, marginTop: 15 }}>
-          <View>
+        <SeachBar />
+        <View style={{ flexDirection: "column", justifyContent: "space-between", paddingHorizontal: 10, marginTop: 15 }}>
+          {/* <View>
             <Text style={{ fontSize: 22, textAlign: "center", marginBottom: 10, fontWeight: "800", color: COLOR.lightBlue }}>Danh sách phòng của bạn</Text>
-          </View>
+          </View> */}
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={rooms}
             renderItem={renderItem}
             keyExtractor={(item) => item.roomId}
@@ -152,14 +170,6 @@ const RoomScreen = ({ navigation }) => {
             onEndReached={loadMoreItem}
             onEndReachedThreshold={0}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
-          />
-        </View>
-        <View>
-          <Button
-            title={"Thêm phòng"}
-            onPress={() => {
-              navigation.navigate("RoomAdd");
-            }}
           />
         </View>
       </SafeAreaView>
@@ -196,6 +206,21 @@ const styles = StyleSheet.create({
     padding: 7,
     marginVertical: 10,
     borderRadius: 5,
+  },
+  container: {
+    height: 60,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#f1f1f5",
+    padding: 10,
+    // borderRadius: 15,
+    // margin: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
 });
 

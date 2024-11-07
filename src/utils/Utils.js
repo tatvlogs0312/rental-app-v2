@@ -51,3 +51,18 @@ export const validateEmail = (email) => {
   const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return regex.test(email);
 };
+
+export const toMoneyDot = (number) => {
+  if (number === null || number === undefined || isNaN(number) || number === "") {
+    return null;
+  }
+  return Number(number).toLocaleString("de-DE");
+};
+
+export const getCurrentDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0"); // Thêm '0' nếu dưới 10
+  const day = String(today.getDate()).padStart(2, "0"); // Thêm '0' nếu dưới 10
+  return `${year}-${month}-${day}`;
+};

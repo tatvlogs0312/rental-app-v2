@@ -49,6 +49,8 @@ export const apiCall = async (endpoint, method, body, params, token) => {
 
 // POST with body
 export const post = async (endpoint, body, token) => {
+  console.log("post token: " + token);
+  console.log("post body: " + JSON.stringify(body));
   try {
     const headers = {
       "Content-Type": "application/json",
@@ -95,7 +97,8 @@ export const get = async (endpoint, params, token) => {
       ...((token !== null || "" || undefined) && { Authorization: `Bearer ${token}` }),
     };
 
-    console.log("get: " + endpoint);
+    console.log("get url: " + endpoint);
+    console.log("get params: " + JSON.stringify(params));
 
     const response = await apiClient({
       url: endpoint,
@@ -103,7 +106,7 @@ export const get = async (endpoint, params, token) => {
       params: params,
       headers: headers,
     });
-    console.log("get: " + response.data);
+    console.log("get: " + JSON.stringify(response));
 
     return response.data;
   } catch (error) {

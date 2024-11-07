@@ -10,6 +10,7 @@ import { Input } from "@rneui/themed";
 import { TouchableOpacity } from "react-native";
 import { post } from "../../api/ApiManager";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import messaging from '@react-native-firebase/messaging';
 
 const PostDetailScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -23,7 +24,7 @@ const PostDetailScreen = ({ navigation, route }) => {
 
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
-
+  
   useEffect(() => {
     axios
       .get(DOMAIN + "/post/" + route.params.id, {
