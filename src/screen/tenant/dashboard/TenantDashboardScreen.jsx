@@ -1,11 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { COLOR } from "../../../constants/COLORS";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { useAuth } from "../../../hook/AuthProvider";
+import { post } from "../../../api/ApiManager";
+import { IMAGE_DOMAIN } from "../../../constants/URL";
+import { ConvertToMoneyV2 } from "../../../utils/Utils";
 
 const TenantDashboardScreen = ({ navigation }) => {
   const auth = useAuth();
+
+  const [news, setNews] = useState([]);
+  const [recommends, setRecommends] = useState([]);
+
+  useEffect(() => {
+    getNews();
+    getRecommends();
+  }, []);
+
+  const getNews = async () => {
+    try {
+      const res = await post("/post/search", { page: 0, size: 4 }, auth.token);
+      setNews(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getRecommends = async () => {
+    try {
+      const res = await post("/post/search-recommend", { page: 0, size: 4 }, auth.token);
+      setRecommends(res.data);
+      console.log("====================================");
+      console.log(recommends);
+      console.log("====================================");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: COLOR.white }}>
@@ -45,37 +77,30 @@ const TenantDashboardScreen = ({ navigation }) => {
               </Pressable>
             </View>
             <ScrollView horizontal style={{ marginVertical: 10 }} showsHorizontalScrollIndicator={false}>
-              <Pressable style={styles.cardNew}>
-                <View style={{ position: "relative" }}>
-                  <Image source={{ uri: "https://tuan.phimhay247.online/file/download/f5d2cffc-fc70-4ff5-8141-1089b994676f.png" }} style={styles.cardNewImg} />
-                  <Text style={styles.txtPrice1}>3 triệu/tháng</Text>
-                </View>
-                <View>
-                  <Text style={styles.cardNewPosition}>Cho thuê chung cư mini số 98 Cầu Giấy - Hà Nội</Text>
-                  <View>
-                    <Text>
-                      <FontAwesome6 name="location-dot" /> Xuân Thủy - Cầu Giấy - Hà Nội
-                    </Text>
-                    
-                  </View>
-                </View>
-              </Pressable>
-
-              <Pressable style={styles.cardNew}>
-                <View style={{ position: "relative" }}>
-                  <Image source={{ uri: "https://tuan.phimhay247.online/file/download/d8696074-53c3-4570-94f5-ce589cdcaecb.png" }} style={styles.cardNewImg} />
-                  <Text style={styles.txtPrice1}>3 triệu/tháng</Text>
-                </View>
-                <View>
-                  <Text style={styles.cardNewPosition}>Cho thuê chung cư mini số 98 Cầu Giấy - Hà Nội</Text>
-                  <View>
-                    <Text>
-                      <FontAwesome6 name="location-dot" /> Xuân Thủy - Cầu Giấy - Hà Nội
-                    </Text>
-                    
-                  </View>
-                </View>
-              </Pressable>
+              {news &&
+                news.map((item) => (
+                  <Pressable
+                    style={styles.cardNew}
+                    onPress={() =>
+                      navigation.navigate("PostDetail", {
+                        id: item.postId,
+                      })
+                    }
+                  >
+                    <View style={{ position: "relative" }}>
+                      <Image source={{ uri: IMAGE_DOMAIN + "/" + item.firstImage }} style={styles.cardNewImg} />
+                      <Text style={styles.txtPrice1}>{ConvertToMoneyV2(item.price) + "/tháng"}</Text>
+                    </View>
+                    <View>
+                      <Text style={styles.cardNewPosition}>{item.title}</Text>
+                      <View>
+                        <Text>
+                          <FontAwesome6 name="location-dot" /> {`${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}
+                        </Text>
+                      </View>
+                    </View>
+                  </Pressable>
+                ))}
             </ScrollView>
           </View>
 
@@ -87,37 +112,23 @@ const TenantDashboardScreen = ({ navigation }) => {
               </Pressable>
             </View>
             <ScrollView horizontal style={{ marginVertical: 10 }} showsHorizontalScrollIndicator={false}>
-              <Pressable style={styles.cardNew}>
-                <View style={{ position: "relative" }}>
-                  <Image source={{ uri: "https://tuan.phimhay247.online/file/download/0b4a3b12-bfe0-42c7-aa53-3316ae6341dd.png" }} style={styles.cardNewImg} />
-                  <Text style={styles.txtPrice1}>3 triệu/tháng</Text>
-                </View>
-                <View>
-                  <Text style={styles.cardNewPosition}>Cho thuê chung cư mini số 98 Cầu Giấy - Hà Nội</Text>
-                  <View>
-                    <Text>
-                      <FontAwesome6 name="location-dot" /> Xuân Thủy - Cầu Giấy - Hà Nội
-                    </Text>
-                    
-                  </View>
-                </View>
-              </Pressable>
-
-              <Pressable style={styles.cardNew}>
-                <View style={{ position: "relative" }}>
-                  <Image source={{ uri: "https://tuan.phimhay247.online/file/download/971d164f-d8f3-4573-ad11-47954b330bfa.png" }} style={styles.cardNewImg} />
-                  <Text style={styles.txtPrice1}>3 triệu/tháng</Text>
-                </View>
-                <View>
-                  <Text style={styles.cardNewPosition}>Cho thuê chung cư mini số 98 Cầu Giấy - Hà Nội</Text>
-                  <View>
-                    <Text>
-                      <FontAwesome6 name="location-dot" /> Xuân Thủy - Cầu Giấy - Hà Nội
-                    </Text>
-                    
-                  </View>
-                </View>
-              </Pressable>
+              {recommends &&
+                recommends.map((item) => (
+                  <Pressable style={styles.cardNew}>
+                    <View style={{ position: "relative" }}>
+                      <Image source={{ uri: IMAGE_DOMAIN + "/" + item.firstImage }} style={styles.cardNewImg} />
+                      <Text style={styles.txtPrice1}>{ConvertToMoneyV2(item.price) + "/tháng"}</Text>
+                    </View>
+                    <View>
+                      <Text style={styles.cardNewPosition}>{item.title}</Text>
+                      <View>
+                        <Text>
+                          <FontAwesome6 name="location-dot" /> {`${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}
+                        </Text>
+                      </View>
+                    </View>
+                  </Pressable>
+                ))}
             </ScrollView>
           </View>
         </ScrollView>

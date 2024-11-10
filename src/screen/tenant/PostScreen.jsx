@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text,   TouchableOpacity, View } from "react-native";
 import axios from "axios";
 import { DOMAIN, IMAGE_DOMAIN } from "../../constants/URL";
 import { COLOR } from "../../constants/COLORS";

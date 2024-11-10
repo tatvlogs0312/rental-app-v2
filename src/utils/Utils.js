@@ -13,6 +13,16 @@ export const ConvertToMoney = (value) => {
   return formatter.format(value);
 };
 
+export function ConvertToMoneyV2(amount) {
+  if (amount >= 1_000_000) {
+    return (amount / 1_000_000).toFixed(1).replace(/\.0$/, "") + " triệu";
+  } else if (amount >= 1_000) {
+    return (amount / 1_000).toFixed(1).replace(/\.0$/, "") + " nghìn";
+  } else {
+    return amount + " đồng";
+  }
+}
+
 export const TimeAgo = (dateString) => {
   const now = new Date();
   const past = new Date(dateString);
