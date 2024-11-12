@@ -7,18 +7,22 @@ import RoomDetailScreen from "../screen/lessor/room_detail/RoomDetailScreen";
 import LessorBookScreen from "../screen/lessor/book/LessorBookScreen";
 import NotificationScreen from "../screen/common/NotificationScreen";
 import LessorDashboradScreen from "../screen/lessor/dashboard/LessorDashboradScreen";
+import LessorPostListScreen from "../screen/lessor/post/LessorPostListScreen";
+import LessorAddPostScreen from "../screen/lessor/post/LessorAddPostScreen";
 
 const Tab = createBottomTabNavigator();
 
 const HomeStack = () => {
   const Stack = createStackNavigator();
   return (
-    <Stack.Navigator initialRouteName="LessorDashboard" screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName="LessorAddPost" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="LessorDashboard" component={LessorDashboradScreen} />
       <Stack.Screen name="Room" component={RoomScreen} />
       <Stack.Screen name="RoomAdd" component={RoomAddScreen} />
       <Stack.Screen name="RoomDetail" component={RoomDetailScreen} />
       <Stack.Screen name="LessorBook" component={LessorBookScreen} />
+      <Stack.Screen name="LessorPostList" component={LessorPostListScreen} />
+      <Stack.Screen name="LessorAddPost" component={LessorAddPostScreen} />
     </Stack.Navigator>
   );
 };

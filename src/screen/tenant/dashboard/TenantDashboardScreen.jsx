@@ -31,9 +31,6 @@ const TenantDashboardScreen = ({ navigation }) => {
     try {
       const res = await post("/post/search-recommend", { page: 0, size: 4 }, auth.token);
       setRecommends(res.data);
-      console.log("====================================");
-      console.log(recommends);
-      console.log("====================================");
     } catch (error) {
       console.log(error);
     }
