@@ -119,7 +119,7 @@ const LessorDashboradScreen = ({ navigation }) => {
               </View>
             </Pressable>
 
-            <Pressable style={{ width: "50%" }}>
+            <Pressable style={{ width: "50%" }} onPress={() => navigation.navigate("LessorPostList")}>
               <View
                 style={[
                   styles.box,

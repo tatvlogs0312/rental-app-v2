@@ -5,29 +5,37 @@ import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { COLOR } from "../../../constants/COLORS";
 import { get, post } from "../../../api/ApiManager";
 import { TouchableOpacity } from "react-native";
-import { IMAGE_DOMAIN } from "../../../constants/URL";
+import { DOMAIN, IMAGE_DOMAIN } from "../../../constants/URL";
+import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
+import { useLoading } from "../../../hook/LoadingProvider";
+import LoadingModal from "react-native-loading-modal";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import uuid from "react-native-uuid";
 
-const LessorAddPostScreen = () => {
+const LessorAddPostScreen = ({ navigation }) => {
   const auth = useAuth();
+  const load = useLoading();
 
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
   const [roomTypes, setRoomTypes] = useState([]);
 
-  const [roomTypeIndex, setRoomTypeIndex] = useState(0);
+  const [roomTypeIndex, setRoomTypeIndex] = useState(null);
 
   const [title, setTitle] = useState(null);
   const [content, setContent] = useState(null);
   const [numberOfRoom, setNumberOfRoom] = useState(null);
   const [acreage, setAcreage] = useState(null);
+  const [price, setPrice] = useState(null);
   const [roomType, setRoomType] = useState("");
   const [ward, setWard] = useState(null);
   const [district, setDistrict] = useState(null);
   const [province, setProvince] = useState(null);
   const [detail, setDetail] = useState(null);
+  const [files, setFiles] = useState([]);
 
-  const [isConfirmVisible, setConfirmVisible] = useState(false);
   const [provinceVisiable, setProvinceVisiable] = useState(false);
   const [wardVisiable, setWardVisiable] = useState(false);
   const [districtVisiable, setDistrictVisiable] = useState(false);
@@ -73,11 +81,63 @@ const LessorAddPostScreen = () => {
     }
   };
 
+  const selectImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [6, 4],
+    });
+
+    if (result.assets !== null) {
+      setFiles([...files, result.assets[0]]);
+    }
+  };
+
+  const addPost = async () => {
+    load.isLoading();
+    try {
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("content", content);
+      formData.append("positionDetail", detail);
+      formData.append("ward", ward);
+      formData.append("district", district);
+      formData.append("province", province);
+      formData.append("price", price);
+      formData.append("roomType", roomType);
+      files.forEach((file) => {
+        formData.append("files", {
+          uri: file.uri,
+          type: "image/jpeg",
+          name: uuid.v4() + ".jpg",
+        });
+      });
+      const response = await axios.post(DOMAIN + "/post/create", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: auth.token,
+        },
+      });
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: "Đăng bài thành công",
+        title: "Thông báo",
+      });
+      navigation.navigate("LessorPostList");
+    } catch (error) {
+      console.log(error);
+      console.log(JSON.stringify(error));
+    } finally {
+      load.nonLoading();
+    }
+  };
+
   return (
     <>
+      <LoadingModal modalVisible={load.loading} />
       <View style={{ flex: 1, backgroundColor: COLOR.white }}>
         <View style={{ padding: 15, flexDirection: "row", alignItems: "center" }}>
-          <Pressable style={styles.icon}>
+          <Pressable style={styles.icon} onPress={() => navigation.goBack()}>
             <FontAwesome6 name="angle-left" size={25} color={COLOR.white} />
           </Pressable>
           <Text style={{ fontSize: 25, marginLeft: 5 }}>Tạo bài viết</Text>
@@ -101,6 +161,9 @@ const LessorAddPostScreen = () => {
                 />
                 <TextInput style={styles.input2} placeholder="Diện tích (m²)" keyboardType="number-pad" onChangeText={(t) => setAcreage(t)} value={acreage} />
               </View>
+              <View>
+                <TextInput style={styles.input} placeholder="Giá cho thuê" onChangeText={(t) => setPrice(t)} value={price} keyboardType="number-pad" />
+              </View>
               <Pressable onPress={() => setProvinceVisiable(true)}>
                 <TextInput style={styles.input} placeholder="Tỉnh/Thành phố" readOnly value={province} />
               </Pressable>
@@ -111,7 +174,13 @@ const LessorAddPostScreen = () => {
                 <TextInput style={styles.input} placeholder="Xã/Phường" readOnly value={ward} />
               </Pressable>
               <View>
-                <TextInput style={styles.inputMutiline} placeholder="Địa chỉ (Số nhà, ngõ, ngách, đường, ...)" multiline />
+                <TextInput
+                  style={styles.inputMutiline}
+                  placeholder="Địa chỉ (Số nhà, ngõ, ngách, đường, ...)"
+                  multiline
+                  onChangeText={(t) => setDetail(t)}
+                  value={detail}
+                />
               </View>
               <View>
                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>Loại phòng</Text>
@@ -139,18 +208,35 @@ const LessorAddPostScreen = () => {
               <View>
                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>Hình ảnh</Text>
                 <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-                  <Image source={{ uri: IMAGE_DOMAIN + "/" + "cdc6e150-3a5b-45b7-aa61-0d415d09afe5.png" }} style={styles.image} />
-                  <Image source={{ uri: IMAGE_DOMAIN + "/" + "1d9ae76e-96f2-4c64-9028-915518cbfb2c.png" }} style={styles.image} />
-                  <Image source={{ uri: IMAGE_DOMAIN + "/" + "e3d0eb1c-0934-4bc1-9c4e-8cbd87e52037.png" }} style={styles.image} />
-                  <Image source={{ uri: IMAGE_DOMAIN + "/" + "e3d0eb1c-0934-4bc1-9c4e-8cbd87e52037.png" }} style={styles.image} />
-                  <TouchableOpacity style={styles.image}>
+                  {files.map((file) => (
+                    <View style={{ position: "relative" }}>
+                      <Image source={{ uri: file.uri }} style={styles.image} />
+                      <Pressable
+                        style={{
+                          backgroundColor: COLOR.black,
+                          position: "absolute",
+                          top: 5,
+                          right: 15,
+                          width: 25,
+                          height: 25,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          borderRadius: 20,
+                        }}
+                        onPress={() => setFiles(files.filter((f) => f !== file))}
+                      >
+                        <FontAwesome6 name="x" size={10} color={COLOR.white} />
+                      </Pressable>
+                    </View>
+                  ))}
+                  <TouchableOpacity style={styles.image} onPress={() => selectImage()}>
                     <FontAwesome6 name="plus" size={30} color={COLOR.black} />
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
             <View>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => addPost()}>
                 <Text style={styles.btn}>Đăng tin</Text>
               </TouchableOpacity>
             </View>

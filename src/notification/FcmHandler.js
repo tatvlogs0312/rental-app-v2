@@ -30,7 +30,7 @@ const FcmHandler = () => {
 
     messaging()
       .getInitialNotification()
-      .then(async (remoteMessage) => {
+      .then((remoteMessage) => {
         if (remoteMessage) {
           console.log(remoteMessage.notification);
         }

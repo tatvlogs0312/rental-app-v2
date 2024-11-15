@@ -8,6 +8,7 @@ import { COLOR } from "../../../constants/COLORS";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { Calendar } from "react-native-calendars";
 import { getCurrentDate } from "../../../utils/Utils";
+import NoData from "../../../components/NoData";
 
 const LessorBookScreen = ({ navigation }) => {
   const auth = useAuth();
@@ -137,9 +138,7 @@ const LessorBookScreen = ({ navigation }) => {
             }}
           />
         ) : (
-          <View>
-            <Text style={{ textAlign: "center", fontStyle: "italic" }}>Không có lịch xem phòng</Text>
-          </View>
+          <NoData message={"Không có lịch xem phòng"} />
         )}
       </View>
     </View>
