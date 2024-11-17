@@ -6,10 +6,11 @@ import { COLOR } from "../../../constants/COLORS";
 import { TouchableOpacity } from "react-native";
 
 const features = [
-  { id: "1", icon: "plus", title: "Thêm phòng", color: "#007bff", navigate: "RoomAdd" },
-  { id: "2", icon: "file-signature", title: "Tạo hợp đồng", color: "#6F1E51", navigate: "Room" },
-  { id: "3", icon: "file-invoice-dollar", title: "Hóa đơn", color: "#00a34c", navigate: "Room" },
-  { id: "4", icon: "calendar", title: "Lịch xem phòng", color: "#9d76e6", navigate: "LessorBook" },
+  { id: "1", icon: "plus", title: "Nhà", color: "#007bff", navigate: "HouseList" },
+  { id: "2", icon: "plus", title: "Bài đăng", color: "#007bff", navigate: "LessorPostList" },
+  { id: "3", icon: "file-signature", title: "Tạo hợp đồng", color: "#6F1E51", navigate: "Room" },
+  { id: "4", icon: "file-invoice-dollar", title: "Hóa đơn", color: "#00a34c", navigate: "Room" },
+  { id: "5", icon: "calendar", title: "Lịch xem phòng", color: "#9d76e6", navigate: "LessorBook" },
 ];
 
 const LessorDashboradScreen = ({ navigation }) => {
@@ -149,6 +150,7 @@ const styles = StyleSheet.create({
   item: {
     width: "25%",
     alignItems: "center",
+    marginBottom: 10,
   },
   iconContainer: {
     width: 40,
