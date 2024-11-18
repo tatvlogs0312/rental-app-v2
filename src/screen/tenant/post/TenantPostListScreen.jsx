@@ -8,6 +8,7 @@ import { useLoading } from "../../../hook/LoadingProvider";
 import { IMAGE_DOMAIN } from "../../../constants/URL";
 import { ConvertToMoneyV2 } from "../../../utils/Utils";
 import { useFocusEffect } from "@react-navigation/native";
+import LoadingModal from "react-native-loading-modal";
 
 const TenantPostListScreen = ({ navigation, route }) => {
   const type = route?.params.type || "NEW";
@@ -16,6 +17,8 @@ const TenantPostListScreen = ({ navigation, route }) => {
   const load = useLoading();
 
   const [posts, setPosts] = useState([]);
+
+  const [keyword, setKeyword] = useState(null);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
 
@@ -32,21 +35,24 @@ const TenantPostListScreen = ({ navigation, route }) => {
 
   const loadMoreItem = async () => {
     await loadMoreData();
-    setPage(page + 1);
   };
 
   const getPost = async () => {
+    load.isLoading();
     try {
+      setPage(0);
       let api = "";
       if (type === "NEW") {
         api = "/post/search";
       } else {
         api = "/post/search-recommend";
       }
-      const res = await post(api, { page: page, size: size }, auth.token);
+      const res = await post(api, { keyword: keyword, page: page, size: size }, auth.token);
       setPosts(res.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      load.nonLoading();
     }
   };
 
@@ -58,8 +64,26 @@ const TenantPostListScreen = ({ navigation, route }) => {
       } else {
         api = "/post/search-recommend";
       }
-      const res = await post(api, { page: page + 1, size: size }, auth.token);
+      const res = await post(api, { keyword: keyword, page: page + 1, size: size }, auth.token);
       setPosts([...posts, ...res.data]);
+      setPage(page + 1);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getPostX = async () => {
+    try {
+      setPage(0);
+      setKeyword(null);
+      let api = "";
+      if (type === "NEW") {
+        api = "/post/search";
+      } else {
+        api = "/post/search-recommend";
+      }
+      const res = await post(api, { keyword: keyword, page: page, size: size }, auth.token);
+      setPosts(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -91,6 +115,7 @@ const TenantPostListScreen = ({ navigation, route }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLOR.white }}>
+      <LoadingModal modalVisible={load.loading} />
       <View>
         <View
           style={{
@@ -108,24 +133,47 @@ const TenantPostListScreen = ({ navigation, route }) => {
           >
             <FontAwesome6 name="angle-left" color={COLOR.white} size={20} />
           </Pressable>
-          <TextInput style={styles.searchInput} placeholder="Tìm kiếm" placeholderTextColor="#A9A9A9" />
+          <TextInput style={styles.searchInput} placeholder="Tìm kiếm" placeholderTextColor="#A9A9A9" value={keyword} onChangeText={(t) => setKeyword(t)} />
+          {/* {keyword ? (
+            <Pressable
+              style={{ height: 50, width: 50, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10 }}
+              onPress={getPostX}
+            >
+              <FontAwesome6 name="x" color={COLOR.white} size={20} />
+            </Pressable>
+          ) : (
+            <Pressable
+              style={{ height: 50, width: 50, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10 }}
+              onPress={getPost}
+            >
+              <FontAwesome6 name="magnifying-glass" color={COLOR.white} size={20} />
+            </Pressable>
+          )} */}
+          <Pressable
+            style={{ height: 50, width: 50, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10 }}
+            onPress={getPost}
+          >
+            <FontAwesome6 name="magnifying-glass" color={COLOR.white} size={20} />
+          </Pressable>
           <Pressable style={{ height: 50, width: 50, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10 }}>
             <FontAwesome6 name="sliders" color={COLOR.white} size={20} />
           </Pressable>
         </View>
       </View>
       <View style={{ flex: 1, margin: 10 }}>
-        <FlatList
-          data={posts}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.postId.toString()} // Sử dụng postId làm key
-          contentContainerStyle={{ marginVertical: 10 }}
-          showsVerticalScrollIndicator={false}
-          refreshControl={<RefreshControl refreshing={load.loading} onRefresh={getPost} />}
-          ListEmptyComponent={<Text style={{ textAlign: "center", marginTop: 20 }}>Không có bài viết nào.</Text>}
-          // onEndReached={loadMoreItem}
-          // onEndReachedThreshold={0}
-        />
+        {posts.length > 0 && (
+          <FlatList
+            data={posts}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.postId.toString()} // Sử dụng postId làm key
+            contentContainerStyle={{ marginVertical: 10 }}
+            showsVerticalScrollIndicator={false}
+            refreshControl={<RefreshControl refreshing={load.loading} onRefresh={getPost} />}
+            ListEmptyComponent={<Text style={{ textAlign: "center", marginTop: 20 }}>Không có bài viết nào.</Text>}
+            onEndReached={loadMoreItem}
+            onEndReachedThreshold={0}
+          />
+        )}
       </View>
     </View>
   );
@@ -166,7 +214,7 @@ const styles = StyleSheet.create({
 
   searchInput: {
     height: 40,
-    width: 270,
+    width: 220,
     paddingHorizontal: 15,
     backgroundColor: "#FFFFFF",
     borderRadius: 10,

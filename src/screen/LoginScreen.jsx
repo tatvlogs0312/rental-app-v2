@@ -91,12 +91,12 @@ const LoginScreen = ({ navigation }) => {
             {msgPassword !== "" && <Text style={{ color: "red", fontSize: 12, textAlign: "left" }}>{msgPassword}</Text>}
           </View>
 
-          <Text style={{ textAlign: "right", fontWeight: "500", color: COLOR.lightBlue }}>Quên mật khẩu?</Text>
+          <Text style={{ textAlign: "right", fontWeight: "500", color: COLOR.primary }}>Quên mật khẩu?</Text>
         </View>
 
         <Pressable onPress={loginApp} style={styles.btnLogin}>
           <View>
-            <Text>Đăng nhập</Text>
+            <Text style={{ color: COLOR.white, fontWeight: "bold" }}>Đăng nhập</Text>
           </View>
         </Pressable>
       </View>
@@ -119,7 +119,7 @@ const LoginScreen = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => {}}
             style={{
-              borderColor: "#ddd",
+              borderColor: COLOR.primary,
               borderWidth: 2,
               borderRadius: 10,
               paddingHorizontal: 30,
@@ -131,7 +131,7 @@ const LoginScreen = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => {}}
             style={{
-              borderColor: "#ddd",
+              borderColor: COLOR.primary,
               borderWidth: 2,
               borderRadius: 10,
               paddingHorizontal: 30,
@@ -143,7 +143,7 @@ const LoginScreen = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => {}}
             style={{
-              borderColor: "#ddd",
+              borderColor: COLOR.primary,
               borderWidth: 2,
               borderRadius: 10,
               paddingHorizontal: 30,
@@ -157,7 +157,7 @@ const LoginScreen = ({ navigation }) => {
         <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
           <Text>Bạn chưa có tài khoản? </Text>
           <Text
-            style={{ color: COLOR.lightBlue }}
+            style={{ color: COLOR.primary }}
             onPress={() => {
               navigation.navigate("Register");
             }}
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   loginTxt: {
     textAlign: "center",
     fontSize: 30,
-    color: COLOR.lightBlue,
+    color: COLOR.primary,
     fontWeight: "600",
     marginTop: 200,
   },
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
 
   btnLogin: {
     width: 300,
-    backgroundColor: COLOR.lightBlue,
+    backgroundColor: COLOR.primary,
     padding: 15,
     marginTop: 50,
     alignItems: "center",

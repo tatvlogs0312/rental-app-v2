@@ -140,14 +140,14 @@ const RegisterScreen = ({ navigation }) => {
 
         <TouchableOpacity style={styles.btnLogin} onPress={registerApp}>
           <View>
-            <Text style={{ color: COLOR.lightBlue, fontSize: 17, fontWeight: "600" }}>Đăng ký</Text>
+            <Text style={{ color: COLOR.white, fontSize: 17, fontWeight: "600" }}>Đăng ký</Text>
           </View>
         </TouchableOpacity>
 
         <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: 20 }}>
           <Text>Bạn đã có tài khoản? </Text>
           <Text
-            style={{ color: COLOR.lightBlue }}
+            style={{ color: COLOR.primary }}
             onPress={() => {
               navigation.navigate("Login");
             }}
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   loginTxt: {
     textAlign: "center",
     fontSize: 30,
-    color: COLOR.lightBlue,
+    color: COLOR.primary,
     fontWeight: "600",
     // marginTop: 100,
   },
@@ -242,7 +242,8 @@ const styles = StyleSheet.create({
     marginTop: 50,
     alignItems: "center",
     borderRadius: 20,
-    borderColor: COLOR.lightBlue,
+    borderColor: COLOR.primary,
+    backgroundColor: COLOR.primary,
     borderWidth: 2,
   },
 

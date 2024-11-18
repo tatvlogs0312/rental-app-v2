@@ -67,12 +67,12 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
                       }
                     }}
                   >
-                    <FontAwesome6 name="angle-left" size={25} color={COLOR.black} />
+                    <FontAwesome6 name="angle-left" size={25} color={COLOR.primary} />
                   </Pressable>
                 </View>
                 <View style={{ position: "absolute", zIndex: 10, top: 10, right: 10 }}>
                   <Pressable style={styles.icon}>
-                    <FontAwesome6 name="heart" size={25} color={COLOR.black} />
+                    <FontAwesome6 name="heart" size={25} color={COLOR.primary} />
                   </Pressable>
                 </View>
                 <Image source={{ uri: `${IMAGE_DOMAIN}/${postData.image[imageIndex]}` }} style={{ width: "auto", height: 250, objectFit: "cover" }} />
@@ -104,42 +104,42 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
                   <View>
                     <Text style={{ fontSize: 19, fontWeight: "bold" }}>{postData.title}</Text>
                     <Text style={{ marginVertical: 3, fontSize: 14 }}>
-                      <FontAwesome6 name="location-dot" size={14} />
+                      <FontAwesome6 name="location-dot" size={14} color={COLOR.primary} />
                       {` ${postData.position.detail}, ${postData.position.ward}, ${postData.position.district}, ${postData.position.province}`}
                     </Text>
                   </View>
-                  <View style={{ marginTop: 5, borderTopWidth: 0.5, borderTopColor: COLOR.grey }}>
+                  <View style={{ marginTop: 5, borderTopWidth: 0.5, borderTopColor: COLOR.primary }}>
                     <View>
-                      <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 15, marginBottom: 5 }}>Mô tả:</Text>
+                      <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 15, marginBottom: 5, color: COLOR.primary }}>Mô tả:</Text>
                       <Text>{postData.content}</Text>
                     </View>
 
                     <View>
-                      <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 15, marginBottom: 10 }}>Thông tin phòng:</Text>
-                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.grey } }}>
+                      <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 15, marginBottom: 10, color: COLOR.primary }}>Thông tin phòng:</Text>
+                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.primary } }}>
                         <View style={styles.infoV2Icon}>
-                          <FontAwesome6 name="house" size={14} />
+                          <FontAwesome6 name="house" size={14} color={COLOR.primary} />
                         </View>
                         <Text style={styles.infoV2Title}>Loại phòng</Text>
                         <Text>{`${postData.roomTypeName}`}</Text>
                       </View>
-                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.grey } }}>
+                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.primary } }}>
                         <View style={styles.infoV2Icon}>
-                          <FontAwesome6 name="money-bill-1-wave" size={14} />
+                          <FontAwesome6 name="money-bill-1-wave" size={14} color={COLOR.primary} />
                         </View>
                         <Text style={styles.infoV2Title}>Mức giá</Text>
                         <Text>{`${ConvertToMoneyV2(postData.price)}/tháng`}</Text>
                       </View>
-                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.grey } }}>
+                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.primary } }}>
                         <View style={styles.infoV2Icon}>
-                          <FontAwesome6 name="expand" size={14} />
+                          <FontAwesome6 name="expand" size={14} color={COLOR.primary} />
                         </View>
                         <Text style={styles.infoV2Title}>Diện tích</Text>
                         <Text>{`${postData.acreage}m²`}</Text>
                       </View>
-                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderBottomWidth: 0.5, borderColor: COLOR.grey } }}>
+                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderBottomWidth: 0.5, borderColor: COLOR.primary } }}>
                         <View style={styles.infoV2Icon}>
-                          <FontAwesome6 name="bed" size={14} />
+                          <FontAwesome6 name="bed" size={14} color={COLOR.primary} />
                         </View>
                         <Text style={styles.infoV2Title}>Số phòng ngủ</Text>
                         <Text>{`${postData.numberOfRoom} PN`}</Text>
@@ -147,7 +147,7 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
                     </View>
 
                     <View style={{ marginTop: 5 }}>
-                      <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 15, marginBottom: 5 }}>Liên hệ xem phòng:</Text>
+                      <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 15, marginBottom: 5, color: COLOR.primary }}>Liên hệ xem phòng:</Text>
                       <Text>
                         <FontAwesome6 name="user" solid />
                         {` ${postData.lessorName}`}
@@ -166,11 +166,11 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
                 <Text
                   style={{
                     padding: 10,
-                    backgroundColor: COLOR.black,
+                    backgroundColor: COLOR.primary,
                     color: COLOR.white,
                     fontSize: 18,
                     fontWeight: "bold",
-                    width: 200,
+                    width: 250,
                     textAlign: "center",
                     borderRadius: 15,
                   }}
@@ -181,7 +181,7 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
             </View>
             <View style={{ margin: 10 }}>
               <View>
-                <Text style={{ fontSize: 18, fontWeight: "bold" }}>Bài viết liên quan:</Text>
+                <Text style={{ fontSize: 18, fontWeight: "bold", color: COLOR.primary }}>Bài viết liên quan:</Text>
               </View>
               <ScrollView horizontal style={{ marginVertical: 10 }} showsHorizontalScrollIndicator={false}>
                 {recommends &&
@@ -198,9 +198,11 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
                         <Text style={styles.txtPrice1}>{ConvertToMoneyV2(item.price) + "/tháng"}</Text>
                       </View>
                       <View>
-                        <Text style={styles.cardNewPosition}>{item.title}</Text>
+                        <Text numberOfLines={1} style={styles.cardNewPosition}>
+                          {item.title}
+                        </Text>
                         <View>
-                          <Text>
+                          <Text style={{ color: COLOR.grey }}>
                             <FontAwesome6 name="location-dot" /> {`${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}
                           </Text>
                         </View>
@@ -253,6 +255,7 @@ const styles = StyleSheet.create({
   infoV2Title: {
     width: "43%",
     fontWeight: "500",
+    color: COLOR.primary,
   },
 
   infoV2Value: {
@@ -264,8 +267,9 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: COLOR.light,
     borderRadius: 10,
-    marginHorizontal: 5,
+    margin: 5,
     zIndex: 10,
+    elevation: 2,
   },
 
   cardNewPosition: {
@@ -284,7 +288,7 @@ const styles = StyleSheet.create({
   txtPrice1: {
     padding: 5,
     backgroundColor: COLOR.white,
-    color: COLOR.black,
+    color: COLOR.primary,
     position: "absolute",
     bottom: 5,
     right: 5,

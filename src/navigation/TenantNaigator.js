@@ -6,6 +6,8 @@ import TenantDarshboardScreen from "../screen/tenant/dashboard/TenantDashboardSc
 import TenantPostListScreen from "../screen/tenant/post/TenantPostListScreen";
 import TenantPostDetailScreen from "../screen/tenant/post/TenantPostDetailScreen";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
+import TenantUserScreen from "../screen/tenant/user/TenantUserScreen";
+import { COLOR } from "../constants/COLORS";
 
 const Tab = createBottomTabNavigator();
 
@@ -31,10 +33,19 @@ const PostStack = () => {
   );
 };
 
+const UserStack = () => {
+  const Stack = createStackNavigator();
+  return (
+    <Stack.Navigator initialRouteName="TenantUser" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="TenantUser" component={TenantUserScreen} />
+    </Stack.Navigator>
+  );
+};
+
 const TenantNaigator = () => {
   return (
     <Tab.Navigator
-      initialRouteName="Post"
+      initialRouteName="User"
       screenOptions={({ route }) => ({
         // tabBarStyle: {
         //   position: "absolute",
@@ -60,14 +71,14 @@ const TenantNaigator = () => {
           }
 
           // Trả về biểu tượng FontAwesome
-          return <FontAwesome6 name={iconName} size={18} color={focused ? "tomato" : "gray"} solid />;
+          return <FontAwesome6 name={iconName} size={18} color={focused ? COLOR.primary : COLOR.grey} solid />;
         },
-        tabBarActiveTintColor: "tomato",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: COLOR.primary,
+        tabBarInactiveTintColor: COLOR.grey,
       })}
     >
       <Tab.Screen name="Post" component={PostStack} options={{ title: "Bài đăng" }} />
-      <Tab.Screen name="User" component={UserScreen} options={{ title: "Cài đặt" }} />
+      <Tab.Screen name="User" component={UserStack} options={{ title: "Cài đặt" }} />
     </Tab.Navigator>
   );
 };

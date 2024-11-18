@@ -9,6 +9,7 @@ import { COLOR } from "../../../constants/COLORS";
 import NoData from "../../../components/NoData";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import ConfirmPopup from "../../../components/ConfirmPopup";
 
 const RoomListScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -26,7 +27,10 @@ const RoomListScreen = ({ navigation, route }) => {
   const [number, setNumber] = useState(null);
   const [acreage, setAcreage] = useState(null);
 
+  const [roomId, setRoomId] = useState(null);
+
   const [addVisiable, setAddVisiable] = useState(false);
+  const [deleteVisiable, setDeleteVisiable] = useState(false);
 
   useEffect(() => {
     if (auth.token) {
@@ -46,7 +50,7 @@ const RoomListScreen = ({ navigation, route }) => {
   const addRoom = async () => {
     try {
       load.isLoading();
-      const res = await post("/room/create/v2", { roomName: roomName, acreage: acreage, numberOfRoom: number }, auth.token);
+      const res = await post("/room/create/v2", { houseId: houseId, roomName: roomName, acreage: acreage, numberOfRoom: number }, auth.token);
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         textBody: "Thêm phòng thành công",
@@ -57,6 +61,24 @@ const RoomListScreen = ({ navigation, route }) => {
       console.log(error);
     } finally {
       load.nonLoading();
+    }
+  };
+
+  const deleteRoom = async () => {
+    try {
+      load.isLoading();
+      const res = await post(`/room/delete/${roomId}`, null, auth.token);
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: "Xóa phòng thành công",
+        title: "Thông báo",
+      });
+      navigation.navigate("HouseList");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      load.nonLoading();
+      setDeleteVisiable(false);
     }
   };
 
@@ -86,6 +108,11 @@ const RoomListScreen = ({ navigation, route }) => {
                         justifyContent: "center",
                         alignItems: "center",
                         borderRadius: 20,
+                        zIndex: 10,
+                      }}
+                      onPress={() => {
+                        setRoomId(item.id);
+                        setDeleteVisiable(true);
                       }}
                     >
                       <FontAwesome6 name="x" size={10} color={COLOR.white} />
@@ -135,6 +162,19 @@ const RoomListScreen = ({ navigation, route }) => {
             </View>
           </View>
         </View>
+      </Modal>
+
+      <Modal visible={deleteVisiable} transparent animationType="slide" onRequestClose={() => setAddVisiable(false)}>
+        <ConfirmPopup
+          title={"Bạn có muốn xóa phòng này"}
+          onCancel={() => {
+            setDeleteVisiable(false);
+            setRoomId(null);
+          }}
+          onSubmit={() => {
+            deleteRoom();
+          }}
+        />
       </Modal>
     </>
   );

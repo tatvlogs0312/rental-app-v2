@@ -79,7 +79,7 @@ const AddHouseScreen = ({ navigation }) => {
         textBody: "Thêm nhà thành công",
         title: "Thông báo",
       });
-      navigation.navigate("HouseList");
+      navigation.push("HouseList");
     } catch (error) {
       console.log(error);
     } finally {

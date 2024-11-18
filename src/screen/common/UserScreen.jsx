@@ -9,11 +9,11 @@ import { TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 
-const UserScreen = () => {
+const UserScreen = ({ navigation, route }) => {
   const auth = useAuth();
 
   const [user, setUser] = useState(null);
-  const [avatar, setAvatar] = useState("edf593c8-9666-4a55-b25e-5fa833bb10d2.png");
+  const [avatar, setAvatar] = useState(null);
 
   useEffect(() => {
     if (auth.token !== "") {

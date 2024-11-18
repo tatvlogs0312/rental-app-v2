@@ -40,8 +40,8 @@ const TenantDashboardScreen = ({ navigation }) => {
     <View style={{ flex: 1, backgroundColor: COLOR.white }}>
       <View style={styles.hearder}>
         <View>
-          <Text style={{ fontSize: 18, fontWeight: "600" }}>Xin chào,</Text>
-          <Text style={{ fontSize: 21, fontWeight: "800" }}>Trần Anh Tuấn</Text>
+          <Text style={{ fontSize: 18, fontWeight: "600", color: COLOR.primary }}>Xin chào,</Text>
+          <Text style={{ fontSize: 21, fontWeight: "800", color: COLOR.primary }}>Trần Anh Tuấn</Text>
         </View>
         <View>
           <Image source={require("../../../../assets/favicon.png")} />
@@ -59,8 +59,8 @@ const TenantDashboardScreen = ({ navigation }) => {
             margin: 10,
           }}
         >
-          <TextInput style={styles.searchInput} placeholder="Search Places" placeholderTextColor="#A9A9A9" />
-          <Pressable style={{ height: 50, width: 50, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10 }}>
+          <TextInput style={styles.searchInput} placeholder="Tìm kiếm" placeholderTextColor={COLOR.grey} />
+          <Pressable style={{ height: 50, width: 50, backgroundColor: COLOR.primary, justifyContent: "center", alignItems: "center", borderRadius: 10 }}>
             <FontAwesome6 name="sliders" color={COLOR.white} size={20} />
           </Pressable>
         </View>
@@ -68,7 +68,7 @@ const TenantDashboardScreen = ({ navigation }) => {
         <ScrollView style={{ flex: 1, padding: 5, marginTop: 10 }} showsVerticalScrollIndicator={false}>
           <View style={{ marginBottom: 10 }}>
             <View style={{ padding: 5, flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" }}>
-              <Text style={{ fontSize: 17, fontWeight: "500" }}>Đăng gần đây</Text>
+              <Text style={{ fontSize: 17, fontWeight: "500", color: COLOR.primary }}>Đăng gần đây</Text>
               <Pressable
                 onPress={() =>
                   navigation.navigate("TenantPostList", {
@@ -76,7 +76,7 @@ const TenantDashboardScreen = ({ navigation }) => {
                   })
                 }
               >
-                <Text>Xem thêm</Text>
+                <Text style={{ color: COLOR.primary }}>Xem thêm</Text>
               </Pressable>
             </View>
             <ScrollView horizontal style={{ marginVertical: 10 }} showsHorizontalScrollIndicator={false}>
@@ -95,10 +95,11 @@ const TenantDashboardScreen = ({ navigation }) => {
                       <Text style={styles.txtPrice1}>{ConvertToMoneyV2(item.price) + "/tháng"}</Text>
                     </View>
                     <View>
-                      <Text style={styles.cardNewPosition}>{item.title}</Text>
+                      <Text numberOfLines={1} style={styles.cardNewPosition}>{item.title}</Text>
                       <View>
-                        <Text>
-                          <FontAwesome6 name="location-dot" /> {`${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}
+                        <Text style={{ color: COLOR.grey }}>
+                          <FontAwesome6 name="location-dot" color={COLOR.primary} size={16} />{" "}
+                          {`${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}
                         </Text>
                       </View>
                     </View>
@@ -109,7 +110,7 @@ const TenantDashboardScreen = ({ navigation }) => {
 
           <View>
             <View style={{ padding: 5, flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" }}>
-              <Text style={{ fontSize: 17, fontWeight: "500" }}>Đề xuất</Text>
+              <Text style={{ fontSize: 17, fontWeight: "500", color: COLOR.primary }}>Đề xuất</Text>
               <Pressable
                 onPress={() =>
                   navigation.navigate("TenantPostList", {
@@ -117,7 +118,7 @@ const TenantDashboardScreen = ({ navigation }) => {
                   })
                 }
               >
-                <Text>Xem thêm</Text>
+                <Text style={{ color: COLOR.primary }}>Xem thêm</Text>
               </Pressable>
             </View>
             <ScrollView horizontal style={{ marginVertical: 10 }} showsHorizontalScrollIndicator={false}>
@@ -136,10 +137,11 @@ const TenantDashboardScreen = ({ navigation }) => {
                       <Text style={styles.txtPrice1}>{ConvertToMoneyV2(item.price) + "/tháng"}</Text>
                     </View>
                     <View>
-                      <Text style={styles.cardNewPosition}>{item.title}</Text>
+                      <Text numberOfLines={1} style={styles.cardNewPosition}>{item.title}</Text>
                       <View>
-                        <Text>
-                          <FontAwesome6 name="location-dot" /> {`${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}
+                        <Text style={{ color: COLOR.grey }}>
+                          <FontAwesome6 name="location-dot" color={COLOR.primary} size={16} />{" "}
+                          {`${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}
                         </Text>
                       </View>
                     </View>
@@ -175,13 +177,16 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: COLOR.light,
     borderRadius: 10,
-    marginHorizontal: 5,
+    margin: 5,
+    elevation: 2
   },
 
   cardNewPosition: {
     fontSize: 15,
     marginBottom: 5,
     fontWeight: "600",
+    paddingVertical: 10,
+    
   },
 
   cardNewImg: {
@@ -194,7 +199,7 @@ const styles = StyleSheet.create({
   txtPrice1: {
     padding: 5,
     backgroundColor: COLOR.white,
-    color: COLOR.black,
+    color: COLOR.primary,
     position: "absolute",
     bottom: 5,
     right: 5,

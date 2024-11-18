@@ -1,4 +1,5 @@
 export const COLOR = {
+  primary: "#f39c12",
   white: "#FFF",
   black: "#000",
   light: "#f6f6f6",
@@ -10,4 +11,6 @@ export const COLOR = {
   tranparent: "rgba(0,0,0,0)",
   darkGreen: "#079992",
   lightYellow: "#ffeaa7",
+  orange: "#f39c12",
+  lightOrange: "rgba(241, 196, 15,0.2)",
 };

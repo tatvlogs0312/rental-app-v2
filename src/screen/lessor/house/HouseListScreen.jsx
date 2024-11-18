@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { FlatList, Modal, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { useAuth } from "../../../hook/AuthProvider";
 import { useLoading } from "../../../hook/LoadingProvider";
-import { get } from "../../../api/ApiManager";
+import { get, post } from "../../../api/ApiManager";
 import { COLOR } from "../../../constants/COLORS";
 import HeaderBarPlus from "../../../components/header/HeaderBarPlus";
 import NoData from "../../../components/NoData";
 import { TouchableOpacity } from "react-native";
+import ConfirmPopup from "../../../components/ConfirmPopup";
+import LoadingModal from "react-native-loading-modal";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const HouseListScreen = ({ navigation }) => {
   const auth = useAuth();
@@ -18,9 +21,13 @@ const HouseListScreen = ({ navigation }) => {
 
   const [houses, setHouses] = useState([]);
 
+  const [houseId, setHouseId] = useState(null);
+
+  const [deleteVisiable, setDeleteVisiable] = useState(false);
+
   useEffect(() => {
     getHouse();
-  }, [page, size, auth.token]);
+  }, [auth.token]);
 
   const getHouse = async () => {
     load.isLoading();
@@ -34,8 +41,27 @@ const HouseListScreen = ({ navigation }) => {
     }
   };
 
+  const deleteHouse = async () => {
+    try {
+      load.isLoading();
+      const res = await post(`/house/delete/${houseId}`, null, auth.token);
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: "Xóa nhà thành công",
+        title: "Thông báo",
+      });
+      getHouse();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      load.nonLoading();
+      setDeleteVisiable(false);
+    }
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: COLOR.white }}>
+      <LoadingModal modalVisible={load.loading} />
       <HeaderBarPlus title={"Nhà"} back={() => navigation.goBack()} plus={() => navigation.navigate("AddHouse")} />
       <View>
         {houses.length > 0 ? (
@@ -64,12 +90,21 @@ const HouseListScreen = ({ navigation }) => {
                       justifyContent: "center",
                       alignItems: "center",
                       borderRadius: 20,
+                      zIndex: 10,
+                    }}
+                    onPress={() => {
+                      setHouseId(item.id);
+                      setDeleteVisiable(true);
                     }}
                   >
                     <FontAwesome6 name="x" size={10} color={COLOR.white} />
                   </TouchableOpacity>
                   <View>
                     <Text style={{ fontSize: 20, fontWeight: "bold", paddingBottom: 1, borderBottomWidth: 0.5 }}>{item.houseName}</Text>
+                    <Text style={{ marginTop: 10 }}>
+                      <FontAwesome6 name="house" />
+                      {` ${item.totalEmptyRoom} phòng trống/${item.totalRoom} phòng`}
+                    </Text>
                     <Text style={{ marginTop: 10 }}>
                       <FontAwesome6 name="location-dot" />
                       {` ${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}
@@ -83,6 +118,19 @@ const HouseListScreen = ({ navigation }) => {
           <NoData message={"Không có dữ liệu"} />
         )}
       </View>
+
+      <Modal visible={deleteVisiable} transparent animationType="slide">
+        <ConfirmPopup
+          title={"Bạn có muốn xóa nhà này"}
+          onCancel={() => {
+            setDeleteVisiable(false);
+            setHouseId(null);
+          }}
+          onSubmit={() => {
+            deleteHouse();
+          }}
+        />
+      </Modal>
     </View>
   );
 };
