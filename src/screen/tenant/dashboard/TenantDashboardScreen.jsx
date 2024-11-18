@@ -65,11 +65,17 @@ const TenantDashboardScreen = ({ navigation }) => {
           </Pressable>
         </View>
 
-        <ScrollView style={{ flex: 1, padding: 5, marginTop: 10 }}>
+        <ScrollView style={{ flex: 1, padding: 5, marginTop: 10 }} showsVerticalScrollIndicator={false}>
           <View style={{ marginBottom: 10 }}>
             <View style={{ padding: 5, flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" }}>
               <Text style={{ fontSize: 17, fontWeight: "500" }}>Đăng gần đây</Text>
-              <Pressable>
+              <Pressable
+                onPress={() =>
+                  navigation.navigate("TenantPostList", {
+                    type: "NEW",
+                  })
+                }
+              >
                 <Text>Xem thêm</Text>
               </Pressable>
             </View>
@@ -79,7 +85,7 @@ const TenantDashboardScreen = ({ navigation }) => {
                   <Pressable
                     style={styles.cardNew}
                     onPress={() =>
-                      navigation.navigate("PostDetail", {
+                      navigation.navigate("TenantPostDetail", {
                         id: item.postId,
                       })
                     }
@@ -104,14 +110,27 @@ const TenantDashboardScreen = ({ navigation }) => {
           <View>
             <View style={{ padding: 5, flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" }}>
               <Text style={{ fontSize: 17, fontWeight: "500" }}>Đề xuất</Text>
-              <Pressable>
+              <Pressable
+                onPress={() =>
+                  navigation.navigate("TenantPostList", {
+                    type: "RECOMMENDS",
+                  })
+                }
+              >
                 <Text>Xem thêm</Text>
               </Pressable>
             </View>
             <ScrollView horizontal style={{ marginVertical: 10 }} showsHorizontalScrollIndicator={false}>
               {recommends &&
                 recommends.map((item) => (
-                  <Pressable style={styles.cardNew}>
+                  <Pressable
+                    style={styles.cardNew}
+                    onPress={() =>
+                      navigation.navigate("TenantPostDetail", {
+                        id: item.postId,
+                      })
+                    }
+                  >
                     <View style={{ position: "relative" }}>
                       <Image source={{ uri: IMAGE_DOMAIN + "/" + item.firstImage }} style={styles.cardNewImg} />
                       <Text style={styles.txtPrice1}>{ConvertToMoneyV2(item.price) + "/tháng"}</Text>

@@ -7,7 +7,7 @@ import { TouchableOpacity } from "react-native";
 
 const features = [
   { id: "1", icon: "plus", title: "Nhà", color: "#007bff", navigate: "HouseList" },
-  { id: "2", icon: "plus", title: "Bài đăng", color: "#007bff", navigate: "LessorPostList" },
+  { id: "2", icon: "pen-to-square", title: "Bài đăng", color: "#f1c40f", navigate: "LessorPostList" },
   { id: "3", icon: "file-signature", title: "Tạo hợp đồng", color: "#6F1E51", navigate: "Room" },
   { id: "4", icon: "file-invoice-dollar", title: "Hóa đơn", color: "#00a34c", navigate: "Room" },
   { id: "5", icon: "calendar", title: "Lịch xem phòng", color: "#9d76e6", navigate: "LessorBook" },
@@ -20,11 +20,11 @@ const LessorDashboradScreen = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ backgroundColor: COLOR.lightBlue, borderBottomLeftRadius: 20, borderBottomRightRadius: 20, padding: 20, elevation: 20 }}>
+      <View style={{ backgroundColor: COLOR.white, borderBottomLeftRadius: 20, borderBottomRightRadius: 20, padding: 20, elevation: 20 }}>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <View style={{ marginBottom: 20 }}>
-            <Text style={{ color: COLOR.white, fontSize: 20 }}>Xin chào,</Text>
-            <Text style={{ color: COLOR.white, fontSize: 35, fontWeight: "600" }}>Tuấn</Text>
+            <Text style={{  fontSize: 20 }}>Xin chào,</Text>
+            <Text style={{  fontSize: 35, fontWeight: "600" }}>Tuấn</Text>
           </View>
           <View>
             <Image source={require("../../../../assets/favicon.png")} />
@@ -46,7 +46,7 @@ const LessorDashboradScreen = ({ navigation }) => {
           />
         </View>
       </View>
-      <View style={{ flex: 1, backgroundColor: "white", marginVertical: 10, borderRadius: 10 }}>
+      {/* <View style={{ flex: 1, backgroundColor: "white", marginVertical: 10, borderRadius: 10 }}>
         <Text style={{ marginLeft: 20, fontSize: 25, fontWeight: "700" }}>Danh sách</Text>
         <ScrollView>
           <View
@@ -141,7 +141,7 @@ const LessorDashboradScreen = ({ navigation }) => {
             </Pressable>
           </View>
         </ScrollView>
-      </View>
+      </View> */}
     </View>
   );
 };

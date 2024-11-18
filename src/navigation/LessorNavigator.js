@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import UserScreen from "./../screen/common/UserScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import RoomScreen from "../screen/lessor/RoomScreen";
@@ -13,6 +14,7 @@ import HouseListScreen from "../screen/lessor/house/HouseListScreen";
 import AddHouseScreen from "../screen/lessor/house/AddHouseScreen";
 import RoomListScreen from "../screen/lessor/room/RoomListScreen";
 import LessorPostDetailScreen from "../screen/lessor/post/LessorPostDetailScreen";
+import { StyleSheet, TouchableOpacity } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -59,12 +61,70 @@ const NotificationStack = () => {
 
 const LessorNavigator = () => {
   return (
-    <Tab.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={({ route }) => ({
+        // tabBarStyle: {
+        //   position: "absolute",
+        //   backgroundColor: "#ffffff",
+        //   height: 50,
+        //   borderTopLeftRadius: 20,
+        //   borderTopRightRadius: 20,
+        //   // borderRadius: 20,
+        //   // width: "90%",
+        //   // alignItems: "center",
+        //   // justifyContent: "center",
+        // },
+        headerShown: false,
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === "Home") {
+            iconName = "house"; // Icon cho trang Home
+          } else if (route.name === "Notification") {
+            iconName = "bell"; // Icon cho thông báo
+          } else if (route.name === "User") {
+            iconName = "user"; // Icon cho cài đặt
+          }
+
+          // Trả về biểu tượng FontAwesome
+          return <FontAwesome6 name={iconName} size={18} color={focused ? "tomato" : "gray"} solid />;
+        },
+        tabBarActiveTintColor: "tomato",
+        tabBarInactiveTintColor: "gray",
+      })}
+    >
       <Tab.Screen name="Home" component={HomeStack} options={{ title: "Trang chủ" }} />
       <Tab.Screen name="Notification" component={NotificationStack} options={{ title: "Thông báo" }} />
       <Tab.Screen name="User" component={UserScreen} options={{ title: "Cài đặt" }} />
     </Tab.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  customButtonContainer: {
+    top: -30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  customButton: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: "#6a5acd",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+    elevation: 5,
+  },
+});
 
 export default LessorNavigator;

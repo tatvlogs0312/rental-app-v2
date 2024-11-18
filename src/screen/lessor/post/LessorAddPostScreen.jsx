@@ -104,6 +104,8 @@ const LessorAddPostScreen = ({ navigation }) => {
       formData.append("district", district);
       formData.append("province", province);
       formData.append("price", price);
+      formData.append("acreage", acreage);
+      formData.append("numberOfRoom", numberOfRoom);
       formData.append("roomType", roomType);
       files.forEach((file) => {
         formData.append("files", {
@@ -123,7 +125,7 @@ const LessorAddPostScreen = ({ navigation }) => {
         textBody: "Đăng bài thành công",
         title: "Thông báo",
       });
-      navigation.navigate("LessorPostList");
+      navigation.push("LessorPostList");
     } catch (error) {
       console.log(error);
       console.log(JSON.stringify(error));

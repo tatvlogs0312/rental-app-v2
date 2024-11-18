@@ -2,29 +2,48 @@ import React, { useEffect, useState } from "react";
 import { FlatList, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../../../hook/AuthProvider";
 import { useLoading } from "../../../hook/LoadingProvider";
-import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
+import { get, post } from "../../../api/ApiManager";
 import { COLOR } from "../../../constants/COLORS";
-import { get } from "../../../api/ApiManager";
-import { IMAGE_DOMAIN } from "../../../constants/URL";
+import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { ConvertToMoneyV2 } from "../../../utils/Utils";
+import { IMAGE_DOMAIN } from "../../../constants/URL";
+import { TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-const LessorPostDetailScreen = ({ navigation, route }) => {
+const TenantPostDetailScreen = ({ navigation, route }) => {
   const auth = useAuth();
   const load = useLoading();
 
-  const postId = route.params.postId;
+  const [postId, setPostId] = useState(route.params.id);
+  //   const postId = "e6857390-313b-484f-9dfb-47aa70f97a06";
 
-  const [post, setPost] = useState(null);
+  const [postData, setPostData] = useState(null);
   const [imageIndex, setImageIndex] = useState(0);
+
+  const [recommends, setRecommends] = useState([]);
 
   useEffect(() => {
     getPost();
-  }, []);
+    getRecommends();
+
+    return () => {
+      console.log("CLEAN UP");
+    };
+  }, [postId]);
 
   const getPost = async () => {
     try {
       const res = await get("/post/" + postId, null, auth.token);
-      setPost(res);
+      setPostData(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getRecommends = async () => {
+    try {
+      const res = await post("/post/search-recommend", { ignore: postId, page: 0, size: 4 }, auth.token);
+      setRecommends(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -32,18 +51,31 @@ const LessorPostDetailScreen = ({ navigation, route }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLOR.white }}>
-      <View></View>
       <View>
-        {post && (
+        {postData && (
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{ flex: 1 }}>
               <View style={{ position: "relative" }}>
                 <View style={{ position: "absolute", zIndex: 10, top: 10, left: 10 }}>
-                  <Pressable style={styles.icon} onPress={() => navigation.goBack()}>
+                  <Pressable
+                    style={styles.icon}
+                    onPress={() => {
+                      if (navigation.canGoBack()) {
+                        navigation.goBack();
+                      } else {
+                        console.log("No previous screen to go back to");
+                      }
+                    }}
+                  >
                     <FontAwesome6 name="angle-left" size={25} color={COLOR.black} />
                   </Pressable>
                 </View>
-                <Image source={{ uri: `${IMAGE_DOMAIN}/${post.image[imageIndex]}` }} style={{ width: "auto", height: 250, objectFit: "cover" }} />
+                <View style={{ position: "absolute", zIndex: 10, top: 10, right: 10 }}>
+                  <Pressable style={styles.icon}>
+                    <FontAwesome6 name="heart" size={25} color={COLOR.black} />
+                  </Pressable>
+                </View>
+                <Image source={{ uri: `${IMAGE_DOMAIN}/${postData.image[imageIndex]}` }} style={{ width: "auto", height: 250, objectFit: "cover" }} />
               </View>
               <View style={{ padding: 10 }}>
                 <View>
@@ -51,13 +83,13 @@ const LessorPostDetailScreen = ({ navigation, route }) => {
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled
                     horizontal
-                    data={post.image}
+                    data={postData.image}
                     renderItem={({ index, item }) => (
                       <Pressable onPress={() => setImageIndex(index)}>
                         <Image
                           source={{ uri: `${IMAGE_DOMAIN}/${item}` }}
                           style={{
-                            marginRight: index === post.image.length - 1 ? 0 : 10,
+                            marginRight: index === postData.image.length - 1 ? 0 : 10,
                             width: 100,
                             height: 60,
                             objectFit: "cover",
@@ -70,16 +102,16 @@ const LessorPostDetailScreen = ({ navigation, route }) => {
                 </View>
                 <View style={{ marginTop: 10 }}>
                   <View>
-                    <Text style={{ fontSize: 19, fontWeight: "bold" }}>{post.title}</Text>
+                    <Text style={{ fontSize: 19, fontWeight: "bold" }}>{postData.title}</Text>
                     <Text style={{ marginVertical: 3, fontSize: 14 }}>
                       <FontAwesome6 name="location-dot" size={14} />
-                      {` ${post.position.detail}, ${post.position.ward}, ${post.position.district}, ${post.position.province}`}
+                      {` ${postData.position.detail}, ${postData.position.ward}, ${postData.position.district}, ${postData.position.province}`}
                     </Text>
                   </View>
                   <View style={{ marginTop: 5, borderTopWidth: 0.5, borderTopColor: COLOR.grey }}>
                     <View>
                       <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 15, marginBottom: 5 }}>Mô tả:</Text>
-                      <Text>{post.content}</Text>
+                      <Text>{postData.content}</Text>
                     </View>
 
                     <View>
@@ -89,28 +121,28 @@ const LessorPostDetailScreen = ({ navigation, route }) => {
                           <FontAwesome6 name="house" size={14} />
                         </View>
                         <Text style={styles.infoV2Title}>Loại phòng</Text>
-                        <Text>{`${post.roomTypeName}`}</Text>
+                        <Text>{`${postData.roomTypeName}`}</Text>
                       </View>
                       <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.grey } }}>
                         <View style={styles.infoV2Icon}>
                           <FontAwesome6 name="money-bill-1-wave" size={14} />
                         </View>
                         <Text style={styles.infoV2Title}>Mức giá</Text>
-                        <Text>{`${ConvertToMoneyV2(post.price)}/tháng`}</Text>
+                        <Text>{`${ConvertToMoneyV2(postData.price)}/tháng`}</Text>
                       </View>
                       <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.grey } }}>
                         <View style={styles.infoV2Icon}>
                           <FontAwesome6 name="expand" size={14} />
                         </View>
                         <Text style={styles.infoV2Title}>Diện tích</Text>
-                        <Text>{`${post.acreage}m²`}</Text>
+                        <Text>{`${postData.acreage}m²`}</Text>
                       </View>
                       <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderBottomWidth: 0.5, borderColor: COLOR.grey } }}>
                         <View style={styles.infoV2Icon}>
                           <FontAwesome6 name="bed" size={14} />
                         </View>
                         <Text style={styles.infoV2Title}>Số phòng ngủ</Text>
-                        <Text>{`${post.numberOfRoom} PN`}</Text>
+                        <Text>{`${postData.numberOfRoom} PN`}</Text>
                       </View>
                     </View>
 
@@ -118,16 +150,64 @@ const LessorPostDetailScreen = ({ navigation, route }) => {
                       <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 15, marginBottom: 5 }}>Liên hệ xem phòng:</Text>
                       <Text>
                         <FontAwesome6 name="user" solid />
-                        {` ${post.lessorName}`}
+                        {` ${postData.lessorName}`}
                       </Text>
                       <Text>
                         <FontAwesome6 name="phone" solid />
-                        {` ${post.lessorNumber}`}
+                        {` ${postData.lessorNumber}`}
                       </Text>
                     </View>
                   </View>
                 </View>
               </View>
+            </View>
+            <View style={{ marginVertical: 10, marginHorizontal: "auto" }}>
+              <TouchableOpacity>
+                <Text
+                  style={{
+                    padding: 10,
+                    backgroundColor: COLOR.black,
+                    color: COLOR.white,
+                    fontSize: 18,
+                    fontWeight: "bold",
+                    width: 200,
+                    textAlign: "center",
+                    borderRadius: 15,
+                  }}
+                >
+                  Liên hệ ngay
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ margin: 10 }}>
+              <View>
+                <Text style={{ fontSize: 18, fontWeight: "bold" }}>Bài viết liên quan:</Text>
+              </View>
+              <ScrollView horizontal style={{ marginVertical: 10 }} showsHorizontalScrollIndicator={false}>
+                {recommends &&
+                  recommends.map((item) => (
+                    <Pressable
+                      style={styles.cardNew}
+                      onPress={() => {
+                        console.log(item.postId);
+                        navigation.push("TenantPostDetail", { id: item.postId });
+                      }}
+                    >
+                      <View style={{ position: "relative" }}>
+                        <Image source={{ uri: IMAGE_DOMAIN + "/" + item.firstImage }} style={styles.cardNewImg} />
+                        <Text style={styles.txtPrice1}>{ConvertToMoneyV2(item.price) + "/tháng"}</Text>
+                      </View>
+                      <View>
+                        <Text style={styles.cardNewPosition}>{item.title}</Text>
+                        <View>
+                          <Text>
+                            <FontAwesome6 name="location-dot" /> {`${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}
+                          </Text>
+                        </View>
+                      </View>
+                    </Pressable>
+                  ))}
+              </ScrollView>
             </View>
           </ScrollView>
         )}
@@ -178,6 +258,38 @@ const styles = StyleSheet.create({
   infoV2Value: {
     width: "50%",
   },
+
+  cardNew: {
+    width: 250,
+    padding: 10,
+    backgroundColor: COLOR.light,
+    borderRadius: 10,
+    marginHorizontal: 5,
+    zIndex: 10,
+  },
+
+  cardNewPosition: {
+    fontSize: 15,
+    marginBottom: 5,
+    fontWeight: "600",
+  },
+
+  cardNewImg: {
+    width: "auto",
+    height: 150,
+    objectFit: "cover",
+    borderRadius: 10,
+  },
+
+  txtPrice1: {
+    padding: 5,
+    backgroundColor: COLOR.white,
+    color: COLOR.black,
+    position: "absolute",
+    bottom: 5,
+    right: 5,
+    borderRadius: 10,
+  },
 });
 
-export default LessorPostDetailScreen;
+export default TenantPostDetailScreen;
