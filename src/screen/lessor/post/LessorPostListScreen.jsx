@@ -7,44 +7,44 @@ import { post } from "../../../api/ApiManager";
 import HeaderBarPlus from "../../../components/header/HeaderBarPlus";
 import { useLoading } from "../../../hook/LoadingProvider";
 
-const LessorPostListScreen = ({ navigation }) => {
+const LessorPostListScreen = ({ navigation, route }) => {
   const auth = useAuth();
   const load = useLoading();
 
   const [posts, setPosts] = useState([]);
+  const [totalPage, setTotalPage] = useState(null);
+
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
 
   useEffect(() => {
     fetchData();
-  }, [auth.token]);
+  }, [auth.token, route.params?.refresh]);
 
   const fetchData = async () => {
     try {
-      setPage(0);
-      const response = await post("/post/search-for-lessor", { page: page, size: size }, auth.token);
+      const response = await post("/post/search-for-lessor", { page: 0, size: size }, auth.token);
       setPosts(response.data);
+      setTotalPage(response.totalPage);
+      setPage(0);
     } catch (error) {
       console.log(error);
     }
   };
 
   const loadMoreData = async () => {
-    try {
-      const response = await post("/post/search-for-lessor", { page: page + 1, size: size }, auth.token);
-      const newPosts = response.data || [];
-      setPosts([...posts, ...newPosts]);
-      setPage(page + 1);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    console.log("totalPage: " + totalPage);
+    console.log("page: " + page);
 
-  const deletePost = async (id) => {
-    try {
-      const response = await post("/post/delete", { id: id }, auth.token);
-    } catch (error) {
-      console.log(error);
+    if (totalPage !== null && page + 1 < totalPage) {
+      try {
+        const response = await post("/post/search-for-lessor", { page: page + 1, size: size }, auth.token);
+        const newPosts = response.data || [];
+        setPosts([...posts, ...newPosts]);
+        setPage(page + 1);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -72,7 +72,7 @@ const LessorPostListScreen = ({ navigation }) => {
       }
     >
       {/* Nút xóa bài */}
-      <Pressable
+      {/* <Pressable
         style={{
           backgroundColor: "black",
           position: "absolute",
@@ -90,10 +90,10 @@ const LessorPostListScreen = ({ navigation }) => {
         }}
       >
         <FontAwesome6 name="x" size={14} color="white" />
-      </Pressable>
+      </Pressable> */}
 
       {/* Thông tin bài đăng */}
-      <Text style={{ fontSize: 17, fontWeight: "bold", marginBottom: 5, width: "90%" }}>{item.title}</Text>
+      <Text style={{ fontSize: 17, fontWeight: "bold", marginBottom: 5, color: COLOR.primary }}>{item.title}</Text>
       <View>
         <Text>
           <FontAwesome6 name="calendar" size={14} />

@@ -125,7 +125,9 @@ const LessorAddPostScreen = ({ navigation }) => {
         textBody: "Đăng bài thành công",
         title: "Thông báo",
       });
-      navigation.push("LessorPostList");
+      navigation.navigate("LessorPostList", {
+        refresh: uuid.v4(),
+      });
     } catch (error) {
       console.log(error);
       console.log(JSON.stringify(error));

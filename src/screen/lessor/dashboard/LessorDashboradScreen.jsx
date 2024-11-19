@@ -20,11 +20,11 @@ const LessorDashboradScreen = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ backgroundColor: COLOR.white, borderBottomLeftRadius: 20, borderBottomRightRadius: 20, padding: 20, elevation: 20 }}>
+      <View style={{ backgroundColor: COLOR.primary, borderBottomLeftRadius: 20, borderBottomRightRadius: 20, padding: 20, elevation: 20 }}>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <View style={{ marginBottom: 20 }}>
-            <Text style={{  fontSize: 20 }}>Xin chào,</Text>
-            <Text style={{  fontSize: 35, fontWeight: "600" }}>Tuấn</Text>
+            <Text style={{ fontSize: 20, color: COLOR.white }}>Xin chào,</Text>
+            <Text style={{ fontSize: 35, fontWeight: "600", color: COLOR.white }}>Tuấn</Text>
           </View>
           <View>
             <Image source={require("../../../../assets/favicon.png")} />

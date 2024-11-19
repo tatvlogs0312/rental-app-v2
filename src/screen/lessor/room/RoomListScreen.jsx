@@ -56,12 +56,21 @@ const RoomListScreen = ({ navigation, route }) => {
         textBody: "Thêm phòng thành công",
         title: "Thông báo",
       });
-      navigation.navigate("HouseList");
+
+      await getRoom();
+      clearData();
+      setAddVisiable(false);
     } catch (error) {
       console.log(error);
     } finally {
       load.nonLoading();
     }
+  };
+
+  const clearData = () => {
+    setRoomName(null);
+    setAcreage(null);
+    setNumber(null);
   };
 
   const deleteRoom = async () => {
@@ -73,7 +82,7 @@ const RoomListScreen = ({ navigation, route }) => {
         textBody: "Xóa phòng thành công",
         title: "Thông báo",
       });
-      navigation.navigate("HouseList");
+      await getRoom();
     } catch (error) {
       console.log(error);
     } finally {
@@ -88,7 +97,18 @@ const RoomListScreen = ({ navigation, route }) => {
 
       <View style={{ flex: 1, backgroundColor: COLOR.white }}>
         <HeaderBarPlus title={"Danh sách phòng"} back={() => navigation.goBack()} plus={() => setAddVisiable(true)} />
-        <View style={{ padding: 10 }}>
+        {/* <View style={{ padding: 10, flexDirection: "row", marginHorizontal: 10, marginTop: 10 }}>
+          <Pressable>
+            <Text style={styles.status1}>Tất cả</Text>
+          </Pressable>
+          <Pressable>
+            <Text style={styles.status2}>Còn trống</Text>
+          </Pressable>
+          <Pressable>
+            <Text style={styles.status2}>Đã cho thuê</Text>
+          </Pressable>
+        </View> */}
+        <View style={{ paddingHorizontal: 10, marginTop: 20 }}>
           {/* <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10, marginLeft: 10 }}>{houseName}</Text> */}
           {rooms.length > 0 ? (
             <View>
@@ -99,7 +119,7 @@ const RoomListScreen = ({ navigation, route }) => {
                   <View style={styles.card}>
                     <Pressable
                       style={{
-                        backgroundColor: COLOR.black,
+                        backgroundColor: COLOR.primary,
                         position: "absolute",
                         top: 5,
                         right: 5,
@@ -119,20 +139,27 @@ const RoomListScreen = ({ navigation, route }) => {
                     </Pressable>
                     <Text style={{ fontSize: 20, fontWeight: "bold", paddingBottom: 1, borderBottomWidth: 0.5 }}>{item.roomName}</Text>
                     <Text style={{ marginTop: 10 }}>
-                      <FontAwesome6 name="crop-simple" />
-                      {` Diện tích: ${item.acreage}/m²`}
+                      <FontAwesome6 name="crop-simple" color={COLOR.primary} size={16} />
+                      <Text style={{ color: COLOR.primary, fontWeight: "bold" }}> Diện tích: </Text>
+                      <Text>{`${item.acreage}/m²`}</Text>
                     </Text>
                     <Text style={{ marginTop: 5 }}>
-                      <FontAwesome6 name="bed" />
-                      {` Số phòng ngủ: ${item.numberOfRom}`}
+                      <FontAwesome6 name="bed" color={COLOR.primary} />
+                      <Text style={{ color: COLOR.primary, fontWeight: "bold" }}> Số phòng ngủ: </Text>
+                      <Text>{`${item.numberOfRom}`}</Text>
                     </Text>
-                    <Text style={{ marginTop: 5 }}>{`Tình trạng: ${item.roomStatus === "EMPTY" ? "Còn trống" : "Đã cho thuê"}`}</Text>
+                    <Text style={{ marginTop: 5 }}>
+                      <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Tình trạng: </Text>
+                      <Text>{`${item.roomStatus === "EMPTY" ? "Còn trống" : "Đã cho thuê"}`}</Text>
+                    </Text>
                   </View>
                 )}
               />
             </View>
           ) : (
-            <NoData message={"Không có dữ liệu"} />
+            <View style={{ marginTop: 50 }}>
+              <NoData message={"Chưa có phòng nào"} />
+            </View>
           )}
         </View>
       </View>
@@ -140,19 +167,22 @@ const RoomListScreen = ({ navigation, route }) => {
       <Modal visible={addVisiable} animationType="slide" onRequestClose={() => setAddVisiable(false)}>
         <View style={{ position: "relative" }}>
           <TouchableOpacity onPress={() => setAddVisiable(false)} style={{ zIndex: 1, position: "absolute", top: 15, right: 15 }}>
-            <FontAwesome6 name="x" size={25} color={COLOR.red} />
+            <FontAwesome6 name="x" size={25} color={COLOR.primary} />
           </TouchableOpacity>
           <View>
-            <Text style={{ textAlign: "center", marginTop: 15, fontWeight: "bold", fontSize: 20 }}>Thêm phòng</Text>
-            <View style={{ padding: 20 }}>
-              <View>
-                <TextInput style={styles.input} placeholder="Tên phòng" value={roomName} onChangeText={(t) => setRoomName(t)} />
+            <Text style={{ textAlign: "center", marginTop: 15, fontWeight: "bold", fontSize: 20, color: COLOR.primary }}>Thêm phòng</Text>
+            <View style={{ padding: 20, marginTop: 20 }}>
+              <View style={{ marginBottom: 20 }}>
+                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Tên phòng</Text>
+                <TextInput style={styles.input} placeholder="Nhập tên phòng" value={roomName} onChangeText={(t) => setRoomName(t)} />
+              </View>
+              <View style={{ marginBottom: 20 }}>
+                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Diện tích</Text>
+                <TextInput style={styles.input} placeholder="Nhập diện tích" value={acreage} onChangeText={(t) => setAcreage(t)} keyboardType="number-pad" />
               </View>
               <View>
-                <TextInput style={styles.input} placeholder="Diện tích" value={acreage} onChangeText={(t) => setAcreage(t)} keyboardType="number-pad" />
-              </View>
-              <View>
-                <TextInput style={styles.input} placeholder="Số phòng ngủ" value={number} onChangeText={(t) => setNumber(t)} keyboardType="number-pad" />
+                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Số phòng ngủ</Text>
+                <TextInput style={styles.input} placeholder="Nhập số phòng ngủ" value={number} onChangeText={(t) => setNumber(t)} keyboardType="number-pad" />
               </View>
             </View>
             <View>
@@ -187,7 +217,7 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 10,
     borderWidth: 1,
-    borderColor: COLOR.black,
+    borderColor: COLOR.primary,
     borderRadius: 10,
     backgroundColor: COLOR.white,
     // Đổ bóng
@@ -205,7 +235,7 @@ const styles = StyleSheet.create({
     margin: "auto",
     padding: 10,
     borderRadius: 10,
-    backgroundColor: COLOR.black,
+    backgroundColor: COLOR.primary,
     color: COLOR.white,
     fontWeight: "bold",
     fontSize: 17,
@@ -221,6 +251,23 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     // Thiết lập đổ bóng cho Android
     elevation: 5,
+  },
+
+  status1: {
+    padding: 10,
+    backgroundColor: COLOR.primary,
+    color: COLOR.white,
+    borderRadius: 10,
+    marginRight: 10,
+  },
+
+  status2: {
+    padding: 10,
+    borderWidth: 1,
+    borderColor: COLOR.primary,
+    color: COLOR.primary,
+    borderRadius: 10,
+    marginRight: 10,
   },
 });
 

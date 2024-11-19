@@ -10,6 +10,8 @@ import { TouchableOpacity } from "react-native";
 import { get, post } from "../../../api/ApiManager";
 import { useEffect } from "react";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import uuid from "react-native-uuid";
+import { getUUID } from "../../../utils/Utils";
 
 const AddHouseScreen = ({ navigation }) => {
   const auth = useAuth();
@@ -61,30 +63,57 @@ const AddHouseScreen = ({ navigation }) => {
   };
 
   const addHouse = async () => {
-    try {
-      load.isLoading();
-      const res = await post(
-        "/house/create",
-        {
-          houseName: houseName,
-          positionDetail: detail,
-          ward: ward,
-          district: district,
-          province: province,
-        },
-        auth.token,
-      );
+    if (handleInput() === true) {
+      try {
+        load.isLoading();
+        const res = await post(
+          "/house/create",
+          {
+            houseName: houseName,
+            positionDetail: detail,
+            ward: ward,
+            district: district,
+            province: province,
+          },
+          auth.token,
+        );
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          textBody: "Thêm nhà thành công",
+          title: "Thông báo",
+        });
+        navigation.navigate("HouseList", {
+          refresh: getUUID(),
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        load.nonLoading();
+      }
+    }
+  };
+
+  const handleInput = () => {
+    if (
+      houseName === null ||
+      houseName === "" ||
+      detail === null ||
+      detail === "" ||
+      ward === null ||
+      ward === "" ||
+      district === null ||
+      district === "" ||
+      province === null ||
+      province === ""
+    ) {
       Toast.show({
-        type: ALERT_TYPE.SUCCESS,
-        textBody: "Thêm nhà thành công",
+        type: ALERT_TYPE.WARNING,
+        textBody: "Vui lòng nhập đầy đủ thông tin",
         title: "Thông báo",
       });
-      navigation.push("HouseList");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      load.nonLoading();
+      return false;
     }
+    return true;
   };
 
   return (
@@ -92,36 +121,43 @@ const AddHouseScreen = ({ navigation }) => {
       <LoadingModal modalVisible={load.loading} />
       <View style={{ flex: 1, backgroundColor: COLOR.white }}>
         <HeaderBarNoPlus title={"Thêm nhà"} back={() => navigation.goBack()} />
-        <View style={{ padding: 10 }}>
-          <View style={{ marginHorizontal: 10 }}>
-            <View>
-              <TextInput style={styles.input} placeholder="Tên nhà" onChangeText={(t) => setHouseName(t)} value={houseName} />
+        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+          <View style={{ padding: 5, margin: 5, elevation: 1 }}>
+            <View style={{ marginHorizontal: 10 }}>
+              <View style={styles.inputBackgroud}>
+                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Tên nhà:</Text>
+                <TextInput style={styles.input} placeholder="Nhập tên nhà" onChangeText={(t) => setHouseName(t)} value={houseName} />
+              </View>
+              <Pressable onPress={() => setProvinceVisiable(true)} style={styles.inputBackgroud}>
+                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Tỉnh/Thành phố:</Text>
+                <TextInput style={styles.input} placeholder="Chọn tỉnh/thành phố" readOnly value={province} />
+              </Pressable>
+              <Pressable onPress={() => setDistrictVisiable(true)} style={styles.inputBackgroud}>
+                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Quận/Huyện:</Text>
+                <TextInput style={styles.input} placeholder="Chọn quận/huyện" readOnly value={district} />
+              </Pressable>
+              <Pressable onPress={() => setWardVisiable(true)} style={styles.inputBackgroud}>
+                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Xã/Phường:</Text>
+                <TextInput style={styles.input} placeholder="Chọn xã/phường" readOnly value={ward} />
+              </Pressable>
+              <View style={{ marginTop: 10 }}>
+                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Địa chỉ chi tiết:</Text>
+                <TextInput
+                  style={styles.inputMutiline}
+                  placeholder="Nhập địa chỉ (Số nhà, ngõ, ngách, đường, ...)"
+                  multiline
+                  onChangeText={(t) => setDetail(t)}
+                  value={detail}
+                />
+              </View>
             </View>
-            <Pressable onPress={() => setProvinceVisiable(true)}>
-              <TextInput style={styles.input} placeholder="Tỉnh/Thành phố" readOnly value={province} />
-            </Pressable>
-            <Pressable onPress={() => setDistrictVisiable(true)}>
-              <TextInput style={styles.input} placeholder="Quận/Huyện" readOnly value={district} />
-            </Pressable>
-            <Pressable onPress={() => setWardVisiable(true)}>
-              <TextInput style={styles.input} placeholder="Xã/Phường" readOnly value={ward} />
-            </Pressable>
             <View>
-              <TextInput
-                style={styles.inputMutiline}
-                placeholder="Địa chỉ (Số nhà, ngõ, ngách, đường, ...)"
-                multiline
-                onChangeText={(t) => setDetail(t)}
-                value={detail}
-              />
+              <TouchableOpacity onPress={addHouse}>
+                <Text style={styles.btn}>Thêm</Text>
+              </TouchableOpacity>
             </View>
           </View>
-          <View>
-            <TouchableOpacity onPress={addHouse}>
-              <Text style={styles.btn}>Thêm</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        </ScrollView>
       </View>
 
       <Modal visible={provinceVisiable} transparent={true} animationType="slide" onRequestClose={() => setProvinceVisiable(false)}>
@@ -220,11 +256,11 @@ const styles = StyleSheet.create({
   btn: {
     marginTop: 20,
     textAlign: "center",
-    width: 200,
-    margin: "auto",
+    // width: 200,
+    margin: 10,
     padding: 10,
     borderRadius: 10,
-    backgroundColor: COLOR.black,
+    backgroundColor: COLOR.primary,
     color: COLOR.white,
     fontWeight: "bold",
     fontSize: 17,
@@ -236,7 +272,7 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 10,
     borderWidth: 1,
-    borderColor: COLOR.black,
+    borderColor: COLOR.primary,
     borderRadius: 10,
     backgroundColor: COLOR.white,
     // Đổ bóng
@@ -254,7 +290,7 @@ const styles = StyleSheet.create({
     height: 100,
     padding: 10,
     borderWidth: 1,
-    borderColor: COLOR.black,
+    borderColor: COLOR.primary,
     borderRadius: 10,
     backgroundColor: COLOR.white,
     // Đổ bóng
@@ -263,6 +299,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2, // Độ mờ của bóng
     shadowRadius: 3.5, // Độ lan của bóng
     elevation: 5, // Đổ bóng cho Android
+  },
+
+  inputBackgroud: {
+    marginTop: 10,
+    // borderBottomWidth: 0.5,
   },
 });
 

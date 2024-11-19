@@ -1,4 +1,5 @@
 import { Dimensions } from "react-native";
+import uuid from "react-native-uuid";
 
 const formatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -75,4 +76,8 @@ export const getCurrentDate = () => {
   const month = String(today.getMonth() + 1).padStart(2, "0"); // Thêm '0' nếu dưới 10
   const day = String(today.getDate()).padStart(2, "0"); // Thêm '0' nếu dưới 10
   return `${year}-${month}-${day}`;
+};
+
+export const getUUID = () => {
+  return uuid.v4();
 };

@@ -45,7 +45,7 @@ const UserStack = () => {
 const TenantNaigator = () => {
   return (
     <Tab.Navigator
-      initialRouteName="User"
+      initialRouteName="Post"
       screenOptions={({ route }) => ({
         // tabBarStyle: {
         //   position: "absolute",

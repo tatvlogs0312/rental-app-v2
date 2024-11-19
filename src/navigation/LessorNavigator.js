@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
-import UserScreen from "./../screen/common/UserScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import RoomScreen from "../screen/lessor/RoomScreen";
 import RoomAddScreen from "../screen/lessor/RoomAddScreen";
@@ -15,6 +14,8 @@ import AddHouseScreen from "../screen/lessor/house/AddHouseScreen";
 import RoomListScreen from "../screen/lessor/room/RoomListScreen";
 import LessorPostDetailScreen from "../screen/lessor/post/LessorPostDetailScreen";
 import { StyleSheet, TouchableOpacity } from "react-native";
+import LessorUserScreen from "../screen/lessor/user/LessorUserScreen";
+import { COLOR } from "../constants/COLORS";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,17 +38,6 @@ const HomeStack = () => {
   );
 };
 
-const BookStack = () => {
-  const Stack = createStackNavigator();
-  return (
-    <Stack.Navigator initialRouteName="LessorBook">
-      <Stack.Group screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="LessorBook" component={LessorBookScreen} />
-      </Stack.Group>
-    </Stack.Navigator>
-  );
-};
-
 const NotificationStack = () => {
   const Stack = createStackNavigator();
   return (
@@ -59,22 +49,20 @@ const NotificationStack = () => {
   );
 };
 
+const UserStack = () => {
+  const Stack = createStackNavigator();
+  return (
+    <Stack.Navigator initialRouteName="LessorUser" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="LessorUser" component={LessorUserScreen} />
+    </Stack.Navigator>
+  );
+};
+
 const LessorNavigator = () => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={({ route }) => ({
-        // tabBarStyle: {
-        //   position: "absolute",
-        //   backgroundColor: "#ffffff",
-        //   height: 50,
-        //   borderTopLeftRadius: 20,
-        //   borderTopRightRadius: 20,
-        //   // borderRadius: 20,
-        //   // width: "90%",
-        //   // alignItems: "center",
-        //   // justifyContent: "center",
-        // },
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -88,15 +76,15 @@ const LessorNavigator = () => {
           }
 
           // Trả về biểu tượng FontAwesome
-          return <FontAwesome6 name={iconName} size={18} color={focused ? "tomato" : "gray"} solid />;
+          return <FontAwesome6 name={iconName} size={18} color={focused ? COLOR.primary : COLOR.grey} solid />;
         },
-        tabBarActiveTintColor: "tomato",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: COLOR.primary,
+        tabBarInactiveTintColor: COLOR.grey,
       })}
     >
       <Tab.Screen name="Home" component={HomeStack} options={{ title: "Trang chủ" }} />
       <Tab.Screen name="Notification" component={NotificationStack} options={{ title: "Thông báo" }} />
-      <Tab.Screen name="User" component={UserScreen} options={{ title: "Cài đặt" }} />
+      <Tab.Screen name="User" component={UserStack} options={{ title: "Tôi" }} />
     </Tab.Navigator>
   );
 };

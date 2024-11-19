@@ -12,7 +12,7 @@ import ConfirmPopup from "../../../components/ConfirmPopup";
 import LoadingModal from "react-native-loading-modal";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
-const HouseListScreen = ({ navigation }) => {
+const HouseListScreen = ({ navigation, route }) => {
   const auth = useAuth();
   const load = useLoading();
 
@@ -27,7 +27,7 @@ const HouseListScreen = ({ navigation }) => {
 
   useEffect(() => {
     getHouse();
-  }, [auth.token]);
+  }, [auth.token, route.params?.refresh]);
 
   const getHouse = async () => {
     load.isLoading();
@@ -81,7 +81,7 @@ const HouseListScreen = ({ navigation }) => {
                 >
                   <TouchableOpacity
                     style={{
-                      backgroundColor: COLOR.black,
+                      backgroundColor: COLOR.primary,
                       position: "absolute",
                       top: 5,
                       right: 5,
@@ -100,7 +100,7 @@ const HouseListScreen = ({ navigation }) => {
                     <FontAwesome6 name="x" size={10} color={COLOR.white} />
                   </TouchableOpacity>
                   <View>
-                    <Text style={{ fontSize: 20, fontWeight: "bold", paddingBottom: 1, borderBottomWidth: 0.5 }}>{item.houseName}</Text>
+                    <Text style={{ fontSize: 20, fontWeight: "bold", paddingBottom: 1, borderBottomWidth: 0.5, color: COLOR.primary }}>{item.houseName}</Text>
                     <Text style={{ marginTop: 10 }}>
                       <FontAwesome6 name="house" />
                       {` ${item.totalEmptyRoom} phòng trống/${item.totalRoom} phòng`}

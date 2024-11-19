@@ -5,24 +5,39 @@ import { COLOR } from "../../constants/COLORS";
 
 const HeaderBarNoPlus = ({ title, back }) => {
   return (
-    <View style={{ padding: 15, flexDirection: "row", alignItems: "center" }}>
+    <View style={styles.background}>
       <Pressable style={styles.icon} onPress={back}>
         <FontAwesome6 name="angle-left" size={25} color={COLOR.white} />
+        <Text style={styles.title}>{title}</Text>
       </Pressable>
-      <Text style={{ fontSize: 25, marginLeft: 5 }}>{title}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   icon: {
-    padding: 5,
-    backgroundColor: COLOR.black,
-    width: 35,
-    height: 35,
-    borderRadius: 10,
+    // padding: 5,
+    // width: 35,
+    // height: 35,
+    // borderRadius: 10,
+    // alignItems: "center",
+    // justifyContent: "center",
+    marginRight: 10,
+    flexDirection: "row",
+  },
+
+  title: {
+    fontSize: 20,
+    marginLeft: 5,
+    fontWeight: "bold",
+    color: COLOR.white,
+  },
+
+  background: {
+    padding: 10,
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: COLOR.primary,
   },
 });
 

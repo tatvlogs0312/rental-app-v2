@@ -1,26 +1,65 @@
-import React, { useEffect, useState } from "react";
-import { FlatList, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { FlatList, Image, Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../../../hook/AuthProvider";
 import { useLoading } from "../../../hook/LoadingProvider";
 import { get, post } from "../../../api/ApiManager";
 import { COLOR } from "../../../constants/COLORS";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
-import { ConvertToMoneyV2 } from "../../../utils/Utils";
+import { ConvertToMoneyV2, witdhScreen } from "../../../utils/Utils";
 import { IMAGE_DOMAIN } from "../../../constants/URL";
 import { TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const TenantPostDetailScreen = ({ navigation, route }) => {
   const auth = useAuth();
   const load = useLoading();
 
   const [postId, setPostId] = useState(route.params.id);
-  //   const postId = "e6857390-313b-484f-9dfb-47aa70f97a06";
 
   const [postData, setPostData] = useState(null);
   const [imageIndex, setImageIndex] = useState(0);
 
   const [recommends, setRecommends] = useState([]);
+
+  const flatListRef = useRef(null);
+  const thumbnailListRef = useRef(null);
+
+  const handleScroll = (event) => {
+    // Lấy chỉ số trang hiện tại
+    const index = Math.round(event.nativeEvent.contentOffset.x / witdhScreen);
+    console.log(index);
+
+    setImageIndex(index);
+
+    // Cuộn danh sách thumbnail đến đúng vị trí
+    thumbnailListRef.current?.scrollToIndex({
+      index,
+      animated: true,
+      viewPosition: 0,
+    });
+  };
+
+  const handleThumbnailPress = (index) => {
+    flatListRef.current?.scrollToIndex({ index, animated: true });
+  };
+
+  const openDialer = () => {
+    const url = `tel:${postData.lessorNumber}`;
+    console.log(url);
+
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          Linking.openURL(url); // Mở ứng dụng điện thoại
+        } else {
+          Toast.show({
+            type: ALERT_TYPE.DANGER,
+            textBody: "Không thể mở ứng dụng điện thoại của bạn",
+          });
+        }
+      })
+      .catch((err) => console.error("Lỗi khi mở ứng dụng gọi điện:", err));
+  };
 
   useEffect(() => {
     getPost();
@@ -57,16 +96,7 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
             <View style={{ flex: 1 }}>
               <View style={{ position: "relative" }}>
                 <View style={{ position: "absolute", zIndex: 10, top: 10, left: 10 }}>
-                  <Pressable
-                    style={styles.icon}
-                    onPress={() => {
-                      if (navigation.canGoBack()) {
-                        navigation.goBack();
-                      } else {
-                        console.log("No previous screen to go back to");
-                      }
-                    }}
-                  >
+                  <Pressable style={styles.icon} onPress={() => navigation.goBack()}>
                     <FontAwesome6 name="angle-left" size={25} color={COLOR.primary} />
                   </Pressable>
                 </View>
@@ -75,26 +105,48 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
                     <FontAwesome6 name="heart" size={25} color={COLOR.primary} />
                   </Pressable>
                 </View>
-                <Image source={{ uri: `${IMAGE_DOMAIN}/${postData.image[imageIndex]}` }} style={{ width: "auto", height: 250, objectFit: "cover" }} />
+                <FlatList
+                  ref={flatListRef}
+                  showsHorizontalScrollIndicator={false}
+                  scrollEnabled
+                  horizontal
+                  data={postData.image}
+                  renderItem={({ item, index }) => (
+                    <Image source={{ uri: `${IMAGE_DOMAIN}/${item}` }} style={{ width: witdhScreen, height: 250, objectFit: "cover" }} />
+                  )}
+                  pagingEnabled
+                  bounces={false}
+                  onScroll={handleScroll}
+                  onViewableItemsChanged={({ viewableItems }) => {
+                    setImageIndex(viewableItems[0]?.index); // Sử dụng dấu ? để tránh lỗi khi không có item nào
+                  }}
+                />
               </View>
               <View style={{ padding: 10 }}>
                 <View>
                   <FlatList
+                    ref={thumbnailListRef}
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled
                     horizontal
                     data={postData.image}
                     renderItem={({ index, item }) => (
-                      <Pressable onPress={() => setImageIndex(index)}>
+                      <Pressable onPress={() => handleThumbnailPress(index)}>
                         <Image
                           source={{ uri: `${IMAGE_DOMAIN}/${item}` }}
-                          style={{
-                            marginRight: index === postData.image.length - 1 ? 0 : 10,
-                            width: 100,
-                            height: 60,
-                            objectFit: "cover",
-                            borderRadius: 10,
-                          }}
+                          style={[
+                            {
+                              marginRight: index === postData.image.length - 1 ? 0 : 10,
+                              width: 100,
+                              height: 60,
+                              objectFit: "cover",
+                              borderRadius: 10,
+                            },
+                            imageIndex === index && {
+                              borderWidth: 5,
+                              borderColor: COLOR.primary,
+                            },
+                          ]}
                         />
                       </Pressable>
                     )}
@@ -149,11 +201,11 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
                     <View style={{ marginTop: 5 }}>
                       <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 15, marginBottom: 5, color: COLOR.primary }}>Liên hệ xem phòng:</Text>
                       <Text>
-                        <FontAwesome6 name="user" solid />
+                        <FontAwesome6 name="user" solid color={COLOR.primary} />
                         {` ${postData.lessorName}`}
                       </Text>
                       <Text>
-                        <FontAwesome6 name="phone" solid />
+                        <FontAwesome6 name="phone" solid color={COLOR.primary} />
                         {` ${postData.lessorNumber}`}
                       </Text>
                     </View>
@@ -162,7 +214,7 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
               </View>
             </View>
             <View style={{ marginVertical: 10, marginHorizontal: "auto" }}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={openDialer}>
                 <Text
                   style={{
                     padding: 10,
@@ -255,7 +307,7 @@ const styles = StyleSheet.create({
   infoV2Title: {
     width: "43%",
     fontWeight: "500",
-    color: COLOR.primary,
+    // color: COLOR.primary,
   },
 
   infoV2Value: {
