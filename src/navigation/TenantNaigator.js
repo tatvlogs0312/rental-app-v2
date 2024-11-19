@@ -1,5 +1,4 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import UserScreen from "../screen/common/UserScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import TenantBookScreen from "../screen/tenant/book/TenantBookScreen";
 import TenantDarshboardScreen from "../screen/tenant/dashboard/TenantDashboardScreen";

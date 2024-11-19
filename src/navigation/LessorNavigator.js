@@ -1,9 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { createStackNavigator } from "@react-navigation/stack";
-import RoomScreen from "../screen/lessor/RoomScreen";
-import RoomAddScreen from "../screen/lessor/RoomAddScreen";
-import RoomDetailScreen from "../screen/lessor/room_detail/RoomDetailScreen";
 import LessorBookScreen from "../screen/lessor/book/LessorBookScreen";
 import NotificationScreen from "../screen/common/NotificationScreen";
 import LessorDashboradScreen from "../screen/lessor/dashboard/LessorDashboradScreen";
@@ -24,9 +21,6 @@ const HomeStack = () => {
   return (
     <Stack.Navigator initialRouteName="LessorDashboard" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="LessorDashboard" component={LessorDashboradScreen} />
-      <Stack.Screen name="Room" component={RoomScreen} />
-      <Stack.Screen name="RoomAdd" component={RoomAddScreen} />
-      <Stack.Screen name="RoomDetail" component={RoomDetailScreen} />
       <Stack.Screen name="LessorBook" component={LessorBookScreen} />
       <Stack.Screen name="LessorPostList" component={LessorPostListScreen} />
       <Stack.Screen name="LessorAddPost" component={LessorAddPostScreen} />
