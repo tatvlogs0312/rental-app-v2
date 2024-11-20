@@ -20,9 +20,9 @@ export default function App() {
             <StatusBar />
             <AppNav />
             <ModalPortal />
-            <FcmHandler />
           </LoadingProvider>
         </AuthProvider>
+        <FcmHandler />
       </FcmProvider>
     </AlertNotificationRoot>
   );

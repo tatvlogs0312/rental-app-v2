@@ -3,21 +3,22 @@ import { useEffect } from "react";
 import messaging from "@react-native-firebase/messaging";
 import { useFcm } from "../hook/FcmProvider";
 import { Toast, ALERT_TYPE } from "react-native-alert-notification";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 const FcmHandler = () => {
   const { saveDeviceId } = useFcm();
 
-  const requestUserPermission = async () => {
+  async function requestUserPermission() {
     const authStatus = await messaging().requestPermission();
     const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
     if (enabled) {
-      console.log("authStatus: ", authStatus);
+      console.log("Authorization status:", authStatus);
     }
-    return enabled;
-  };
+  }
 
   useEffect(() => {
-    if (requestUserPermission) {
+    if (requestUserPermission()) {
       messaging()
         .getToken()
         .then((token) => {
