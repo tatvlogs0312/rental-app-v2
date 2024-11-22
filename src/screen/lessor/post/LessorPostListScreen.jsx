@@ -71,27 +71,6 @@ const LessorPostListScreen = ({ navigation, route }) => {
         })
       }
     >
-      {/* Nút xóa bài */}
-      {/* <Pressable
-        style={{
-          backgroundColor: "black",
-          position: "absolute",
-          top: 5,
-          right: 5,
-          width: 25,
-          height: 25,
-          justifyContent: "center",
-          alignItems: "center",
-          borderRadius: 20,
-        }}
-        onPress={async () => {
-          await deletePost(item.id);
-          await fetchData(); // Làm mới dữ liệu sau khi xóa
-        }}
-      >
-        <FontAwesome6 name="x" size={14} color="white" />
-      </Pressable> */}
-
       {/* Thông tin bài đăng */}
       <Text style={{ fontSize: 17, fontWeight: "bold", marginBottom: 5, color: COLOR.primary }}>{item.title}</Text>
       <View>
@@ -117,7 +96,6 @@ const LessorPostListScreen = ({ navigation, route }) => {
           keyExtractor={(item) => item.id.toString()} // Đảm bảo key là unique
           refreshControl={<RefreshControl refreshing={load.loading} onRefresh={fetchData} />}
           showsVerticalScrollIndicator={false}
-          // ListEmptyComponent={<Text style={{ textAlign: "center", marginTop: 20 }}>Không có bài viết nào.</Text>}
           onEndReached={loadMoreItem}
           onEndReachedThreshold={0}
         />

@@ -3,18 +3,23 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { COLOR } from "../../constants/COLORS";
 
-const HeaderBarPlus = ({ title, back, plus }) => {
+const HeaderBarSliderPlus = ({ title, back, plus }) => {
   return (
-    <View style={styles.background2}>
+    <View style={styles.background}>
       <View style={{ flexDirection: "row" }}>
         <Pressable style={styles.icon} onPress={back}>
           <FontAwesome6 name="angle-left" size={20} color={COLOR.white} />
           <Text style={styles.title}>{title}</Text>
         </Pressable>
       </View>
-      <Pressable style={styles.icon} onPress={plus}>
-        <FontAwesome6 name="plus" size={25} color={COLOR.white} />
-      </Pressable>
+      <View style={{ flexDirection: "row" }}>
+        <Pressable style={[styles.icon, { marginRight: 15 }]} onPress={plus}>
+          <FontAwesome6 name="sliders" size={25} color={COLOR.white} />
+        </Pressable>
+        <Pressable style={styles.icon} onPress={plus}>
+          <FontAwesome6 name="plus" size={25} color={COLOR.white} />
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -44,17 +49,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottomWidth: 0.5,
-    // backgroundColor: COLOR.primary,
-  },
-
-  background2: {
-    padding: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
     backgroundColor: COLOR.primary,
   },
 });
 
-export default HeaderBarPlus;
+export default HeaderBarSliderPlus;

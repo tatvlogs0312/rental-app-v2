@@ -8,7 +8,7 @@ import { TouchableOpacity } from "react-native";
 const features = [
   { id: "1", icon: "plus", title: "Nhà", color: "#007bff", navigate: "HouseList" },
   { id: "2", icon: "pen-to-square", title: "Bài đăng", color: "#f1c40f", navigate: "LessorPostList" },
-  { id: "3", icon: "file-signature", title: "Tạo hợp đồng", color: "#6F1E51", navigate: "Room" },
+  { id: "3", icon: "file-signature", title: "Hợp đồng", color: "#6F1E51", navigate: "LessorContractList" },
   { id: "4", icon: "file-invoice-dollar", title: "Hóa đơn", color: "#00a34c", navigate: "Room" },
   { id: "5", icon: "calendar", title: "Lịch xem phòng", color: "#9d76e6", navigate: "LessorBook" },
 ];
