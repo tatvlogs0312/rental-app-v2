@@ -9,7 +9,7 @@ import { get } from "../../../api/ApiManager";
 import { COLOR } from "../../../constants/COLORS";
 import { useAuth } from "../../../hook/AuthProvider";
 
-const TenantUserScreen = () => {
+const TenantUserScreen = ({ navigation }) => {
   const auth = useAuth();
 
   const [user, setUser] = useState(null);
@@ -115,6 +115,9 @@ const TenantUserScreen = () => {
                     alignContent: "center",
                     // backgroundColor: COLOR.white,
                     // elevation: 2,
+                  }}
+                  onPress={() => {
+                    navigation.navigate("TenantContractList");
                   }}
                 >
                   <FontAwesome6 name="file-contract" size={20} color={COLOR.primary} />

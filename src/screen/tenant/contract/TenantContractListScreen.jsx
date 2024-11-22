@@ -9,8 +9,9 @@ import HeaderBarPlus from "../../../components/header/HeaderBarPlus";
 import LoadingModal from "react-native-loading-modal";
 import { TouchableOpacity } from "react-native";
 import HeaderBarSliderPlus from "../../../components/header/HeaderBarSliderPlus";
+import HeaderBarNoPlus from "../../../components/header/HeaderBarNoPlus";
 
-const LessorContractListScreen = ({ navigation, route }) => {
+const TenantContractListScreen = ({ navigation, route }) => {
   const auth = useAuth();
   const load = useLoading();
 
@@ -31,7 +32,7 @@ const LessorContractListScreen = ({ navigation, route }) => {
     load.isLoading();
     try {
       const response = await get(
-        "/contract/search-for-lessor",
+        "/contract/search-for-tenant",
         {
           status: status,
           page: page,
@@ -68,7 +69,7 @@ const LessorContractListScreen = ({ navigation, route }) => {
   return (
     <View style={{ flex: 1, backgroundColor: COLOR.white }}>
       {/* <LoadingModal modalVisible={load.loading}/> */}
-      <HeaderBarSliderPlus title={"Hợp đồng"} back={() => navigation.goBack()} plus={() => navigation.goBack()} />
+      <HeaderBarNoPlus title={"Hợp đồng"} back={() => navigation.goBack()} plus={() => navigation.goBack()} />
       <View style={{ margin: 5, flex: 1 }}>
         {contracts.length > 0 && (
           <FlatList
@@ -90,24 +91,6 @@ const LessorContractListScreen = ({ navigation, route }) => {
                   position: "relative",
                 }}
               >
-                {item.contractStatusCode === "DRAFT" && (
-                  <TouchableOpacity
-                    style={{
-                      position: "absolute",
-                      top: 10,
-                      right: 10,
-                      zIndex: 10,
-                      padding: 5,
-                      borderRadius: 10,
-                      backgroundColor: COLOR.primary,
-                    }}
-                  >
-                    <Text style={{ color: COLOR.white }}>
-                      <FontAwesome6 name="pen" size={13} />
-                      {" Sửa"}
-                    </Text>
-                  </TouchableOpacity>
-                )}
                 <Pressable>
                   <View style={{ paddingBottom: 10, borderBottomWidth: 0.5, borderColor: COLOR.grey }}>
                     <Text style={{ fontSize: 17, marginBottom: 5 }}>
@@ -124,13 +107,13 @@ const LessorContractListScreen = ({ navigation, route }) => {
                       <View style={{ marginRight: 15 }}>
                         <Text>
                           <FontAwesome6 name="user" solid />
-                          {" " + item.tenantFirstName + " " + item.tenantLastName}
+                          {" " + item.lessorFirstName + " " + item.lessorLastName}
                         </Text>
                       </View>
                       <View>
                         <Text>
                           <FontAwesome6 name="phone" />
-                          {" " + item.tenantPhoneNumber}
+                          {" " + item.lessorPhoneNumber}
                         </Text>
                       </View>
                     </View>
@@ -156,7 +139,7 @@ const LessorContractListScreen = ({ navigation, route }) => {
                       </View>
                       <Pressable
                         onPress={() => {
-                          navigation.navigate("LessorContractDetail", {
+                          navigation.navigate("TenantContractDetail", {
                             contractId: item.contractId,
                           });
                         }}
@@ -180,4 +163,4 @@ const LessorContractListScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({});
 
-export default LessorContractListScreen;
+export default TenantContractListScreen;

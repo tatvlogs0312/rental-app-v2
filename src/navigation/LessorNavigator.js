@@ -14,13 +14,15 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import LessorUserScreen from "../screen/lessor/user/LessorUserScreen";
 import { COLOR } from "../constants/COLORS";
 import LessorContractListScreen from "../screen/lessor/contract/LessorContractListScreen";
+import LessorContractDetailScreen from "../screen/lessor/contract/LessorContractDetailScreen";
+import LessorContractCreateScreen from "../screen/lessor/contract/LessorContractCreateScreen";
 
 const Tab = createBottomTabNavigator();
 
 const HomeStack = () => {
   const Stack = createStackNavigator();
   return (
-    <Stack.Navigator initialRouteName="LessorContractList" screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName="LessorDashboard" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="LessorDashboard" component={LessorDashboradScreen} />
       <Stack.Screen name="LessorBook" component={LessorBookScreen} />
       <Stack.Screen name="LessorPostList" component={LessorPostListScreen} />
@@ -30,6 +32,8 @@ const HomeStack = () => {
       <Stack.Screen name="RoomList" component={RoomListScreen} />
       <Stack.Screen name="LessorPostDetail" component={LessorPostDetailScreen} />
       <Stack.Screen name="LessorContractList" component={LessorContractListScreen} />
+      <Stack.Screen name="LessorContractDetail" component={LessorContractDetailScreen} />
+      <Stack.Screen name="LessorContractCreate" component={LessorContractCreateScreen} />
     </Stack.Navigator>
   );
 };

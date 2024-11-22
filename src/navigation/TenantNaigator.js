@@ -7,6 +7,9 @@ import TenantPostDetailScreen from "../screen/tenant/post/TenantPostDetailScreen
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import TenantUserScreen from "../screen/tenant/user/TenantUserScreen";
 import { COLOR } from "../constants/COLORS";
+import TenantContractListScreen from "../screen/tenant/contract/TenantContractListScreen";
+import TenantContractDetailScreen from "../screen/tenant/contract/TenantContractDetailScreen";
+import TenantContractSignScreen from "../screen/tenant/contract/TenantContractSignScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,6 +40,9 @@ const UserStack = () => {
   return (
     <Stack.Navigator initialRouteName="TenantUser" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="TenantUser" component={TenantUserScreen} />
+      <Stack.Screen name="TenantContractList" component={TenantContractListScreen} />
+      <Stack.Screen name="TenantContractDetail" component={TenantContractDetailScreen} />
+      <Stack.Screen name="TenantContractSign" component={TenantContractSignScreen} />
     </Stack.Navigator>
   );
 };
@@ -52,10 +58,6 @@ const TenantNaigator = () => {
         //   height: 50,
         //   borderTopLeftRadius: 20,
         //   borderTopRightRadius: 20,
-        //   // borderRadius: 20,
-        //   // width: "90%",
-        //   // alignItems: "center",
-        //   // justifyContent: "center",
         // },
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
