@@ -54,7 +54,6 @@ const AddUtilityModal = ({ roomId, onsubmit, onCancel }) => {
             <View>
               <SelectList
                 setSelected={(val) => {
-                  console.log(val);
                   setUtitlity(val);
                 }}
                 data={utilities.map(({ id, name }) => ({ key: id, value: name }))}

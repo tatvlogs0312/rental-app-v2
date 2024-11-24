@@ -1,5 +1,6 @@
 import { Dimensions } from "react-native";
 import uuid from "react-native-uuid";
+import dayjs from "dayjs";
 
 const formatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -80,4 +81,11 @@ export const getCurrentDate = () => {
 
 export const getUUID = () => {
   return uuid.v4();
+};
+
+export const convertDate = (date, format) => {
+  if (date === null) {
+    return null;
+  }
+  return dayjs(date).format(format);
 };

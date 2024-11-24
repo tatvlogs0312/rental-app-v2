@@ -16,6 +16,7 @@ import { COLOR } from "../constants/COLORS";
 import LessorContractListScreen from "../screen/lessor/contract/LessorContractListScreen";
 import LessorContractDetailScreen from "../screen/lessor/contract/LessorContractDetailScreen";
 import LessorContractCreateScreen from "../screen/lessor/contract/LessorContractCreateScreen";
+import SignSuccessScreen from "../screen/common/SignSuccessScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,6 +35,7 @@ const HomeStack = () => {
       <Stack.Screen name="LessorContractList" component={LessorContractListScreen} />
       <Stack.Screen name="LessorContractDetail" component={LessorContractDetailScreen} />
       <Stack.Screen name="LessorContractCreate" component={LessorContractCreateScreen} />
+      <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
     </Stack.Navigator>
   );
 };

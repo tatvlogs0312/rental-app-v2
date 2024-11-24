@@ -17,6 +17,7 @@ const TenantPostListScreen = ({ navigation, route }) => {
   const load = useLoading();
 
   const [posts, setPosts] = useState([]);
+  const [totalPage, setTotalPage] = useState(null);
 
   const [keyword, setKeyword] = useState(null);
   const [page, setPage] = useState(0);
@@ -40,15 +41,16 @@ const TenantPostListScreen = ({ navigation, route }) => {
   const getPost = async () => {
     load.isLoading();
     try {
-      setPage(0);
       let api = "";
       if (type === "NEW") {
         api = "/post/search";
       } else {
         api = "/post/search-recommend";
       }
-      const res = await post(api, { keyword: keyword, page: page, size: size }, auth.token);
+      const res = await post(api, { keyword: keyword, page: 0, size: size }, auth.token);
       setPosts(res.data);
+      setTotalPage(res.totalPage);
+      setPage(0);
     } catch (error) {
       console.log(error);
     } finally {
@@ -57,18 +59,20 @@ const TenantPostListScreen = ({ navigation, route }) => {
   };
 
   const loadMoreData = async () => {
-    try {
-      let api = "";
-      if (type === "NEW") {
-        api = "/post/search";
-      } else {
-        api = "/post/search-recommend";
+    if (totalPage !== null && page + 1 < totalPage) {
+      try {
+        let api = "";
+        if (type === "NEW") {
+          api = "/post/search";
+        } else {
+          api = "/post/search-recommend";
+        }
+        const res = await post(api, { keyword: keyword, page: page + 1, size: size }, auth.token);
+        setPosts([...posts, ...res.data]);
+        setPage(page + 1);
+      } catch (error) {
+        console.log(error);
       }
-      const res = await post(api, { keyword: keyword, page: page + 1, size: size }, auth.token);
-      setPosts([...posts, ...res.data]);
-      setPage(page + 1);
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -105,7 +109,7 @@ const TenantPostListScreen = ({ navigation, route }) => {
       <View>
         <Text style={styles.cardNewPosition}>{item.title}</Text>
         <View>
-          <Text>
+          <Text style={{color: COLOR.grey}}>
             <FontAwesome6 name="location-dot" /> {`${item.positionDetail} - ${item.ward} - ${item.district} - ${item.province}`}
           </Text>
         </View>
@@ -122,45 +126,29 @@ const TenantPostListScreen = ({ navigation, route }) => {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            backgroundColor: "#F5F5F5",
-            borderRadius: 10,
+            backgroundColor: COLOR.primary,
             padding: 10,
           }}
         >
           <Pressable
-            style={{ height: 50, width: 50, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10 }}
+            style={{ height: 40, width: 40, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10 }}
             onPress={() => navigation.goBack()}
           >
             <FontAwesome6 name="angle-left" color={COLOR.white} size={20} />
           </Pressable>
           <TextInput style={styles.searchInput} placeholder="Tìm kiếm" placeholderTextColor="#A9A9A9" value={keyword} onChangeText={(t) => setKeyword(t)} />
-          {/* {keyword ? (
-            <Pressable
-              style={{ height: 50, width: 50, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10 }}
-              onPress={getPostX}
-            >
-              <FontAwesome6 name="x" color={COLOR.white} size={20} />
-            </Pressable>
-          ) : (
-            <Pressable
-              style={{ height: 50, width: 50, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10 }}
-              onPress={getPost}
-            >
-              <FontAwesome6 name="magnifying-glass" color={COLOR.white} size={20} />
-            </Pressable>
-          )} */}
           <Pressable
-            style={{ height: 50, width: 50, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10 }}
+            style={{ height: 40, width: 40, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10 }}
             onPress={getPost}
           >
             <FontAwesome6 name="magnifying-glass" color={COLOR.white} size={20} />
           </Pressable>
-          <Pressable style={{ height: 50, width: 50, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10 }}>
+          <Pressable style={{ height: 40, width: 40, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10 }}>
             <FontAwesome6 name="sliders" color={COLOR.white} size={20} />
           </Pressable>
         </View>
       </View>
-      <View style={{ flex: 1, margin: 10 }}>
+      <View style={{ flex: 1, marginHorizontal: 10, marginBottom: 10 }}>
         {posts.length > 0 && (
           <FlatList
             data={posts}
@@ -186,13 +174,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 5,
     marginBottom: 15,
-    elevation: 5,
+    elevation: 3,
   },
 
   cardNewPosition: {
     fontSize: 17,
     marginBottom: 5,
     fontWeight: "600",
+    color: COLOR.primary
   },
 
   cardNewImg: {
@@ -205,7 +194,7 @@ const styles = StyleSheet.create({
   txtPrice1: {
     padding: 5,
     backgroundColor: COLOR.white,
-    color: COLOR.black,
+    color: COLOR.primary,
     position: "absolute",
     bottom: 5,
     right: 5,
@@ -214,7 +203,7 @@ const styles = StyleSheet.create({
 
   searchInput: {
     height: 40,
-    width: 220,
+    width: 230,
     paddingHorizontal: 15,
     backgroundColor: "#FFFFFF",
     borderRadius: 10,

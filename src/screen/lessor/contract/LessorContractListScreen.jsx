@@ -25,7 +25,7 @@ const LessorContractListScreen = ({ navigation, route }) => {
     if (auth.token !== "") {
       getContracts();
     }
-  }, [auth.token]);
+  }, [auth.token, route.params?.refresh]);
 
   const getContracts = async () => {
     load.isLoading();
@@ -68,7 +68,7 @@ const LessorContractListScreen = ({ navigation, route }) => {
   return (
     <View style={{ flex: 1, backgroundColor: COLOR.white }}>
       {/* <LoadingModal modalVisible={load.loading}/> */}
-      <HeaderBarSliderPlus title={"Hợp đồng"} back={() => navigation.goBack()} plus={() => navigation.goBack()} />
+      <HeaderBarSliderPlus title={"Hợp đồng"} back={() => navigation.goBack()} plus={() => navigation.navigate("LessorContractCreate")} />
       <View style={{ margin: 5, flex: 1 }}>
         {contracts.length > 0 && (
           <FlatList

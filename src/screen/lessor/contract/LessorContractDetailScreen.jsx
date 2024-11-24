@@ -3,10 +3,13 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import HeaderBarNoPlus from "../../../components/header/HeaderBarNoPlus";
 import { COLOR } from "../../../constants/COLORS";
 import { useState } from "react";
-import { get } from "../../../api/ApiManager";
+import { get, post } from "../../../api/ApiManager";
 import { useAuth } from "../../../hook/AuthProvider";
 import { useLoading } from "../../../hook/LoadingProvider";
 import { TouchableOpacity } from "react-native";
+import LoadingModal from "react-native-loading-modal";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import { getUUID } from "../../../utils/Utils";
 
 const LessorContractDetailScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -31,6 +34,54 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
     }
   };
 
+  const sendUser = () => {
+    try {
+      load.isLoading();
+      const res = post("/contract/send-user/" + contractId, {}, auth.token);
+
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: "Gửi ký hợp đồng thành công",
+        title: "Thông báo",
+      });
+
+      navigation.navigate("LessorContractList", {
+        refresh: getUUID(),
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      load.nonLoading();
+    }
+  };
+
+  const cancel = () => {
+    try {
+      load.isLoading();
+      const res = post(
+        "/contract/cancel",
+        {
+          id: contractId,
+        },
+        auth.token,
+      );
+
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: "Hủy hợp đồng thành công",
+        title: "Thông báo",
+      });
+
+      navigation.navigate("LessorContractList", {
+        refresh: getUUID(),
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      load.nonLoading();
+    }
+  };
+
   const Row = ({ title, value }) => {
     return (
       <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 15 }}>
@@ -46,6 +97,7 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
 
   return (
     <View style={{ flex: 1 }}>
+      <LoadingModal modalVisible={load.loading} />
       <HeaderBarNoPlus title={"BACK"} back={() => navigation.goBack()} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ padding: 10, flex: 1 }}>
@@ -77,7 +129,7 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
                   <Text style={{ fontSize: 16, padding: 5, color: COLOR.primary }}>Giá thuê phòng & dịch vụ</Text>
                   <View style={{ backgroundColor: COLOR.white, borderRadius: 10 }}>
                     <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
-                      <Row title={"Tiền phòng hàng tháng:"} value={contract.contractCode} />
+                      <Row title={"Tiền phòng hàng tháng:"} value={contract.price + " vnđ"} />
                     </View>
                     {contract.utilities.map((item, index) => (
                       <View
@@ -144,12 +196,20 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
 
               {contract.contractStatusCode === "DRAFT" && (
                 <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 15, marginBottom: 20 }}>
-                  <TouchableOpacity style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 20 }}>
+                  <TouchableOpacity style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 20 }} onPress={cancel}>
                     <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Hủy hợp đồng</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 20 }}>
+                  <TouchableOpacity style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 20 }} onPress={sendUser}>
                     <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Gửi khách thuê ký</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              {contract.contractStatusCode === "PENDING_SIGNED" && (
+                <View style={{ padding: 15, marginBottom: 20 }}>
+                  <TouchableOpacity style={{ backgroundColor: COLOR.primary, borderRadius: 20 }} onPress={sendUser}>
+                    <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Gửi lại khách thuê ký</Text>
                   </TouchableOpacity>
                 </View>
               )}

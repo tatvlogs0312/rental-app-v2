@@ -10,6 +10,7 @@ import { COLOR } from "../constants/COLORS";
 import TenantContractListScreen from "../screen/tenant/contract/TenantContractListScreen";
 import TenantContractDetailScreen from "../screen/tenant/contract/TenantContractDetailScreen";
 import TenantContractSignScreen from "../screen/tenant/contract/TenantContractSignScreen";
+import SignSuccessScreen from "../screen/common/SignSuccessScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -31,6 +32,7 @@ const PostStack = () => {
       <Stack.Screen name="TenantDashboard" component={TenantDarshboardScreen} />
       <Stack.Screen name="TenantPostList" component={TenantPostListScreen} />
       <Stack.Screen name="TenantPostDetail" component={TenantPostDetailScreen} />
+      <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
     </Stack.Navigator>
   );
 };
@@ -43,6 +45,7 @@ const UserStack = () => {
       <Stack.Screen name="TenantContractList" component={TenantContractListScreen} />
       <Stack.Screen name="TenantContractDetail" component={TenantContractDetailScreen} />
       <Stack.Screen name="TenantContractSign" component={TenantContractSignScreen} />
+      <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
     </Stack.Navigator>
   );
 };

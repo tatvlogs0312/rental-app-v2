@@ -77,7 +77,7 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
                   <Text style={{ fontSize: 16, padding: 5, color: COLOR.primary }}>Giá thuê phòng & dịch vụ</Text>
                   <View style={{ backgroundColor: COLOR.white, borderRadius: 10 }}>
                     <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
-                      <Row title={"Tiền phòng hàng tháng:"} value={contract.contractCode} />
+                      <Row title={"Tiền phòng hàng tháng:"} value={contract.price + " vnđ"} />
                     </View>
                     {contract.utilities.map((item, index) => (
                       <View
@@ -148,7 +148,14 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
                     <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Từ chối</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 20 }}>
+                  <TouchableOpacity
+                    style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 20 }}
+                    onPress={() =>
+                      navigation.navigate("TenantContractSign", {
+                        id: contractId,
+                      })
+                    }
+                  >
                     <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Ký hợp đồng</Text>
                   </TouchableOpacity>
                 </View>
