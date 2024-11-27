@@ -84,7 +84,7 @@ const RegisterScreen = ({ navigation }) => {
     if (username !== "" && password !== "" && confirmPassword !== "" && password === confirmPassword) {
       load.isLoading();
       try {
-        var data = await apiCall("/auth/register", "POST", { username: username, password: password, role: role }, {}, null);
+        var data = await apiCall("/rental-service/auth/register", "POST", { username: username, password: password, role: role }, {}, null);
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           textBody: "Đăng ký tài khoản thành công",

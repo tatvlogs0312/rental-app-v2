@@ -27,7 +27,7 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
 
   const getContract = async () => {
     try {
-      const res = await get("/contract/detail/" + contractId, null, auth.token);
+      const res = await get("/rental-service/contract/detail/" + contractId, null, auth.token);
       setContract(res);
     } catch (error) {
       console.log(error);
@@ -37,7 +37,7 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
   const sendUser = () => {
     try {
       load.isLoading();
-      const res = post("/contract/send-user/" + contractId, {}, auth.token);
+      const res = post("/rental-service/contract/send-user/" + contractId, {}, auth.token);
 
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
@@ -59,7 +59,7 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
     try {
       load.isLoading();
       const res = post(
-        "/contract/cancel",
+        "/rental-service/contract/cancel",
         {
           id: contractId,
         },

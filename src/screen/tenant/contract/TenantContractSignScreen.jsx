@@ -43,7 +43,7 @@ const TenantContractSignScreen = ({ navigation, route }) => {
     try {
       setTimeLeft(5 * 60);
       load.isLoading();
-      const res = get("/contract/get-otp/" + contractId, {}, auth.token);
+      const res = get("/rental-service/contract/get-otp/" + contractId, {}, auth.token);
 
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
@@ -61,7 +61,7 @@ const TenantContractSignScreen = ({ navigation, route }) => {
     try {
       load.isLoading();
       const res = await post(
-        "/contract/sign",
+        "/rental-service/contract/sign",
         {
           contractId: contractId,
           otp: otp,

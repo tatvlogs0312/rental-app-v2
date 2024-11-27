@@ -55,7 +55,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
       load.isLoading();
       try {
         const res = await get(
-          "/user-profile/get",
+          "/rental-service/user-profile/get",
           {
             username: tenant,
             role: "TENANT",
@@ -73,7 +73,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
 
   const getUtility = async () => {
     try {
-      const res = await post("/utility/search", {}, null);
+      const res = await post("/rental-service/utility/search", {}, null);
       setUtilityData(res.data);
     } catch (error) {
       console.log(error);
@@ -82,7 +82,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
 
   const getHouses = async () => {
     try {
-      const res = await get("/house/search", { page: 0, size: 10000 }, auth.token);
+      const res = await get("/rental-service/house/search", { page: 0, size: 10000 }, auth.token);
       setHouses(res.data);
       console.log(houses);
     } catch (error) {
@@ -95,7 +95,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
   const getRoom = async (house) => {
     try {
       load.isLoading();
-      const res = await get("/room/search/v3", { houseId: house, roomStatus: "EMPTY", page: 0, size: 10000 }, auth.token);
+      const res = await get("/rental-service/room/search/v3", { houseId: house, roomStatus: "EMPTY", page: 0, size: 10000 }, auth.token);
       setRooms(res.data);
     } catch (error) {
       console.log(error);
@@ -108,7 +108,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
     try {
       load.isLoading();
       const res = await post(
-        "/contract/create",
+        "/rental-service/contract/create",
         {
           tenant: tenantInfo.username,
           houseId: houseId,

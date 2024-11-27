@@ -37,7 +37,7 @@ const AddHouseScreen = ({ navigation }) => {
 
   const getProvinces = async () => {
     try {
-      const data = await get("/province", {}, null);
+      const data = await get("/rental-service/province", {}, null);
       setProvinces(data);
     } catch (error) {
       console.log(error);
@@ -46,7 +46,7 @@ const AddHouseScreen = ({ navigation }) => {
 
   const getDistricts = async (provinceId) => {
     try {
-      const data = await get("/province/district", { provinceId: provinceId }, null);
+      const data = await get("/rental-service/province/district", { provinceId: provinceId }, null);
       setDistricts(data);
     } catch (error) {
       console.log(error);
@@ -55,7 +55,7 @@ const AddHouseScreen = ({ navigation }) => {
 
   const getWard = async (districtId) => {
     try {
-      const data = await get("/province/ward", { districtId: districtId }, null);
+      const data = await get("/rental-service/province/ward", { districtId: districtId }, null);
       setWards(data);
     } catch (error) {
       console.log(error);
@@ -67,7 +67,7 @@ const AddHouseScreen = ({ navigation }) => {
       try {
         load.isLoading();
         const res = await post(
-          "/house/create",
+          "/rental-service/house/create",
           {
             houseName: houseName,
             positionDetail: detail,

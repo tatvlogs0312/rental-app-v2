@@ -43,10 +43,20 @@ const HomeStack = () => {
 const NotificationStack = () => {
   const Stack = createStackNavigator();
   return (
-    <Stack.Navigator initialRouteName="Notification">
-      <Stack.Group screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Notification" component={NotificationScreen} />
-      </Stack.Group>
+    <Stack.Navigator initialRouteName="Notification" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Notification" component={NotificationScreen} />
+
+      <Stack.Screen name="LessorBook" component={LessorBookScreen} />
+      <Stack.Screen name="LessorPostList" component={LessorPostListScreen} />
+      <Stack.Screen name="LessorAddPost" component={LessorAddPostScreen} />
+      <Stack.Screen name="HouseList" component={HouseListScreen} />
+      <Stack.Screen name="AddHouse" component={AddHouseScreen} />
+      <Stack.Screen name="RoomList" component={RoomListScreen} />
+      <Stack.Screen name="LessorPostDetail" component={LessorPostDetailScreen} />
+      <Stack.Screen name="LessorContractList" component={LessorContractListScreen} />
+      <Stack.Screen name="LessorContractDetail" component={LessorContractDetailScreen} />
+      <Stack.Screen name="LessorContractCreate" component={LessorContractCreateScreen} />
+      <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
     </Stack.Navigator>
   );
 };
@@ -56,6 +66,18 @@ const UserStack = () => {
   return (
     <Stack.Navigator initialRouteName="LessorUser" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="LessorUser" component={LessorUserScreen} />
+
+      <Stack.Screen name="LessorBook" component={LessorBookScreen} />
+      <Stack.Screen name="LessorPostList" component={LessorPostListScreen} />
+      <Stack.Screen name="LessorAddPost" component={LessorAddPostScreen} />
+      <Stack.Screen name="HouseList" component={HouseListScreen} />
+      <Stack.Screen name="AddHouse" component={AddHouseScreen} />
+      <Stack.Screen name="RoomList" component={RoomListScreen} />
+      <Stack.Screen name="LessorPostDetail" component={LessorPostDetailScreen} />
+      <Stack.Screen name="LessorContractList" component={LessorContractListScreen} />
+      <Stack.Screen name="LessorContractDetail" component={LessorContractDetailScreen} />
+      <Stack.Screen name="LessorContractCreate" component={LessorContractCreateScreen} />
+      <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
     </Stack.Navigator>
   );
 };

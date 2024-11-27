@@ -32,7 +32,7 @@ const TenantContractListScreen = ({ navigation, route }) => {
     load.isLoading();
     try {
       const response = await get(
-        "/contract/search-for-tenant",
+        "/rental-service/contract/search-for-tenant",
         {
           status: status,
           page: page,
@@ -53,7 +53,7 @@ const TenantContractListScreen = ({ navigation, route }) => {
     try {
       if (totalPage !== null && page + 1 < totalPage) {
         try {
-          const response = await post("/contract/search-for-lessor", { page: page + 1, size: size }, auth.token);
+          const response = await post("/rental-service/contract/search-for-lessor", { page: page + 1, size: size }, auth.token);
           const newData = response.data || [];
           setContracts([...contracts, ...newData]);
           setPage(page + 1);

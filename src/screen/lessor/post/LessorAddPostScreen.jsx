@@ -47,7 +47,7 @@ const LessorAddPostScreen = ({ navigation }) => {
 
   const getRoomTypes = async () => {
     try {
-      const data = await post("/room-type/search", {}, null);
+      const data = await post("/rental-service/room-type/search", {}, null);
       setRoomTypes(data.data);
     } catch (error) {
       console.log(error);
@@ -56,7 +56,7 @@ const LessorAddPostScreen = ({ navigation }) => {
 
   const getProvinces = async () => {
     try {
-      const data = await get("/province", {}, null);
+      const data = await get("/rental-service/province", {}, null);
       setProvinces(data);
     } catch (error) {
       console.log(error);
@@ -65,7 +65,7 @@ const LessorAddPostScreen = ({ navigation }) => {
 
   const getDistricts = async (provinceId) => {
     try {
-      const data = await get("/province/district", { provinceId: provinceId }, null);
+      const data = await get("/rental-service/province/district", { provinceId: provinceId }, null);
       setDistricts(data);
     } catch (error) {
       console.log(error);
@@ -74,7 +74,7 @@ const LessorAddPostScreen = ({ navigation }) => {
 
   const getWard = async (districtId) => {
     try {
-      const data = await get("/province/ward", { districtId: districtId }, null);
+      const data = await get("/rental-service/province/ward", { districtId: districtId }, null);
       setWards(data);
     } catch (error) {
       console.log(error);
@@ -114,7 +114,7 @@ const LessorAddPostScreen = ({ navigation }) => {
           name: uuid.v4() + ".jpg",
         });
       });
-      const response = await axios.post(DOMAIN + "/post/create", formData, {
+      const response = await axios.post(DOMAIN + "/rental-service/post/create", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: auth.token,

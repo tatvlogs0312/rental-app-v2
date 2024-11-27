@@ -52,7 +52,7 @@ const LessorPostDetailScreen = ({ navigation, route }) => {
 
   const getPost = async () => {
     try {
-      const res = await get("/post/" + postId, null, auth.token);
+      const res = await get("/rental-service/post/" + postId, null, auth.token);
       setPostData(res);
     } catch (error) {
       console.log(error);
@@ -62,7 +62,7 @@ const LessorPostDetailScreen = ({ navigation, route }) => {
   const deletePost = async (id) => {
     try {
       load.isLoading();
-      const response = await post("/post/delete", { id: postId }, auth.token);
+      const response = await post("/rental-service/post/delete", { id: postId }, auth.token);
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         textBody: "Xóa bài đăng thành công",

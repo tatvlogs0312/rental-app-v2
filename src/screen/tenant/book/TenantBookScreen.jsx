@@ -36,7 +36,7 @@ const TenantBookScreen = ({ navigation }) => {
     setSize(10);
 
     try {
-      const data = await post("/book/search-for-tenant", { status: status, page: page, size: size }, auth.token);
+      const data = await post("/rental-service/book/search-for-tenant", { status: status, page: page, size: size }, auth.token);
       setBooks(data.data);
     } catch (error) {
       console.log(error);
@@ -45,7 +45,7 @@ const TenantBookScreen = ({ navigation }) => {
 
   const fetchDataPage = async () => {
     try {
-      const data = await post("/book/search-for-tenant", { status: status, page: page, size: size }, auth.token);
+      const data = await post("/rental-service/book/search-for-tenant", { status: status, page: page, size: size }, auth.token);
       setPosts([...books, ...data.data]);
     } catch (error) {
       console.log(error);

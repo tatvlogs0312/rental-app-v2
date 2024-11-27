@@ -23,7 +23,7 @@ const LessorPostListScreen = ({ navigation, route }) => {
 
   const fetchData = async () => {
     try {
-      const response = await post("/post/search-for-lessor", { page: 0, size: size }, auth.token);
+      const response = await post("/rental-service/post/search-for-lessor", { page: 0, size: size }, auth.token);
       setPosts(response.data);
       setTotalPage(response.totalPage);
       setPage(0);
@@ -38,7 +38,7 @@ const LessorPostListScreen = ({ navigation, route }) => {
 
     if (totalPage !== null && page + 1 < totalPage) {
       try {
-        const response = await post("/post/search-for-lessor", { page: page + 1, size: size }, auth.token);
+        const response = await post("/rental-service/post/search-for-lessor", { page: page + 1, size: size }, auth.token);
         const newPosts = response.data || [];
         setPosts([...posts, ...newPosts]);
         setPage(page + 1);

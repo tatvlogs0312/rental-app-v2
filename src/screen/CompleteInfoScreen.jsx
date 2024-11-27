@@ -83,7 +83,7 @@ const CompleteInfoScreen = ({ navigation, route }) => {
     if (validateInput()) {
       try {
         const res = post(
-          "/user-profile/complete-information",
+          "/rental-service/user-profile/complete-information",
           {
             firstName: firstName,
             lastName: lastName,

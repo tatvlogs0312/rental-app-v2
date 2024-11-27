@@ -4,13 +4,24 @@ export const FcmContext = createContext();
 
 export const FcmProvider = ({ children }) => {
   const [deviceId, setDeviceId] = useState("");
+  const [unRead, setUnRead] = useState(0);
 
   const saveDeviceId = (token) => {
     console.log("device: " + token);
     setDeviceId(token);
   };
 
-  return <FcmContext.Provider value={{ deviceId, saveDeviceId }}>{children}</FcmContext.Provider>;
+  const plusUnRead = () => {
+    setUnRead(unRead + 1);
+  };
+
+  const minusUnRead = () => {
+    if (unRead > 0) {
+      setUnRead(unRead - 1);
+    }
+  };
+
+  return <FcmContext.Provider value={{ deviceId, saveDeviceId, plusUnRead, minusUnRead }}>{children}</FcmContext.Provider>;
 };
 
 export const useFcm = () => {

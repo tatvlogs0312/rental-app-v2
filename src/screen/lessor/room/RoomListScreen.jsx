@@ -40,7 +40,7 @@ const RoomListScreen = ({ navigation, route }) => {
 
   const getRoom = async () => {
     try {
-      const res = await get("/room/search/v2", { houseId: houseId, page: page, size: size }, auth.token);
+      const res = await get("/rental-service/room/search/v2", { houseId: houseId, page: page, size: size }, auth.token);
       setRooms(res.data);
     } catch (error) {
       console.log(error);
@@ -50,7 +50,7 @@ const RoomListScreen = ({ navigation, route }) => {
   const addRoom = async () => {
     try {
       load.isLoading();
-      const res = await post("/room/create/v2", { houseId: houseId, roomName: roomName, acreage: acreage, numberOfRoom: number }, auth.token);
+      const res = await post("/rental-service/room/create/v2", { houseId: houseId, roomName: roomName, acreage: acreage, numberOfRoom: number }, auth.token);
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         textBody: "Thêm phòng thành công",
@@ -76,7 +76,7 @@ const RoomListScreen = ({ navigation, route }) => {
   const deleteRoom = async () => {
     try {
       load.isLoading();
-      const res = await post(`/room/delete/${roomId}`, null, auth.token);
+      const res = await post(`/rental-service/room/delete/${roomId}`, null, auth.token);
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         textBody: "Xóa phòng thành công",

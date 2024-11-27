@@ -23,7 +23,7 @@ const LessorUserScreen = () => {
 
   const getUser = async () => {
     try {
-      const data = await get("/user-profile/get-information", null, auth.token);
+      const data = await get("/rental-service/user-profile/get-information", null, auth.token);
       setUser(data);
       setAvatar(data.avatar);
     } catch (error) {
@@ -47,7 +47,7 @@ const LessorUserScreen = () => {
         name: "photo.jpg",
       });
       axios
-        .post(DOMAIN + "/user-profile/upload-avatar", formData, {
+        .post(DOMAIN + "/rental-service/user-profile/upload-avatar", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: auth.token,

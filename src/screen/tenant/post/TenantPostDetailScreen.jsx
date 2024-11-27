@@ -72,7 +72,7 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
 
   const getPost = async () => {
     try {
-      const res = await get("/post/" + postId, null, auth.token);
+      const res = await get("/rental-service/post/" + postId, null, auth.token);
       setPostData(res);
     } catch (error) {
       console.log(error);
@@ -81,7 +81,7 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
 
   const getRecommends = async () => {
     try {
-      const res = await post("/post/search-recommend", { ignore: postId, page: 0, size: 4 }, auth.token);
+      const res = await post("/rental-service/post/search-recommend", { ignore: postId, page: 0, size: 4 }, auth.token);
       setRecommends(res.data);
     } catch (error) {
       console.log(error);

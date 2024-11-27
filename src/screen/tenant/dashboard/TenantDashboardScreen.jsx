@@ -20,7 +20,7 @@ const TenantDashboardScreen = ({ navigation }) => {
 
   const getNews = async () => {
     try {
-      const res = await post("/post/search", { page: 0, size: 4 }, auth.token);
+      const res = await post("/rental-service/post/search", { page: 0, size: 4 }, auth.token);
       setNews(res.data);
     } catch (error) {
       console.log(error);
@@ -29,7 +29,7 @@ const TenantDashboardScreen = ({ navigation }) => {
 
   const getRecommends = async () => {
     try {
-      const res = await post("/post/search-recommend", { page: 0, size: 4 }, auth.token);
+      const res = await post("/rental-service/post/search-recommend", { page: 0, size: 4 }, auth.token);
       setRecommends(res.data);
     } catch (error) {
       console.log(error);

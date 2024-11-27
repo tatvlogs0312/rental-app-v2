@@ -45,7 +45,7 @@ const LessorBookScreen = ({ navigation }) => {
 
   const fetchData = async () => {
     try {
-      const data = await post("/book/search-for-lessor", { date: date, status: status, page: page, size: size }, auth.token);
+      const data = await post("/rental-service/book/search-for-lessor", { date: date, status: status, page: page, size: size }, auth.token);
       setBooks(data.data);
     } catch (error) {
       console.log(error);
@@ -54,7 +54,7 @@ const LessorBookScreen = ({ navigation }) => {
 
   const getBookInMonth = async () => {
     try {
-      const data = await get("/book/get-book-in-month", { month: month, year: year }, auth.token);
+      const data = await get("/rental-service/book/get-book-in-month", { month: month, year: year }, auth.token);
 
       const result = {};
       data.forEach((date) => {

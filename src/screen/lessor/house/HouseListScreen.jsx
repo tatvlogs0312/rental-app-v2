@@ -32,7 +32,7 @@ const HouseListScreen = ({ navigation, route }) => {
   const getHouse = async () => {
     load.isLoading();
     try {
-      const res = await get("/house/search", { page: page, size: size }, auth.token);
+      const res = await get("/rental-service/house/search", { page: page, size: size }, auth.token);
       setHouses(res.data);
     } catch (error) {
       console.log(error);
@@ -44,7 +44,7 @@ const HouseListScreen = ({ navigation, route }) => {
   const deleteHouse = async () => {
     try {
       load.isLoading();
-      const res = await post(`/house/delete/${houseId}`, null, auth.token);
+      const res = await post(`/rental-service/house/delete/${houseId}`, null, auth.token);
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         textBody: "Xóa nhà thành công",

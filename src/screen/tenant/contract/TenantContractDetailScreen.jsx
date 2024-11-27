@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Modal, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import HeaderBarNoPlus from "../../../components/header/HeaderBarNoPlus";
 import { COLOR } from "../../../constants/COLORS";
 import { useState } from "react";
@@ -7,14 +7,25 @@ import { get } from "../../../api/ApiManager";
 import { useAuth } from "../../../hook/AuthProvider";
 import { useLoading } from "../../../hook/LoadingProvider";
 import { TouchableOpacity } from "react-native";
+import LoadingModal from "react-native-loading-modal";
 
 const TenantContractDetailScreen = ({ navigation, route }) => {
+  console.log(route.params);
+
   const auth = useAuth();
   const load = useLoading();
 
   const contractId = route.params?.contractId;
+  const stackNavigate = route.params?.stack || null;
+  const screenNavigate = route.params?.screen || null;
 
   const [contract, setContract] = useState(null);
+
+  const [reason, setReason] = useState(null);
+
+  const [reasonMsg, setReasonMsg] = useState(null);
+
+  const [rejectVisiable, setRejectVisiable] = useState(false);
 
   useEffect(() => {
     if (auth.token !== "") {
@@ -24,11 +35,38 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
 
   const getContract = async () => {
     try {
-      const res = await get("/contract/detail/" + contractId, null, auth.token);
+      const res = await get("/rental-service/contract/detail/" + contractId, null, auth.token);
       setContract(res);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const reject = async () => {
+    if (handleInputReject()) {
+      try {
+        load.isLoading();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        load.nonLoading();
+        setRejectVisiable(false);
+      }
+    }
+  };
+
+  const setInputReason = (text) => {
+    setReasonMsg(text);
+    setReasonMsg("");
+  };
+
+  const handleInputReject = () => {
+    if (reason === null || reason === "") {
+      setReasonMsg("Vui lòng nhập lý do từ chối");
+      return false;
+    }
+
+    return true;
   };
 
   const Row = ({ title, value }) => {
@@ -46,7 +84,8 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <HeaderBarNoPlus title={"BACK"} back={() => navigation.goBack()} />
+      <LoadingModal modalVisible={load.loading} />
+      <HeaderBarNoPlus title={"Quay lại"} back={() => navigation.goBack()} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ padding: 10, flex: 1 }}>
           {contract !== null && (
@@ -144,7 +183,7 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
 
               {contract.contractStatusCode === "PENDING_SIGNED" && (
                 <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 15, marginBottom: 20 }}>
-                  <TouchableOpacity style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 20 }}>
+                  <TouchableOpacity style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 20 }} onPress={() => setRejectVisiable(true)}>
                     <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Từ chối</Text>
                   </TouchableOpacity>
 
@@ -164,10 +203,85 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
           )}
         </View>
       </ScrollView>
+
+      <Modal visible={rejectVisiable} transparent={true} animationType="slide" onRequestClose={() => setRejectVisiable(false)}>
+        <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center" }}>
+          <View style={{ width: "80%", backgroundColor: "white", borderRadius: 8, padding: 20 }}>
+            <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Từ chối hợp đồng</Text>
+            <View style={{ marginTop: 20 }}>
+              <Text style={{ color: COLOR.primary, fontWeight: "bold", fontSize: 15 }}>* Nhập lý do từ chối:</Text>
+              <TextInput
+                style={styles.inputMutiline}
+                placeholder="Nhập lý do từ chối của bạn"
+                multiline
+                onChangeText={(t) => setInputReason(t)}
+                value={reason}
+              />
+              <Text style={{ color: COLOR.red, fontSize: 13 }}>{reasonMsg}</Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 20 }}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => {
+                  setRejectVisiable(false);
+                  setReasonMsg(null);
+                }}
+              >
+                <Text style={styles.cancelText}>Hủy</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.accessButton} onPress={reject}>
+                <Text style={styles.cancelText}>Xác nhận</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  cancelButton: {
+    marginTop: 10,
+    marginHorizontal: 4,
+    backgroundColor: "#ff4444",
+    padding: 10,
+    borderRadius: 5,
+    width: 100,
+  },
+
+  accessButton: {
+    marginTop: 10,
+    marginHorizontal: 4,
+    backgroundColor: "blue",
+    padding: 10,
+    borderRadius: 5,
+    width: 100,
+  },
+
+  cancelText: {
+    color: "white",
+    textAlign: "center",
+  },
+
+  inputMutiline: {
+    color: COLOR.black,
+    textAlignVertical: "top",
+    marginVertical: 10,
+    height: 100,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: COLOR.grey,
+    borderRadius: 10,
+    backgroundColor: COLOR.white,
+    // Đổ bóng
+    shadowColor: "#000", // Màu đổ bóng
+    shadowOffset: { width: 0, height: 5 }, // Vị trí bóng đổ
+    shadowOpacity: 0.2, // Độ mờ của bóng
+    shadowRadius: 3.5, // Độ lan của bóng
+    elevation: 5, // Đổ bóng cho Android
+  },
+});
 
 export default TenantContractDetailScreen;

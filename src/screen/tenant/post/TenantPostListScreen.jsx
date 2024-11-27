@@ -43,9 +43,9 @@ const TenantPostListScreen = ({ navigation, route }) => {
     try {
       let api = "";
       if (type === "NEW") {
-        api = "/post/search";
+        api = "/rental-service/post/search";
       } else {
-        api = "/post/search-recommend";
+        api = "/rental-service/post/search-recommend";
       }
       const res = await post(api, { keyword: keyword, page: 0, size: size }, auth.token);
       setPosts(res.data);
@@ -63,9 +63,9 @@ const TenantPostListScreen = ({ navigation, route }) => {
       try {
         let api = "";
         if (type === "NEW") {
-          api = "/post/search";
+          api = "/rental-service/post/search";
         } else {
-          api = "/post/search-recommend";
+          api = "/rental-service/post/search-recommend";
         }
         const res = await post(api, { keyword: keyword, page: page + 1, size: size }, auth.token);
         setPosts([...posts, ...res.data]);
@@ -82,9 +82,9 @@ const TenantPostListScreen = ({ navigation, route }) => {
       setKeyword(null);
       let api = "";
       if (type === "NEW") {
-        api = "/post/search";
+        api = "/rental-service/post/search";
       } else {
-        api = "/post/search-recommend";
+        api = "/rental-service/post/search-recommend";
       }
       const res = await post(api, { keyword: keyword, page: page, size: size }, auth.token);
       setPosts(res.data);

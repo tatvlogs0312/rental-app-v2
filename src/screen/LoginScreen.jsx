@@ -45,7 +45,8 @@ const LoginScreen = ({ navigation }) => {
 
     if (username !== "" && password !== "") {
       try {
-        var data = await apiCall("/auth/login", "POST", { username: username, password: password, device: fcm.deviceId }, {}, auth.token);
+        var data = await apiCall("/rental-service/auth/login", "POST", { username: username, password: password, device: fcm.deviceId }, {}, auth.token);
+        
         if (data.status === "ACTIVE") {
           auth.login(data);
         } else {
