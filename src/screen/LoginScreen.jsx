@@ -7,9 +7,10 @@ import GoogleSVG from "../../assets/svg/google.svg";
 import Facebook from "../../assets/svg/facebook.svg";
 import TwitterSVG from "../../assets/svg/twitter.svg";
 import { useAuth } from "../hook/AuthProvider";
-import { apiCall } from "../api/ApiManager";
+import { apiCall, get, post } from "../api/ApiManager";
 import { useLoading } from "../hook/LoadingProvider";
 import { useFcm } from "../hook/FcmProvider";
+import LoadingModal from "react-native-loading-modal";
 
 const LoginScreen = ({ navigation }) => {
   const auth = useAuth();
@@ -45,8 +46,10 @@ const LoginScreen = ({ navigation }) => {
 
     if (username !== "" && password !== "") {
       try {
+        load.isLoading();
         var data = await apiCall("/rental-service/auth/login", "POST", { username: username, password: password, device: fcm.deviceId }, {}, auth.token);
-        
+        var subrile = await post("/rental-service/fcm/subscribe/" + fcm.deviceId, {}, data.token);
+        fcm.setUnRead(subrile);
         if (data.status === "ACTIVE") {
           auth.login(data);
         } else {
@@ -56,6 +59,8 @@ const LoginScreen = ({ navigation }) => {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        load.nonLoading();
       }
     }
   };
@@ -79,6 +84,7 @@ const LoginScreen = ({ navigation }) => {
         backgroundColor: "#fff",
       }}
     >
+      <LoadingModal modalVisible={load.loading} />
       <Text style={styles.loginTxt}>Đăng nhập</Text>
       <View style={styles.form}>
         <View>

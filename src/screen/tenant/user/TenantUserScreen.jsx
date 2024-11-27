@@ -5,12 +5,14 @@ import { TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { DOMAIN, IMAGE_DOMAIN } from "../../../constants/URL";
-import { get } from "../../../api/ApiManager";
+import { get, post } from "../../../api/ApiManager";
 import { COLOR } from "../../../constants/COLORS";
 import { useAuth } from "../../../hook/AuthProvider";
+import { useFcm } from "../../../hook/FcmProvider";
 
 const TenantUserScreen = ({ navigation }) => {
   const auth = useAuth();
+  const fcm = useFcm();
 
   const [user, setUser] = useState(null);
   const [avatar, setAvatar] = useState(null);
@@ -56,6 +58,11 @@ const TenantUserScreen = ({ navigation }) => {
         .then((res) => setAvatar(res.data))
         .catch((err) => console.log(JSON.stringify(err)));
     }
+  };
+
+  const logout = async () => {
+    const unSubrile = await post("/rental-service/fcm/unsubscribe/" + fcm.deviceId, {}, auth.token);
+    auth.logout();
   };
 
   return (
@@ -154,7 +161,7 @@ const TenantUserScreen = ({ navigation }) => {
               </View>
             </View>
             <View>
-              <TouchableOpacity onPress={() => auth.logout()}>
+              <TouchableOpacity onPress={logout}>
                 <Text style={styles.btn}>Đăng xuất</Text>
               </TouchableOpacity>
             </View>

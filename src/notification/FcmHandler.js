@@ -6,7 +6,7 @@ import { Toast, ALERT_TYPE } from "react-native-alert-notification";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 const FcmHandler = () => {
-  const { saveDeviceId } = useFcm();
+  const { saveDeviceId, plusUnRead } = useFcm();
 
   async function requestUserPermission() {
     const authStatus = await messaging().requestPermission();
@@ -47,6 +47,7 @@ const FcmHandler = () => {
 
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
       console.log("notification: ", JSON.stringify(remoteMessage));
+      plusUnRead();
       Toast.show({
         type: ALERT_TYPE.INFO,
         title: "Thông báo",

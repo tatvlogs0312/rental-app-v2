@@ -5,10 +5,12 @@ import { useLoading } from "../../hook/LoadingProvider";
 import { get, post } from "../../api/ApiManager";
 import { COLOR } from "../../constants/COLORS";
 import LoadingModal from "react-native-loading-modal";
+import { useFcm } from "../../hook/FcmProvider";
 
 const NotificationScreen = ({ navigation, route }) => {
   const auth = useAuth();
   const load = useLoading();
+  const { minusUnRead } = useFcm();
 
   const [notifications, setNotifications] = useState([]);
   const [totalPage, setTotalPage] = useState(null);
@@ -59,6 +61,7 @@ const NotificationScreen = ({ navigation, route }) => {
 
     try {
       const res = await get("/rental-service/fcm/read/" + id, {}, auth.token);
+      minusUnRead();
 
       // Parse dữ liệu từ chuỗi JSON
       const dataObj = JSON.parse(data);
