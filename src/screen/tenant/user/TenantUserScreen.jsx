@@ -91,7 +91,7 @@ const TenantUserScreen = ({ navigation }) => {
           <ScrollView style={{ flex: 1 }}>
             <View style={{ padding: 10, margin: 10, backgroundColor: COLOR.white, elevation: 5, borderRadius: 5 }}>
               <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                <Text style={{ fontSize: 20, fontWeight: "bold", color: COLOR.primary }}>Thông tin cá nhân:</Text>
+                <Text style={{ fontSize: 18, fontWeight: "bold", color: COLOR.primary }}>Thông tin cá nhân:</Text>
                 <Pressable>
                   <FontAwesome6 name="pen-to-square" size={20} color={COLOR.primary} />
                 </Pressable>
@@ -99,66 +99,96 @@ const TenantUserScreen = ({ navigation }) => {
               <View>
                 <View style={styles.info}>
                   <Text>Số điện thoại:</Text>
-                  <TextInput value="0381551953" style={styles.infoInput} />
+                  <TextInput value={user.phoneNumber} style={styles.infoInput} />
                 </View>
                 <View style={styles.info}>
                   <Text>Email:</Text>
-                  <TextInput value="tanhtuan093@gmail.com" style={styles.infoInput} />
+                  <TextInput value={user.email} style={styles.infoInput} />
                 </View>
               </View>
             </View>
-            <View style={{ padding: 10, margin: 10, backgroundColor: COLOR.white, elevation: 5, borderRadius: 5 }}>
-              <View>
-                <Text style={{ fontSize: 20, fontWeight: "bold", color: COLOR.primary }}>Tiện ích:</Text>
-              </View>
-              <View>
-                <TouchableOpacity
-                  style={{
-                    padding: 10,
-                    marginVertical: 3,
-                    borderRadius: 10,
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    alignContent: "center",
-                    // backgroundColor: COLOR.white,
-                    // elevation: 2,
-                  }}
-                  onPress={() => {
-                    navigation.navigate("TenantContractList");
-                  }}
-                >
-                  <FontAwesome6 name="file-contract" size={20} color={COLOR.primary} />
-                  <Text style={{ marginLeft: 10, fontSize: 16 }}>Hợp đồng</Text>
-                </TouchableOpacity>
+            <View style={{ margin: 10, backgroundColor: COLOR.white, elevation: 5, borderRadius: 5 }}>
+              <TouchableOpacity
+                style={{
+                  padding: 5,
+                  marginVertical: 3,
+                  borderRadius: 10,
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignContent: "center",
+                  borderBottomWidth: StyleSheet.hairlineWidth,
+                  borderColor: COLOR.grey,
+                }}
+                onPress={() => {
+                  navigation.navigate("TenantContractList");
+                }}
+              >
+                <View style={{ width: "10%", justifyContent: "center", alignItems: "center" }}>
+                  <FontAwesome6 name="file-contract" size={16} color={COLOR.primary} />
+                </View>
+                <View style={{ width: "90%", flexDirection: "row", justifyContent: "space-between" }}>
+                  <View>
+                    <Text style={{ fontSize: 16 }}>Hợp đồng</Text>
+                    <Text style={{ fontSize: 14, color: COLOR.grey }}>Danh sách các hợp đồng đợi ký, đã ký của bạn</Text>
+                  </View>
+                  <View style={{ justifyContent: "center", alignItems: "center", padding: 5 }}>
+                    <FontAwesome6 name="angle-right" size={15} color={COLOR.primary} />
+                  </View>
+                </View>
+              </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={{
-                    padding: 10,
-                    marginVertical: 3,
-                    borderRadius: 10,
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    alignContent: "center",
-                  }}
-                >
-                  <FontAwesome6 name="money-bill-wave" size={20} color={COLOR.primary} />
-                  <Text style={{ marginLeft: 10, fontSize: 16 }}>Hóa đơn</Text>
-                </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  padding: 5,
+                  marginVertical: 3,
+                  borderRadius: 10,
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignContent: "center",
+                  borderBottomWidth: StyleSheet.hairlineWidth,
+                  borderColor: COLOR.grey,
+                }}
+                onPress={() => {
+                  navigation.navigate("TenantBillList");
+                }}
+              >
+                <View style={{ width: "10%", justifyContent: "center", alignItems: "center" }}>
+                  <FontAwesome6 name="money-bill-wave" size={16} color={COLOR.primary} />
+                </View>
+                <View style={{ width: "90%", flexDirection: "row", justifyContent: "space-between" }}>
+                  <View>
+                    <Text style={{ fontSize: 16 }}>Hóa đơn</Text>
+                    <Text style={{ fontSize: 14, color: COLOR.grey }}>Danh sách hóa đơn hàng tháng của bạn</Text>
+                  </View>
+                  <View style={{ justifyContent: "center", alignItems: "center", padding: 5 }}>
+                    <FontAwesome6 name="angle-right" size={15} color={COLOR.primary} />
+                  </View>
+                </View>
+              </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={{
-                    padding: 10,
-                    marginVertical: 3,
-                    borderRadius: 10,
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    alignContent: "center",
-                  }}
-                >
-                  <FontAwesome6 name="triangle-exclamation" size={20} color={COLOR.primary} />
-                  <Text style={{ marginLeft: 10, fontSize: 16 }}>Thông báo sự cố</Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                style={{
+                  padding: 10,
+                  marginVertical: 3,
+                  borderRadius: 10,
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignContent: "center",
+                }}
+              >
+                <View style={{ width: "10%", justifyContent: "center", alignItems: "center" }}>
+                  <FontAwesome6 name="triangle-exclamation" size={16} color={COLOR.primary} />
+                </View>
+                <View style={{ width: "90%", flexDirection: "row", justifyContent: "space-between" }}>
+                  <View>
+                    <Text style={{ fontSize: 16 }}>Báo cáo sự cố</Text>
+                    <Text style={{ fontSize: 14, color: COLOR.grey }}>Thông báo sự cố đến chủ trọ</Text>
+                  </View>
+                  <View style={{ justifyContent: "center", alignItems: "center", padding: 5 }}>
+                    <FontAwesome6 name="angle-right" size={15} color={COLOR.primary} />
+                  </View>
+                </View>
+              </TouchableOpacity>
             </View>
             <View>
               <TouchableOpacity onPress={logout}>

@@ -6,7 +6,8 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState("");
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
+  const [info, setInfo] = useState(null);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -28,6 +29,17 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, []);
 
+  const setInfoApp = (infoReq) => {
+    console.log("====================================");
+    console.log(infoReq);
+    console.log("====================================");
+    setInfo(infoReq);
+    console.log("====================================");
+    console.log(info);
+    console.log("====================================");
+    AsyncStorage.setItem("info", JSON.stringify(infoReq));
+  };
+
   const login = (user) => {
     setUser(user);
     setToken(user.token);
@@ -38,11 +50,13 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     AsyncStorage.removeItem("user");
     AsyncStorage.removeItem("token");
+    AsyncStorage.removeItem("info");
     setUser(null);
+    setInfo(null);
     setToken("");
   };
 
-  return <AuthContext.Provider value={{ user, token, login, logout, loading }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, token, setInfoApp, login, logout, loading }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

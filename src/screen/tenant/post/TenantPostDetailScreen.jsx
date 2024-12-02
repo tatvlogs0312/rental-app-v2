@@ -160,7 +160,7 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
                       {` ${postData.position.detail}, ${postData.position.ward}, ${postData.position.district}, ${postData.position.province}`}
                     </Text>
                   </View>
-                  <View style={{ marginTop: 5, borderTopWidth: 0.5, borderTopColor: COLOR.primary }}>
+                  <View style={{ marginTop: 5, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: COLOR.grey }}>
                     <View>
                       <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 15, marginBottom: 5, color: COLOR.primary }}>Mô tả:</Text>
                       <Text>{postData.content}</Text>
@@ -168,28 +168,33 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
 
                     <View>
                       <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 15, marginBottom: 10, color: COLOR.primary }}>Thông tin phòng:</Text>
-                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.primary } }}>
+                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey } }}>
                         <View style={styles.infoV2Icon}>
                           <FontAwesome6 name="house" size={14} color={COLOR.primary} />
                         </View>
                         <Text style={styles.infoV2Title}>Loại phòng</Text>
                         <Text>{`${postData.roomTypeName}`}</Text>
                       </View>
-                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.primary } }}>
+                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey } }}>
                         <View style={styles.infoV2Icon}>
                           <FontAwesome6 name="money-bill-1-wave" size={14} color={COLOR.primary} />
                         </View>
                         <Text style={styles.infoV2Title}>Mức giá</Text>
                         <Text>{`${ConvertToMoneyV2(postData.price)}/tháng`}</Text>
                       </View>
-                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.primary } }}>
+                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey } }}>
                         <View style={styles.infoV2Icon}>
                           <FontAwesome6 name="expand" size={14} color={COLOR.primary} />
                         </View>
                         <Text style={styles.infoV2Title}>Diện tích</Text>
                         <Text>{`${postData.acreage}m²`}</Text>
                       </View>
-                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderBottomWidth: 0.5, borderColor: COLOR.primary } }}>
+                      <View
+                        style={{
+                          ...styles.infoV2,
+                          ...{ borderTopWidth: StyleSheet.hairlineWidth, borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey },
+                        }}
+                      >
                         <View style={styles.infoV2Icon}>
                           <FontAwesome6 name="bed" size={14} color={COLOR.primary} />
                         </View>
@@ -248,6 +253,11 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
                       <View style={{ position: "relative" }}>
                         <Image source={{ uri: IMAGE_DOMAIN + "/" + item.firstImage }} style={styles.cardNewImg} />
                         <Text style={styles.txtPrice1}>{ConvertToMoneyV2(item.price) + "/tháng"}</Text>
+                        <Text
+                          style={{ padding: 5, backgroundColor: COLOR.white, color: COLOR.primary, position: "absolute", bottom: 5, left: 5, borderRadius: 10 }}
+                        >
+                          {item.typeName}
+                        </Text>
                       </View>
                       <View>
                         <Text numberOfLines={1} style={styles.cardNewPosition}>

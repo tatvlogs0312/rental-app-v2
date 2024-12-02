@@ -63,7 +63,15 @@ const LessorUserScreen = () => {
       {user && (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLOR.white }}>
           <View>
-            <View style={{ padding: 20, flexDirection: "row", borderBottomWidth: 0.5, borderColor: COLOR.primary, backgroundColor: COLOR.primary }}>
+            <View
+              style={{
+                padding: 20,
+                flexDirection: "row",
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                borderColor: COLOR.primary,
+                backgroundColor: COLOR.primary,
+              }}
+            >
               <View style={{ position: "relative", marginTop: 10 }}>
                 <Image source={{ uri: `${IMAGE_DOMAIN}/${avatar}` }} style={{ width: 100, height: 100, objectFit: "cover", borderRadius: 100 }} />
                 <Pressable
@@ -91,64 +99,14 @@ const LessorUserScreen = () => {
               <View>
                 <View style={styles.info}>
                   <Text>Số điện thoại:</Text>
-                  <TextInput value="0381551953" style={styles.infoInput} />
+                  <TextInput value={user.phoneNumber} style={styles.infoInput} />
                 </View>
                 <View style={styles.info}>
                   <Text>Email:</Text>
-                  <TextInput value="tanhtuan093@gmail.com" style={styles.infoInput} />
+                  <TextInput value={user.email} style={styles.infoInput} />
                 </View>
               </View>
             </View>
-            {/* <View style={{ padding: 10, margin: 10, backgroundColor: COLOR.white, elevation: 5, borderRadius: 5 }}>
-              <View>
-                <Text style={{ fontSize: 20, fontWeight: "bold", color: COLOR.primary }}>Tiện ích:</Text>
-              </View>
-              <View>
-                <TouchableOpacity
-                  style={{
-                    padding: 10,
-                    marginVertical: 3,
-                    borderRadius: 10,
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    alignContent: "center",
-                    // backgroundColor: COLOR.white,
-                    // elevation: 2,
-                  }}
-                >
-                  <FontAwesome6 name="file-contract" size={20} color={COLOR.primary} />
-                  <Text style={{ marginLeft: 10, fontSize: 16 }}>Hợp đồng</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={{
-                    padding: 10,
-                    marginVertical: 3,
-                    borderRadius: 10,
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    alignContent: "center",
-                  }}
-                >
-                  <FontAwesome6 name="money-bill-wave" size={20} color={COLOR.primary} />
-                  <Text style={{ marginLeft: 10, fontSize: 16 }}>Hóa đơn</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={{
-                    padding: 10,
-                    marginVertical: 3,
-                    borderRadius: 10,
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    alignContent: "center",
-                  }}
-                >
-                  <FontAwesome6 name="triangle-exclamation" size={20} color={COLOR.primary} />
-                  <Text style={{ marginLeft: 10, fontSize: 16 }}>Thông báo sự cố</Text>
-                </TouchableOpacity>
-              </View>
-            </View> */}
             <View>
               <TouchableOpacity onPress={() => auth.logout()}>
                 <Text style={styles.btn}>Đăng xuất</Text>
@@ -167,7 +125,7 @@ const styles = StyleSheet.create({
   },
 
   infoInput: {
-    borderBottomWidth: 0.5,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
 
   btn: {

@@ -10,6 +10,38 @@ import LoadingModal from "react-native-loading-modal";
 import { TouchableOpacity } from "react-native";
 import HeaderBarSliderPlus from "../../../components/header/HeaderBarSliderPlus";
 
+const contractStauts = [
+  {
+    code: null,
+    name: "Tất cả",
+  },
+
+  {
+    code: "DRAFT",
+    name: "Nháp",
+  },
+
+  {
+    code: "PENDING_SIGNED",
+    name: "Chờ ký",
+  },
+
+  {
+    code: "SIGNED",
+    name: "Đã ký",
+  },
+
+  {
+    code: "CANCEL",
+    name: "Hủy",
+  },
+
+  {
+    code: "REJECT",
+    name: "Từ chối",
+  },
+];
+
 const LessorContractListScreen = ({ navigation, route }) => {
   const auth = useAuth();
   const load = useLoading();
@@ -17,23 +49,29 @@ const LessorContractListScreen = ({ navigation, route }) => {
   const [contracts, setContracts] = useState([]);
   const [totalPage, setTotalPage] = useState(null);
 
+  const [statusI, setStatusI] = useState(0);
+
   const [status, setStatus] = useState(null);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
 
   useEffect(() => {
     if (auth.token !== "") {
-      getContracts();
+      getContracts(contractStauts[statusI].code);
     }
   }, [auth.token, route.params?.refresh]);
 
-  const getContracts = async () => {
+  useEffect(() => {
+    setStatus(contractStauts[statusI].code);
+  }, [statusI]);
+
+  const getContracts = async (statusReq) => {
     load.isLoading();
     try {
       const response = await get(
         "/rental-service/contract/search-for-lessor",
         {
-          status: status,
+          status: statusReq,
           page: page,
           size: size,
         },
@@ -52,7 +90,7 @@ const LessorContractListScreen = ({ navigation, route }) => {
     try {
       if (totalPage !== null && page + 1 < totalPage) {
         try {
-          const response = await post("/rental-service/contract/search-for-lessor", { page: page + 1, size: size }, auth.token);
+          const response = await post("/rental-service/contract/search-for-lessor", { status: status, page: page + 1, size: size }, auth.token);
           const newData = response.data || [];
           setContracts([...contracts, ...newData]);
           setPage(page + 1);
@@ -66,9 +104,50 @@ const LessorContractListScreen = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLOR.white }}>
-      {/* <LoadingModal modalVisible={load.loading}/> */}
-      <HeaderBarSliderPlus title={"Hợp đồng"} back={() => navigation.goBack()} plus={() => navigation.navigate("LessorContractCreate")} />
+    <View style={{ flex: 1 }}>
+      <LoadingModal modalVisible={load.loading} />
+      <View style={{ backgroundColor: COLOR.white }}>
+        <HeaderBarPlus title={"Hợp đồng"} back={() => navigation.goBack()} plus={() => navigation.navigate("LessorContractCreate")} />
+        <View style={{ marginTop: 10 }}>
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={contractStauts}
+            renderItem={({ item, index }) => (
+              <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    setStatusI(index);
+                    getContracts(contractStauts[index].code);
+                  }}
+                >
+                  <Text
+                    style={
+                      index === statusI
+                        ? {
+                            width: 100,
+                            padding: 10,
+                            borderBottomWidth: 2, // Đường viền dưới
+                            borderBottomColor: COLOR.primary,
+                            color: COLOR.primary, // Màu chữ của nút được chọn
+                            fontWeight: "bold",
+                            textAlign: "center",
+                          }
+                        : {
+                            width: 100,
+                            padding: 10,
+                            textAlign: "center",
+                          }
+                    }
+                  >
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        </View>
+      </View>
       <View style={{ margin: 5, flex: 1 }}>
         {contracts.length > 0 && (
           <FlatList
@@ -90,26 +169,8 @@ const LessorContractListScreen = ({ navigation, route }) => {
                   position: "relative",
                 }}
               >
-                {item.contractStatusCode === "DRAFT" && (
-                  <TouchableOpacity
-                    style={{
-                      position: "absolute",
-                      top: 10,
-                      right: 10,
-                      zIndex: 10,
-                      padding: 5,
-                      borderRadius: 10,
-                      backgroundColor: COLOR.primary,
-                    }}
-                  >
-                    <Text style={{ color: COLOR.white }}>
-                      <FontAwesome6 name="pen" size={13} />
-                      {" Sửa"}
-                    </Text>
-                  </TouchableOpacity>
-                )}
                 <Pressable>
-                  <View style={{ paddingBottom: 10, borderBottomWidth: 0.5, borderColor: COLOR.grey }}>
+                  <View style={{ paddingBottom: 10, borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey }}>
                     <Text style={{ fontSize: 17, marginBottom: 5 }}>
                       {/* <Text style={{ color: COLOR.grey }}>Mã hợp đồng: </Text> */}
                       <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>{item.contractCode}</Text>

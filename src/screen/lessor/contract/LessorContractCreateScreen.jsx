@@ -173,11 +173,8 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
     <>
       <View style={{ flex: 1, backgroundColor: COLOR.white }}>
         <LoadingModal modalVisible={load.loading} />
-        <HeaderBarNoPlus title={"BACK"} back={() => navigation.goBack()} />
+        <HeaderBarNoPlus title={"Quay lại"} back={() => navigation.goBack()} />
         <View style={{ flex: 1 }}>
-          <View>
-            <Text style={{ padding: 10, fontWeight: "bold", fontSize: 17, textAlign: "center" }}>Tạo hợp đồng</Text>
-          </View>
           <View style={{ flex: 1 }}>
             <View>
               <View
@@ -219,11 +216,11 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                   <View style={{ padding: 10 }}>
                     <View>
                       <Text style={{ fontSize: 16, fontWeight: "bold" }}>Thông tin khách thuê</Text>
-                      <View style={{ borderColor: COLOR.grey, borderRadius: 10, borderWidth: 0.5 }}>
-                        <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                      <View style={{ borderColor: COLOR.grey, borderRadius: 10, borderWidth: StyleSheet.hairlineWidth }}>
+                        <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                           <Row title={"Họ tên:"} value={tenantInfo.firstName + " " + tenantInfo.lastName} />
                         </View>
-                        <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                        <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                           <Row title={"Số điện thoại:"} value={tenantInfo.phoneNumber} />
                         </View>
                         <View style={{ borderColor: COLOR.grey, marginHorizontal: 15 }}>
@@ -270,14 +267,14 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                     </View>
 
                     <View style={{ marginTop: 20, backgroundColor: COLOR.light, padding: 10, borderRadius: 10 }}>
-                      <Text style={{ fontSize: 16, fontWeight: "bold" }}>Dịch vụ</Text>
-                      <View style={{ borderColor: COLOR.grey, borderRadius: 10, borderWidth: 0.5 }}>
+                      <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 10 }}>Dịch vụ</Text>
+                      <View style={{ borderColor: COLOR.grey, borderRadius: 10, borderWidth: 0.5, backgroundColor: COLOR.white }}>
                         {utilities.map((item, index) => (
                           <View
                             style={
                               index === utilities.length - 1
                                 ? { borderColor: COLOR.grey, marginHorizontal: 15 }
-                                : { borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }
+                                : { borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }
                             }
                           >
                             <Row title={item.utilityName + ":"} value={item.utilityPrice + "/" + item.utilityUnit} />
@@ -388,7 +385,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
               renderItem={({ index, item }) => (
                 <TouchableOpacity
                   key={index}
-                  style={{ padding: 20, borderBottomWidth: 0.5, borderBottomColor: COLOR.grey }}
+                  style={{ padding: 20, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: COLOR.grey }}
                   onPress={() => {
                     setHouseId(item.id);
                     setHouseName(item.houseName);
@@ -420,7 +417,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
               renderItem={({ index, item }) => (
                 <TouchableOpacity
                   key={index}
-                  style={{ padding: 20, borderBottomWidth: 0.5, borderBottomColor: COLOR.grey }}
+                  style={{ padding: 20, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: COLOR.grey }}
                   onPress={() => {
                     setRoomId(item.id);
                     setRoomName(item.roomName);
@@ -457,6 +454,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     color: COLOR.black,
     borderColor: COLOR.grey,
+    backgroundColor: COLOR.white,
   },
 
   inputTitle: {

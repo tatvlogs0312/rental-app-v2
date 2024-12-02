@@ -50,6 +50,8 @@
     "react-native-loading-modal": "^1.1.2",
     "react-native-modal": "^13.0.1",
     "react-native-modals": "^0.22.3",
+    "react-native-modern-datepicker": "^1.0.0-beta.91",
+    "react-native-month-year-picker": "^1.9.0",
     "react-native-otp-entry": "^1.7.3",
     "react-native-pager-view": "^6.4.1",
     "react-native-push-notification": "^8.1.1",

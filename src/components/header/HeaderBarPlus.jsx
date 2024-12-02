@@ -8,12 +8,12 @@ const HeaderBarPlus = ({ title, back, plus }) => {
     <View style={styles.background2}>
       <View style={{ flexDirection: "row" }}>
         <Pressable style={styles.icon} onPress={back}>
-          <FontAwesome6 name="angle-left" size={20} color={COLOR.white} />
+          <FontAwesome6 name="angle-left" size={20} color={COLOR.primary} />
           <Text style={styles.title}>{title}</Text>
         </Pressable>
       </View>
       <Pressable style={styles.icon} onPress={plus}>
-        <FontAwesome6 name="plus" size={25} color={COLOR.white} />
+        <FontAwesome6 name="plus" size={25} color={COLOR.primary} />
       </Pressable>
     </View>
   );
@@ -34,9 +34,9 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 20,
-    marginLeft: 5,
+    marginLeft: 10,
     fontWeight: "bold",
-    color: COLOR.white,
+    color: COLOR.primary,
   },
 
   background: {
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: COLOR.primary,
+    backgroundColor: COLOR.white,
   },
 });
 

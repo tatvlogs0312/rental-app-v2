@@ -10,6 +10,7 @@ import LoadingModal from "react-native-loading-modal";
 import { TouchableOpacity } from "react-native";
 import HeaderBarSliderPlus from "../../../components/header/HeaderBarSliderPlus";
 import HeaderBarNoPlus from "../../../components/header/HeaderBarNoPlus";
+import { witdhScreen } from "../../../utils/Utils";
 
 const TenantContractListScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -18,15 +19,16 @@ const TenantContractListScreen = ({ navigation, route }) => {
   const [contracts, setContracts] = useState([]);
   const [totalPage, setTotalPage] = useState(null);
 
-  const [status, setStatus] = useState(null);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
+
+  const [selectedButton, setSelectedButton] = useState("PENDING_SIGNED");
 
   useEffect(() => {
     if (auth.token !== "") {
       getContracts();
     }
-  }, [auth.token]);
+  }, [auth.token, route.params?.refresh, selectedButton]);
 
   const getContracts = async () => {
     load.isLoading();
@@ -34,7 +36,7 @@ const TenantContractListScreen = ({ navigation, route }) => {
       const response = await get(
         "/rental-service/contract/search-for-tenant",
         {
-          status: status,
+          status: selectedButton,
           page: page,
           size: size,
         },
@@ -67,9 +69,22 @@ const TenantContractListScreen = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLOR.white }}>
-      {/* <LoadingModal modalVisible={load.loading}/> */}
+    <View style={{ flex: 1 }}>
+      <LoadingModal modalVisible={load.loading}/>
       <HeaderBarNoPlus title={"Hợp đồng"} back={() => navigation.goBack()} plus={() => navigation.goBack()} />
+      <View style={{ backgroundColor: COLOR.white, flexDirection: "row" }}>
+        <Pressable style={[styles.button, selectedButton === "PENDING_SIGNED" && styles.selectedButton]} onPress={() => setSelectedButton("PENDING_SIGNED")}>
+          <Text style={[styles.text, selectedButton === "PENDING_SIGNED" && styles.selectedText]}>Chờ ký</Text>
+        </Pressable>
+
+        <Pressable style={[styles.button, selectedButton === "SIGNED" && styles.selectedButton]} onPress={() => setSelectedButton("SIGNED")}>
+          <Text style={[styles.text, selectedButton === "SIGNED" && styles.selectedText]}>Đã ký</Text>
+        </Pressable>
+
+        <Pressable style={[styles.button, selectedButton === "REJECT" && styles.selectedButton]} onPress={() => setSelectedButton("REJECT")}>
+          <Text style={[styles.text, selectedButton === "REJECT" && styles.selectedText]}>Từ chối</Text>
+        </Pressable>
+      </View>
       <View style={{ margin: 5, flex: 1 }}>
         {contracts.length > 0 && (
           <FlatList
@@ -161,6 +176,23 @@ const TenantContractListScreen = ({ navigation, route }) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  button: {
+    width: witdhScreen / 3,
+    padding: 10,
+  },
+  selectedButton: {
+    borderBottomWidth: 2, // Đường viền dưới
+    borderBottomColor: COLOR.primary, // Màu của đường viền
+  },
+  text: {
+    textAlign: "center",
+    color: "#000", // Màu chữ mặc định
+  },
+  selectedText: {
+    color: COLOR.primary, // Màu chữ của nút được chọn
+    fontWeight: "bold", // Chữ đậm cho nút được chọn
+  },
+});
 
 export default TenantContractListScreen;

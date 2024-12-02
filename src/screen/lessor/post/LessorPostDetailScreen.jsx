@@ -147,7 +147,7 @@ const LessorPostDetailScreen = ({ navigation, route }) => {
                       {` ${postData.position.detail}, ${postData.position.ward}, ${postData.position.district}, ${postData.position.province}`}
                     </Text>
                   </View>
-                  <View style={{ marginTop: 5, borderTopWidth: 0.5, borderTopColor: COLOR.primary }}>
+                  <View style={{ marginTop: 5, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: COLOR.grey }}>
                     <View>
                       <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 15, marginBottom: 5, color: COLOR.primary }}>Mô tả:</Text>
                       <Text>{postData.content}</Text>
@@ -155,28 +155,33 @@ const LessorPostDetailScreen = ({ navigation, route }) => {
 
                     <View>
                       <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 15, marginBottom: 10, color: COLOR.primary }}>Thông tin phòng:</Text>
-                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.primary } }}>
+                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey } }}>
                         <View style={styles.infoV2Icon}>
                           <FontAwesome6 name="house" size={14} color={COLOR.primary} />
                         </View>
                         <Text style={styles.infoV2Title}>Loại phòng</Text>
                         <Text>{`${postData.roomTypeName}`}</Text>
                       </View>
-                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.primary } }}>
+                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey } }}>
                         <View style={styles.infoV2Icon}>
                           <FontAwesome6 name="money-bill-1-wave" size={14} color={COLOR.primary} />
                         </View>
                         <Text style={styles.infoV2Title}>Mức giá</Text>
                         <Text>{`${ConvertToMoneyV2(postData.price)}/tháng`}</Text>
                       </View>
-                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderColor: COLOR.primary } }}>
+                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey } }}>
                         <View style={styles.infoV2Icon}>
                           <FontAwesome6 name="expand" size={14} color={COLOR.primary} />
                         </View>
                         <Text style={styles.infoV2Title}>Diện tích</Text>
                         <Text>{`${postData.acreage}m²`}</Text>
                       </View>
-                      <View style={{ ...styles.infoV2, ...{ borderTopWidth: 0.5, borderBottomWidth: 0.5, borderColor: COLOR.primary } }}>
+                      <View
+                        style={{
+                          ...styles.infoV2,
+                          ...{ borderTopWidth: StyleSheet.hairlineWidth, borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey },
+                        }}
+                      >
                         <View style={styles.infoV2Icon}>
                           <FontAwesome6 name="bed" size={14} color={COLOR.primary} />
                         </View>

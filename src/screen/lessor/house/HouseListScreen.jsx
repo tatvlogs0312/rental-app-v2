@@ -60,13 +60,15 @@ const HouseListScreen = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLOR.white }}>
+    <View style={{ flex: 1 }}>
       <LoadingModal modalVisible={load.loading} />
       <HeaderBarPlus title={"Nhà"} back={() => navigation.goBack()} plus={() => navigation.navigate("AddHouse")} />
-      <View>
+      <View style={{ flex: 1 }}>
         {houses.length > 0 ? (
-          <View style={{ padding: 10 }}>
+          <View style={{ padding: 5, flex: 1 }}>
             <FlatList
+              scrollEnabled
+              showsVerticalScrollIndicator={false}
               refreshControl={<RefreshControl refreshing={load.loading} onRefresh={getHouse} />}
               data={houses}
               renderItem={({ item }) => (
@@ -100,7 +102,9 @@ const HouseListScreen = ({ navigation, route }) => {
                     <FontAwesome6 name="x" size={10} color={COLOR.white} />
                   </TouchableOpacity>
                   <View>
-                    <Text style={{ fontSize: 20, fontWeight: "bold", paddingBottom: 1, borderBottomWidth: 0.5, color: COLOR.primary }}>{item.houseName}</Text>
+                    <Text style={{ fontSize: 20, fontWeight: "bold", paddingBottom: 1, borderBottomWidth: StyleSheet.hairlineWidth, color: COLOR.primary }}>
+                      {item.houseName}
+                    </Text>
                     <Text style={{ marginTop: 10 }}>
                       <FontAwesome6 name="house" />
                       {` ${item.totalEmptyRoom} phòng trống/${item.totalRoom} phòng`}

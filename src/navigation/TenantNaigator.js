@@ -12,6 +12,8 @@ import TenantContractDetailScreen from "../screen/tenant/contract/TenantContract
 import TenantContractSignScreen from "../screen/tenant/contract/TenantContractSignScreen";
 import SignSuccessScreen from "../screen/common/SignSuccessScreen";
 import NotificationScreen from "../screen/common/NotificationScreen";
+import TenantBillListScreen from "../screen/tenant/bill/TenantBillListScreen";
+import TenantBillDetailScreen from "../screen/tenant/bill/TenantBillDetailScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -27,6 +29,9 @@ const NotificationStack = () => {
       <Stack.Screen name="TenantContractList" component={TenantContractListScreen} />
       <Stack.Screen name="TenantContractDetail" component={TenantContractDetailScreen} />
       <Stack.Screen name="TenantContractSign" component={TenantContractSignScreen} />
+
+      <Stack.Screen name="TenantBillList" component={TenantBillListScreen} />
+      <Stack.Screen name="TenantBillDetail" component={TenantBillDetailScreen} />
     </Stack.Navigator>
   );
 };
@@ -37,16 +42,15 @@ const PostStack = () => {
     <Stack.Navigator initialRouteName="TenantDashboard" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="TenantDashboard" component={TenantDarshboardScreen} />
 
-      {/* <Stack.Screen name="TenantPostList" component={TenantPostListScreen} />
-      <Stack.Screen name="TenantPostDetail" component={TenantPostDetailScreen} />
-      <Stack.Screen name="SignSuccess" component={SignSuccessScreen} /> */}
-
       <Stack.Screen name="TenantPostList" component={TenantPostListScreen} />
       <Stack.Screen name="TenantPostDetail" component={TenantPostDetailScreen} />
       <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
       <Stack.Screen name="TenantContractList" component={TenantContractListScreen} />
       <Stack.Screen name="TenantContractDetail" component={TenantContractDetailScreen} />
       <Stack.Screen name="TenantContractSign" component={TenantContractSignScreen} />
+
+      <Stack.Screen name="TenantBillList" component={TenantBillListScreen} />
+      <Stack.Screen name="TenantBillDetail" component={TenantBillDetailScreen} />
     </Stack.Navigator>
   );
 };
@@ -57,17 +61,15 @@ const UserStack = () => {
     <Stack.Navigator initialRouteName="TenantUser" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="TenantUser" component={TenantUserScreen} />
 
-      {/* <Stack.Screen name="TenantContractList" component={TenantContractListScreen} />
-      <Stack.Screen name="TenantContractDetail" component={TenantContractDetailScreen} />
-      <Stack.Screen name="TenantContractSign" component={TenantContractSignScreen} />
-      <Stack.Screen name="SignSuccess" component={SignSuccessScreen} /> */}
-
       <Stack.Screen name="TenantPostList" component={TenantPostListScreen} />
       <Stack.Screen name="TenantPostDetail" component={TenantPostDetailScreen} />
       <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
       <Stack.Screen name="TenantContractList" component={TenantContractListScreen} />
       <Stack.Screen name="TenantContractDetail" component={TenantContractDetailScreen} />
       <Stack.Screen name="TenantContractSign" component={TenantContractSignScreen} />
+
+      <Stack.Screen name="TenantBillList" component={TenantBillListScreen} />
+      <Stack.Screen name="TenantBillDetail" component={TenantBillDetailScreen} />
     </Stack.Navigator>
   );
 };
@@ -77,13 +79,6 @@ const TenantNaigator = () => {
     <Tab.Navigator
       initialRouteName="Post"
       screenOptions={({ route }) => ({
-        // tabBarStyle: {
-        //   position: "absolute",
-        //   backgroundColor: "#ffffff",
-        //   height: 50,
-        //   borderTopLeftRadius: 20,
-        //   borderTopRightRadius: 20,
-        // },
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;

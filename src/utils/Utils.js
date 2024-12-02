@@ -25,6 +25,13 @@ export function ConvertToMoneyV2(amount) {
   }
 }
 
+export function ConvertMoneyV3(amount) {
+  if (amount !== null) {
+    return amount.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+  }
+  return "0 đ";
+}
+
 export const TimeAgo = (dateString) => {
   const now = new Date();
   const past = new Date(dateString);

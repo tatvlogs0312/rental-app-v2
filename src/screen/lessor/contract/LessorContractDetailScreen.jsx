@@ -9,7 +9,8 @@ import { useLoading } from "../../../hook/LoadingProvider";
 import { TouchableOpacity } from "react-native";
 import LoadingModal from "react-native-loading-modal";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
-import { getUUID } from "../../../utils/Utils";
+import { ConvertMoneyV3, getUUID } from "../../../utils/Utils";
+import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 
 const LessorContractDetailScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -34,10 +35,10 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
     }
   };
 
-  const sendUser = () => {
+  const sendUser = async () => {
     try {
       load.isLoading();
-      const res = post("/rental-service/contract/send-user/" + contractId, {}, auth.token);
+      const res = await post("/rental-service/contract/send-user/" + contractId, {}, auth.token);
 
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
@@ -55,10 +56,10 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
     }
   };
 
-  const cancel = () => {
+  const cancel = async () => {
     try {
       load.isLoading();
-      const res = post(
+      const res = await post(
         "/rental-service/contract/cancel",
         {
           id: contractId,
@@ -98,25 +99,49 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
   return (
     <View style={{ flex: 1 }}>
       <LoadingModal modalVisible={load.loading} />
-      <HeaderBarNoPlus title={"BACK"} back={() => navigation.goBack()} />
+      <HeaderBarNoPlus title={"Quay lại"} back={() => navigation.goBack()} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ padding: 10, flex: 1 }}>
           {contract !== null && (
             <View>
               <View>
+                {(contract.contractStatusCode === "REJECT" || contract.contractStatusCode === "CANCEL") && (
+                  <View
+                    style={{
+                      paddingHorizontal: 5,
+                      paddingVertical: 10,
+                      backgroundColor: "rgba(253, 121, 168, 0.5)",
+                      borderRadius: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View style={{ marginHorizontal: 10 }}>
+                      <FontAwesome6Icon name="triangle-exclamation" color={COLOR.red} light size={20} />
+                    </View>
+                    <View>
+                      <Text style={{ color: COLOR.red }}>Hợp đồng bị hủy/từ chối</Text>
+                      {contract.statusMessage !== null && (
+                        <Text>
+                          Lý do: <Text>{contract.statusMessage}</Text>
+                        </Text>
+                      )}
+                    </View>
+                  </View>
+                )}
                 <View style={{ marginBottom: 15 }}>
                   <Text style={{ fontSize: 16, padding: 5, color: COLOR.primary }}>Thông tin hợp đồng</Text>
                   <View style={{ backgroundColor: COLOR.white, borderRadius: 10 }}>
-                    <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                    <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                       <Row title={"Mã hợp đồng:"} value={contract.contractCode} />
                     </View>
-                    <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                    <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                       <Row title={"Thời gian tạo:"} value={contract.createdTime} />
                     </View>
-                    <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                    <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                       <Row title={"Ngày hiệu lực:"} value={contract.startDate} />
                     </View>
-                    <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                    <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                       <Row title={"Ngày kết thúc:"} value={contract.endDate} />
                     </View>
                     <View style={{ marginHorizontal: 15 }}>
@@ -128,18 +153,18 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
                 <View style={{ marginBottom: 15 }}>
                   <Text style={{ fontSize: 16, padding: 5, color: COLOR.primary }}>Giá thuê phòng & dịch vụ</Text>
                   <View style={{ backgroundColor: COLOR.white, borderRadius: 10 }}>
-                    <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
-                      <Row title={"Tiền phòng hàng tháng:"} value={contract.price + " vnđ"} />
+                    <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                      <Row title={"Tiền phòng hàng tháng:"} value={ConvertMoneyV3(contract.price)} />
                     </View>
                     {contract.utilities.map((item, index) => (
                       <View
                         style={
                           index === contract.utilities.length - 1
                             ? { borderColor: COLOR.grey, marginHorizontal: 15 }
-                            : { borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }
+                            : { borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }
                         }
                       >
-                        <Row title={item.utilityName + ":"} value={item.utilityPrice + "/" + item.utilityUnit} />
+                        <Row title={item.utilityName + ":"} value={ConvertMoneyV3(item.utilityPrice) + "/" + item.utilityUnit} />
                       </View>
                     ))}
                   </View>
@@ -148,7 +173,7 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
                 <View style={{ marginBottom: 15 }}>
                   <Text style={{ fontSize: 16, padding: 5, color: COLOR.primary }}>Thông tin chủ trọ</Text>
                   <View style={{ backgroundColor: COLOR.white, borderRadius: 10 }}>
-                    <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                    <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                       <Row title={"Họ tên:"} value={contract.lessorFirstName + " " + contract.lessorLastName} />
                     </View>
                     <View style={{ marginHorizontal: 15 }}>
@@ -160,7 +185,7 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
                 <View style={{ marginBottom: 15 }}>
                   <Text style={{ fontSize: 16, padding: 5, color: COLOR.primary }}>Thông tin khách thuê</Text>
                   <View style={{ backgroundColor: COLOR.white, borderRadius: 10 }}>
-                    <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                    <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                       <Row title={"Họ tên:"} value={contract.tenantFirstName + " " + contract.tenantLastName} />
                     </View>
                     <View style={{ marginHorizontal: 15 }}>
@@ -172,19 +197,19 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
                 <View style={{ marginBottom: 15 }}>
                   <Text style={{ fontSize: 16, padding: 5, color: COLOR.primary }}>Thông tin phòng</Text>
                   <View style={{ backgroundColor: COLOR.white, borderRadius: 10 }}>
-                    <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                    <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                       <Row title={"Nhà:"} value={contract.houseName} />
                     </View>
-                    <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                    <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                       <Row title={"Phòng:"} value={contract.roomName} />
                     </View>
-                    <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                    <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                       <Row title={"Địa chỉ:"} value={contract.position.detail} />
                     </View>
-                    <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                    <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                       <Row title={"Xã/Phường:"} value={contract.position.ward} />
                     </View>
-                    <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                    <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                       <Row title={"Quận/Huyện:"} value={contract.position.district} />
                     </View>
                     <View style={{ marginHorizontal: 15 }}>
@@ -195,12 +220,12 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
               </View>
 
               {contract.contractStatusCode === "DRAFT" && (
-                <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 15, marginBottom: 20 }}>
-                  <TouchableOpacity style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 20 }} onPress={cancel}>
+                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                  <TouchableOpacity style={{ width: "49%", backgroundColor: COLOR.primary, borderRadius: 10 }} onPress={cancel}>
                     <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Hủy hợp đồng</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 20 }} onPress={sendUser}>
+                  <TouchableOpacity style={{ width: "49%", backgroundColor: COLOR.primary, borderRadius: 10 }} onPress={sendUser}>
                     <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Gửi khách thuê ký</Text>
                   </TouchableOpacity>
                 </View>

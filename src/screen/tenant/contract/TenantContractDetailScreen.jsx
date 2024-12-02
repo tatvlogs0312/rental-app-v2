@@ -3,11 +3,14 @@ import { Modal, ScrollView, StyleSheet, Text, TextInput, View } from "react-nati
 import HeaderBarNoPlus from "../../../components/header/HeaderBarNoPlus";
 import { COLOR } from "../../../constants/COLORS";
 import { useState } from "react";
-import { get } from "../../../api/ApiManager";
+import { get, post } from "../../../api/ApiManager";
 import { useAuth } from "../../../hook/AuthProvider";
 import { useLoading } from "../../../hook/LoadingProvider";
 import { TouchableOpacity } from "react-native";
 import LoadingModal from "react-native-loading-modal";
+import { ConvertMoneyV3, getUUID } from "../../../utils/Utils";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 
 const TenantContractDetailScreen = ({ navigation, route }) => {
   console.log(route.params);
@@ -46,22 +49,44 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
     if (handleInputReject()) {
       try {
         load.isLoading();
+        const res = await post(
+          "/rental-service/contract/reject",
+          {
+            id: contractId,
+            message: reason,
+          },
+          auth.token,
+        );
+
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          textBody: "Từ chối hợp đồng thành công",
+          title: "Thông báo",
+        });
+
+        navigation.navigate("TenantContractList", {
+          refresh: getUUID(),
+        });
       } catch (error) {
         console.log(error);
       } finally {
         load.nonLoading();
         setRejectVisiable(false);
+        setReason(null);
       }
     }
   };
 
   const setInputReason = (text) => {
-    setReasonMsg(text);
+    setReason(text);
     setReasonMsg("");
   };
 
   const handleInputReject = () => {
     if (reason === null || reason === "") {
+      console.log("====================================");
+      console.log(reason);
+      console.log("====================================");
       setReasonMsg("Vui lòng nhập lý do từ chối");
       return false;
     }
@@ -91,6 +116,30 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
           {contract !== null && (
             <View>
               <View>
+                {(contract.contractStatusCode === "REJECT" || contract.contractStatusCode === "CANCEL") && (
+                  <View
+                    style={{
+                      paddingHorizontal: 5,
+                      paddingVertical: 10,
+                      backgroundColor: "rgba(253, 121, 168, 0.5)",
+                      borderRadius: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View style={{ marginHorizontal: 10 }}>
+                      <FontAwesome6Icon name="triangle-exclamation" color={COLOR.red} light size={20} />
+                    </View>
+                    <View>
+                      <Text style={{ color: COLOR.red }}>Hợp đồng bị hủy/từ chối</Text>
+                      {contract.statusMessage !== null && (
+                        <Text>
+                          Lý do: <Text>{contract.statusMessage}</Text>
+                        </Text>
+                      )}
+                    </View>
+                  </View>
+                )}
                 <View style={{ marginBottom: 15 }}>
                   <Text style={{ fontSize: 16, padding: 5, color: COLOR.primary }}>Thông tin hợp đồng</Text>
                   <View style={{ backgroundColor: COLOR.white, borderRadius: 10 }}>
@@ -116,7 +165,7 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
                   <Text style={{ fontSize: 16, padding: 5, color: COLOR.primary }}>Giá thuê phòng & dịch vụ</Text>
                   <View style={{ backgroundColor: COLOR.white, borderRadius: 10 }}>
                     <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
-                      <Row title={"Tiền phòng hàng tháng:"} value={contract.price + " vnđ"} />
+                      <Row title={"Tiền phòng hàng tháng:"} value={ConvertMoneyV3(contract.price)} />
                     </View>
                     {contract.utilities.map((item, index) => (
                       <View
@@ -126,7 +175,7 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
                             : { borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }
                         }
                       >
-                        <Row title={item.utilityName + ":"} value={item.utilityPrice + "/" + item.utilityUnit} />
+                        <Row title={item.utilityName + ":"} value={ConvertMoneyV3(item.utilityPrice) + "/" + item.utilityUnit} />
                       </View>
                     ))}
                   </View>
@@ -182,13 +231,13 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
               </View>
 
               {contract.contractStatusCode === "PENDING_SIGNED" && (
-                <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 15, marginBottom: 20 }}>
-                  <TouchableOpacity style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 20 }} onPress={() => setRejectVisiable(true)}>
+                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                  <TouchableOpacity style={{ width: "49%", backgroundColor: COLOR.primary, borderRadius: 10 }} onPress={() => setRejectVisiable(true)}>
                     <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Từ chối</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 20 }}
+                    style={{ width: "49%", backgroundColor: COLOR.primary, borderRadius: 10 }}
                     onPress={() =>
                       navigation.navigate("TenantContractSign", {
                         id: contractId,

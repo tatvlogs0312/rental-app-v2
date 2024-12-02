@@ -18,6 +18,10 @@ import LessorContractDetailScreen from "../screen/lessor/contract/LessorContract
 import LessorContractCreateScreen from "../screen/lessor/contract/LessorContractCreateScreen";
 import SignSuccessScreen from "../screen/common/SignSuccessScreen";
 
+import LessorBillDetailScreen from "../screen/lessor/bill/LessorBillDetailScreen";
+import LessorBillListScreen from "../screen/lessor/bill/LessorBillListScreen";
+import LessorBillCreateScreen from "../screen/lessor/bill/LessorBillCreateScreen";
+
 const Tab = createBottomTabNavigator();
 
 const HomeStack = () => {
@@ -25,6 +29,7 @@ const HomeStack = () => {
   return (
     <Stack.Navigator initialRouteName="LessorDashboard" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="LessorDashboard" component={LessorDashboradScreen} />
+
       <Stack.Screen name="LessorBook" component={LessorBookScreen} />
       <Stack.Screen name="LessorPostList" component={LessorPostListScreen} />
       <Stack.Screen name="LessorAddPost" component={LessorAddPostScreen} />
@@ -36,6 +41,10 @@ const HomeStack = () => {
       <Stack.Screen name="LessorContractDetail" component={LessorContractDetailScreen} />
       <Stack.Screen name="LessorContractCreate" component={LessorContractCreateScreen} />
       <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
+
+      <Stack.Screen name="LessorBillCreate" component={LessorBillCreateScreen} />
+      <Stack.Screen name="LessorBillDetail" component={LessorBillDetailScreen} />
+      <Stack.Screen name="LessorBillList" component={LessorBillListScreen} />
     </Stack.Navigator>
   );
 };
@@ -57,6 +66,10 @@ const NotificationStack = () => {
       <Stack.Screen name="LessorContractDetail" component={LessorContractDetailScreen} />
       <Stack.Screen name="LessorContractCreate" component={LessorContractCreateScreen} />
       <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
+
+      <Stack.Screen name="LessorBillCreate" component={LessorBillCreateScreen} />
+      <Stack.Screen name="LessorBillDetail" component={LessorBillDetailScreen} />
+      <Stack.Screen name="LessorBillList" component={LessorBillListScreen} />
     </Stack.Navigator>
   );
 };
@@ -78,6 +91,10 @@ const UserStack = () => {
       <Stack.Screen name="LessorContractDetail" component={LessorContractDetailScreen} />
       <Stack.Screen name="LessorContractCreate" component={LessorContractCreateScreen} />
       <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
+
+      <Stack.Screen name="LessorBillCreate" component={LessorBillCreateScreen} />
+      <Stack.Screen name="LessorBillDetail" component={LessorBillDetailScreen} />
+      <Stack.Screen name="LessorBillList" component={LessorBillListScreen} />
     </Stack.Navigator>
   );
 };

@@ -119,45 +119,47 @@ const AddHouseScreen = ({ navigation }) => {
   return (
     <>
       <LoadingModal modalVisible={load.loading} />
-      <View style={{ flex: 1, backgroundColor: COLOR.white }}>
+      <View style={{ flex: 1 }}>
         <HeaderBarNoPlus title={"Thêm nhà"} back={() => navigation.goBack()} />
-        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-          <View style={{ padding: 5, margin: 5, elevation: 1 }}>
-            <View style={{ marginHorizontal: 10 }}>
-              <View style={styles.inputBackgroud}>
-                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Tên nhà:</Text>
-                <TextInput style={styles.input} placeholder="Nhập tên nhà" onChangeText={(t) => setHouseName(t)} value={houseName} />
+        <View style={{ flex: 1, backgroundColor: COLOR.white, margin: 5, borderRadius: 5 }}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={{ padding: 5, margin: 5 }}>
+              <View style={{ marginHorizontal: 10 }}>
+                <View style={styles.inputBackgroud}>
+                  <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Tên nhà:</Text>
+                  <TextInput style={styles.input} placeholder="Nhập tên nhà" onChangeText={(t) => setHouseName(t)} value={houseName} />
+                </View>
+                <Pressable onPress={() => setProvinceVisiable(true)} style={styles.inputBackgroud}>
+                  <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Tỉnh/Thành phố:</Text>
+                  <TextInput style={styles.input} placeholder="Chọn tỉnh/thành phố" readOnly value={province} />
+                </Pressable>
+                <Pressable onPress={() => setDistrictVisiable(true)} style={styles.inputBackgroud}>
+                  <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Quận/Huyện:</Text>
+                  <TextInput style={styles.input} placeholder="Chọn quận/huyện" readOnly value={district} />
+                </Pressable>
+                <Pressable onPress={() => setWardVisiable(true)} style={styles.inputBackgroud}>
+                  <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Xã/Phường:</Text>
+                  <TextInput style={styles.input} placeholder="Chọn xã/phường" readOnly value={ward} />
+                </Pressable>
+                <View style={{ marginTop: 10 }}>
+                  <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Địa chỉ chi tiết:</Text>
+                  <TextInput
+                    style={styles.inputMutiline}
+                    placeholder="Nhập địa chỉ (Số nhà, ngõ, ngách, đường, ...)"
+                    multiline
+                    onChangeText={(t) => setDetail(t)}
+                    value={detail}
+                  />
+                </View>
               </View>
-              <Pressable onPress={() => setProvinceVisiable(true)} style={styles.inputBackgroud}>
-                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Tỉnh/Thành phố:</Text>
-                <TextInput style={styles.input} placeholder="Chọn tỉnh/thành phố" readOnly value={province} />
-              </Pressable>
-              <Pressable onPress={() => setDistrictVisiable(true)} style={styles.inputBackgroud}>
-                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Quận/Huyện:</Text>
-                <TextInput style={styles.input} placeholder="Chọn quận/huyện" readOnly value={district} />
-              </Pressable>
-              <Pressable onPress={() => setWardVisiable(true)} style={styles.inputBackgroud}>
-                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Xã/Phường:</Text>
-                <TextInput style={styles.input} placeholder="Chọn xã/phường" readOnly value={ward} />
-              </Pressable>
-              <View style={{ marginTop: 10 }}>
-                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Địa chỉ chi tiết:</Text>
-                <TextInput
-                  style={styles.inputMutiline}
-                  placeholder="Nhập địa chỉ (Số nhà, ngõ, ngách, đường, ...)"
-                  multiline
-                  onChangeText={(t) => setDetail(t)}
-                  value={detail}
-                />
+              <View>
+                <TouchableOpacity onPress={addHouse}>
+                  <Text style={styles.btn}>Thêm</Text>
+                </TouchableOpacity>
               </View>
             </View>
-            <View>
-              <TouchableOpacity onPress={addHouse}>
-                <Text style={styles.btn}>Thêm</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </View>
       </View>
 
       <Modal visible={provinceVisiable} transparent={true} animationType="slide" onRequestClose={() => setProvinceVisiable(false)}>
@@ -171,7 +173,7 @@ const AddHouseScreen = ({ navigation }) => {
               renderItem={({ index, item }) => (
                 <TouchableOpacity
                   key={index}
-                  style={{ padding: 20, borderBottomWidth: 0.5, borderBottomColor: "#dcdde1" }}
+                  style={{ padding: 20, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: "#dcdde1" }}
                   onPress={() => {
                     setProvince(item.province_name);
                     setDistrict(null);
@@ -202,7 +204,7 @@ const AddHouseScreen = ({ navigation }) => {
               renderItem={({ index, item }) => (
                 <TouchableOpacity
                   key={index}
-                  style={{ padding: 20, borderBottomWidth: 0.5, borderBottomColor: "#dcdde1" }}
+                  style={{ padding: 20, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: "#dcdde1" }}
                   onPress={() => {
                     setDistrict(item.district_name);
                     setWard(null);
@@ -232,7 +234,7 @@ const AddHouseScreen = ({ navigation }) => {
               renderItem={({ index, item }) => (
                 <TouchableOpacity
                   key={index}
-                  style={{ padding: 20, borderBottomWidth: 0.5, borderBottomColor: "#dcdde1" }}
+                  style={{ padding: 20, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: "#dcdde1" }}
                   onPress={() => {
                     setWard(item.ward_name);
                     setWardVisiable(false);
@@ -271,8 +273,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     height: 50,
     padding: 10,
-    borderWidth: 1,
-    borderColor: COLOR.primary,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: COLOR.grey,
     borderRadius: 10,
     backgroundColor: COLOR.white,
     // Đổ bóng
@@ -289,8 +291,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     height: 100,
     padding: 10,
-    borderWidth: 1,
-    borderColor: COLOR.primary,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: COLOR.grey,
     borderRadius: 10,
     backgroundColor: COLOR.white,
     // Đổ bóng
@@ -303,7 +305,6 @@ const styles = StyleSheet.create({
 
   inputBackgroud: {
     marginTop: 10,
-    // borderBottomWidth: 0.5,
   },
 });
 

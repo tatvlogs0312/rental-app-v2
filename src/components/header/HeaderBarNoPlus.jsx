@@ -7,7 +7,7 @@ const HeaderBarNoPlus = ({ title, back }) => {
   return (
     <View style={styles.background}>
       <Pressable style={styles.icon} onPress={back}>
-        <FontAwesome6 name="angle-left" size={20} color={COLOR.white}/>
+        <FontAwesome6 name="angle-left" size={20} color={COLOR.primary}/>
         <Text style={styles.title}>{title}</Text>
       </Pressable>
     </View>
@@ -29,16 +29,16 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 20,
-    marginLeft: 5,
+    marginLeft: 10,
     fontWeight: "bold",
-    color: COLOR.white,
+    color: COLOR.primary,
   },
 
   background: {
     padding: 10,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLOR.primary,
+    backgroundColor: COLOR.white,
   },
 });
 

@@ -12,6 +12,7 @@ import { useLoading } from "../../../hook/LoadingProvider";
 import LoadingModal from "react-native-loading-modal";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import uuid from "react-native-uuid";
+import HeaderBarNoPlus from "../../../components/header/HeaderBarNoPlus";
 
 const LessorAddPostScreen = ({ navigation }) => {
   const auth = useAuth();
@@ -139,15 +140,10 @@ const LessorAddPostScreen = ({ navigation }) => {
   return (
     <>
       <LoadingModal modalVisible={load.loading} />
-      <View style={{ flex: 1, backgroundColor: COLOR.white }}>
-        <View style={{ padding: 15, flexDirection: "row", alignItems: "center" }}>
-          <Pressable style={styles.icon} onPress={() => navigation.goBack()}>
-            <FontAwesome6 name="angle-left" size={25} color={COLOR.white} />
-          </Pressable>
-          <Text style={{ fontSize: 25, marginLeft: 5 }}>Tạo bài viết</Text>
-        </View>
+      <View style={{ flex: 1 }}>
+        <HeaderBarNoPlus title={"Tạo bài viết"} back={() => navigation.goBack()} />
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-          <View style={{ padding: 10 }}>
+          <View style={{ padding: 5, backgroundColor: COLOR.white }}>
             <View style={{ marginHorizontal: 10 }}>
               <View>
                 <TextInput style={styles.input} placeholder="Tiêu đề" onChangeText={(t) => setTitle(t)} value={title} />
@@ -199,8 +195,8 @@ const LessorAddPostScreen = ({ navigation }) => {
                       <Text
                         style={
                           index === roomTypeIndex
-                            ? { fontSize: 15, padding: 5, borderWidth: 1, borderRadius: 10, margin: 5, backgroundColor: COLOR.black, color: COLOR.white }
-                            : { fontSize: 15, padding: 5, borderWidth: 1, borderRadius: 10, margin: 5 }
+                            ? { fontSize: 16, padding: 6, borderRadius: 10, margin: 5, backgroundColor: COLOR.primary, color: COLOR.white }
+                            : { fontSize: 16, padding: 5, borderWidth: 1, borderRadius: 10, margin: 5, color: COLOR.primary, borderColor: COLOR.primary }
                         }
                       >
                         {item.name}
@@ -210,14 +206,14 @@ const LessorAddPostScreen = ({ navigation }) => {
                 </View>
               </View>
               <View>
-                <Text style={{ fontWeight: "bold", fontSize: 16 }}>Hình ảnh</Text>
+                <Text style={{ fontWeight: "bold", fontSize: 16, marginTop: 10 }}>Hình ảnh</Text>
                 <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
                   {files.map((file) => (
                     <View style={{ position: "relative" }}>
                       <Image source={{ uri: file.uri }} style={styles.image} />
                       <Pressable
                         style={{
-                          backgroundColor: COLOR.black,
+                          backgroundColor: COLOR.primary,
                           position: "absolute",
                           top: 5,
                           right: 15,
@@ -259,7 +255,7 @@ const LessorAddPostScreen = ({ navigation }) => {
               renderItem={({ index, item }) => (
                 <TouchableOpacity
                   key={index}
-                  style={{ padding: 20, borderBottomWidth: 0.5, borderBottomColor: "#dcdde1" }}
+                  style={{ padding: 20, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: "#dcdde1" }}
                   onPress={() => {
                     setProvince(item.province_name);
                     setDistrict(null);
@@ -290,7 +286,7 @@ const LessorAddPostScreen = ({ navigation }) => {
               renderItem={({ index, item }) => (
                 <TouchableOpacity
                   key={index}
-                  style={{ padding: 20, borderBottomWidth: 0.5, borderBottomColor: "#dcdde1" }}
+                  style={{ padding: 20, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: "#dcdde1" }}
                   onPress={() => {
                     setDistrict(item.district_name);
                     setWard(null);
@@ -320,7 +316,7 @@ const LessorAddPostScreen = ({ navigation }) => {
               renderItem={({ index, item }) => (
                 <TouchableOpacity
                   key={index}
-                  style={{ padding: 20, borderBottomWidth: 0.5, borderBottomColor: "#dcdde1" }}
+                  style={{ padding: 20, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: "#dcdde1" }}
                   onPress={() => {
                     setWard(item.ward_name);
                     setWardVisiable(false);
@@ -357,7 +353,7 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 10,
     borderWidth: 1,
-    borderColor: COLOR.black,
+    borderColor: COLOR.grey,
     borderRadius: 10,
     backgroundColor: COLOR.white,
     // Đổ bóng
@@ -375,7 +371,7 @@ const styles = StyleSheet.create({
     width: 160,
     padding: 10,
     borderWidth: 1,
-    borderColor: COLOR.black,
+    borderColor: COLOR.grey,
     borderRadius: 10,
     backgroundColor: COLOR.white,
     // Đổ bóng
@@ -393,7 +389,7 @@ const styles = StyleSheet.create({
     height: 100,
     padding: 10,
     borderWidth: 1,
-    borderColor: COLOR.black,
+    borderColor: COLOR.grey,
     borderRadius: 10,
     backgroundColor: COLOR.white,
     // Đổ bóng
@@ -416,16 +412,16 @@ const styles = StyleSheet.create({
   },
 
   btn: {
-    marginTop: 20,
+    marginVertical: 20,
     textAlign: "center",
-    width: 200,
+    width: "100%",
     margin: "auto",
     padding: 10,
     borderRadius: 10,
-    backgroundColor: COLOR.black,
+    backgroundColor: COLOR.primary,
     color: COLOR.white,
     fontWeight: "bold",
-    fontSize: 17,
+    fontSize: 18,
   },
 });
 

@@ -6,11 +6,11 @@ import { COLOR } from "../../../constants/COLORS";
 import { TouchableOpacity } from "react-native";
 
 const features = [
-  { id: "1", icon: "plus", title: "Nhà", color: "#007bff", navigate: "HouseList" },
+  { id: "1", icon: "house", title: "Nhà", color: "#007bff", navigate: "HouseList" },
   { id: "2", icon: "pen-to-square", title: "Bài đăng", color: "#f1c40f", navigate: "LessorPostList" },
   { id: "3", icon: "file-signature", title: "Hợp đồng", color: "#6F1E51", navigate: "LessorContractList" },
-  { id: "4", icon: "file-invoice-dollar", title: "Hóa đơn", color: "#00a34c", navigate: "Room" },
-  { id: "5", icon: "calendar", title: "Lịch xem phòng", color: "#9d76e6", navigate: "LessorBook" },
+  { id: "4", icon: "file-invoice-dollar", title: "Hóa đơn", color: "#00a34c", navigate: "LessorBillList" },
+  { id: "4", icon: "user", title: "Khách thuê", color: "#007bff", navigate: "LessorBillList" },
 ];
 
 const LessorDashboradScreen = ({ navigation }) => {
@@ -24,7 +24,7 @@ const LessorDashboradScreen = ({ navigation }) => {
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <View style={{ marginBottom: 20 }}>
             <Text style={{ fontSize: 20, color: COLOR.white }}>Xin chào,</Text>
-            <Text style={{ fontSize: 35, fontWeight: "600", color: COLOR.white }}>Tuấn</Text>
+            <Text style={{ fontSize: 35, fontWeight: "600", color: COLOR.white }}>{auth.user.name}</Text>
           </View>
           <View>
             <Image source={require("../../../../assets/favicon.png")} />

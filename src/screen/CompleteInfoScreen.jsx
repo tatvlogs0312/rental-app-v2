@@ -6,7 +6,7 @@ import { TouchableOpacity } from "react-native";
 import { useLoading } from "../hook/LoadingProvider";
 import { useAuth } from "../hook/AuthProvider";
 import LoadingModal from "react-native-loading-modal";
-import { post } from "../api/ApiManager";
+import { get, post } from "../api/ApiManager";
 import { validateEmail } from "../utils/Utils";
 
 const CompleteInfoScreen = ({ navigation, route }) => {
@@ -79,10 +79,10 @@ const CompleteInfoScreen = ({ navigation, route }) => {
     return isPass;
   };
 
-  const completeInfo = () => {
+  const completeInfo = async () => {
     if (validateInput()) {
       try {
-        const res = post(
+        const res = await post(
           "/rental-service/user-profile/complete-information",
           {
             firstName: firstName,
@@ -93,6 +93,8 @@ const CompleteInfoScreen = ({ navigation, route }) => {
           user.token,
         );
         if (res) {
+          var info = await get("/rental-service/user-profile/get-information", {}, data.token);
+          auth.setInfoApp(info);
           auth.login(user);
         }
       } catch (error) {

@@ -94,25 +94,14 @@ const RoomListScreen = ({ navigation, route }) => {
   return (
     <>
       <LoadingModal modalVisible={load.loading} />
-
-      <View style={{ flex: 1, backgroundColor: COLOR.white }}>
+      <View style={{ flex: 1 }}>
         <HeaderBarPlus title={"Danh sách phòng"} back={() => navigation.goBack()} plus={() => setAddVisiable(true)} />
-        {/* <View style={{ padding: 10, flexDirection: "row", marginHorizontal: 10, marginTop: 10 }}>
-          <Pressable>
-            <Text style={styles.status1}>Tất cả</Text>
-          </Pressable>
-          <Pressable>
-            <Text style={styles.status2}>Còn trống</Text>
-          </Pressable>
-          <Pressable>
-            <Text style={styles.status2}>Đã cho thuê</Text>
-          </Pressable>
-        </View> */}
-        <View style={{ paddingHorizontal: 10, marginTop: 20 }}>
-          {/* <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10, marginLeft: 10 }}>{houseName}</Text> */}
+        <View style={{ paddingHorizontal: 5, marginTop: 10, flex: 1 }}>
           {rooms.length > 0 ? (
             <View>
               <FlatList
+                scrollEnabled
+                showsVerticalScrollIndicator={false}
                 refreshControl={<RefreshControl refreshing={load.loading} onRefresh={getRoom} />}
                 data={rooms}
                 renderItem={({ item }) => (
@@ -137,20 +126,22 @@ const RoomListScreen = ({ navigation, route }) => {
                     >
                       <FontAwesome6 name="x" size={10} color={COLOR.white} />
                     </Pressable>
-                    <Text style={{ fontSize: 20, fontWeight: "bold", paddingBottom: 1, borderBottomWidth: 0.5 }}>{item.roomName}</Text>
+                    <Text style={{ fontSize: 20, fontWeight: "bold", paddingBottom: 1, borderBottomWidth: StyleSheet.hairlineWidth, color: COLOR.primary }}>
+                      {item.roomName}
+                    </Text>
                     <Text style={{ marginTop: 10 }}>
-                      <FontAwesome6 name="crop-simple" color={COLOR.primary} size={16} />
-                      <Text style={{ color: COLOR.primary, fontWeight: "bold" }}> Diện tích: </Text>
-                      <Text>{`${item.acreage}/m²`}</Text>
+                      <FontAwesome6 name="crop-simple" color={COLOR.grey} size={16} />
+                      <Text style={{ color: COLOR.grey, fontWeight: "bold" }}> Diện tích: </Text>
+                      <Text style={{ fontWeight: "bold" }}>{`${item.acreage}/m²`}</Text>
                     </Text>
                     <Text style={{ marginTop: 5 }}>
-                      <FontAwesome6 name="bed" color={COLOR.primary} />
-                      <Text style={{ color: COLOR.primary, fontWeight: "bold" }}> Số phòng ngủ: </Text>
-                      <Text>{`${item.numberOfRom}`}</Text>
+                      <FontAwesome6 name="bed" color={COLOR.grey} />
+                      <Text style={{ color: COLOR.grey, fontWeight: "bold" }}> Số phòng ngủ: </Text>
+                      <Text style={{ fontWeight: "bold" }}>{`${item.numberOfRom}`}</Text>
                     </Text>
                     <Text style={{ marginTop: 5 }}>
-                      <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Tình trạng: </Text>
-                      <Text>{`${item.roomStatus === "EMPTY" ? "Còn trống" : "Đã cho thuê"}`}</Text>
+                      <Text style={{ color: COLOR.grey, fontWeight: "bold" }}>Tình trạng: </Text>
+                      <Text style={{ fontWeight: "bold" }}>{`${item.roomStatus === "EMPTY" ? "Còn trống" : "Đã cho thuê"}`}</Text>
                     </Text>
                   </View>
                 )}

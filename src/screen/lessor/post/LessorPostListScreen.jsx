@@ -87,9 +87,9 @@ const LessorPostListScreen = ({ navigation, route }) => {
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLOR.white }}>
+    <View style={{ flex: 1 }}>
       <HeaderBarPlus title={"Bài viết"} back={() => navigation.goBack()} plus={() => navigation.navigate("LessorAddPost")} />
-      <View style={{ padding: 10, flex: 1 }}>
+      <View style={{ padding: 5, flex: 1 }}>
         <FlatList
           data={posts}
           renderItem={renderItem}

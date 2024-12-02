@@ -51,6 +51,14 @@ const LoginScreen = ({ navigation }) => {
         var subrile = await post("/rental-service/fcm/subscribe/" + fcm.deviceId, {}, data.token);
         fcm.setUnRead(subrile);
         if (data.status === "ACTIVE") {
+          // var info = await get("/rental-service/user-profile/get-information", {}, data.token);
+          // if (info !== undefined && info !== null) {
+          //   console.log('====================================');
+          //   console.log(info);
+          //   console.log('====================================');
+          //   auth.setInfoApp(info);
+          //   auth.login(data);
+          // }
           auth.login(data);
         } else {
           navigation.navigate("CompleteInfo", {

@@ -112,7 +112,7 @@ const LessorBookScreen = ({ navigation }) => {
               return (
                 <View style={{ marginVertical: 5, padding: 20, backgroundColor: COLOR.light, borderRadius: 20 }}>
                   <View>
-                    <View style={{ borderBottomWidth: 0.5, marginBottom: 10 }}>
+                    <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, marginBottom: 10 }}>
                       <Text style={{ fontSize: 15, fontWeight: "600", color: COLOR.darkBlue }}>{" Phòng: " + item.roomCode + " - " + item.position}</Text>
                     </View>
                     <View>

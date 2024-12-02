@@ -41,7 +41,7 @@ const TenantDashboardScreen = ({ navigation }) => {
       <View style={styles.hearder}>
         <View>
           <Text style={{ fontSize: 18, fontWeight: "600", color: COLOR.primary }}>Xin chào,</Text>
-          <Text style={{ fontSize: 21, fontWeight: "800", color: COLOR.primary }}>Trần Anh Tuấn</Text>
+          <Text style={{ fontSize: 21, fontWeight: "800", color: COLOR.primary }}>{auth.user.name}</Text>
         </View>
         <View>
           <Image source={require("../../../../assets/favicon.png")} />
@@ -93,9 +93,16 @@ const TenantDashboardScreen = ({ navigation }) => {
                     <View style={{ position: "relative" }}>
                       <Image source={{ uri: IMAGE_DOMAIN + "/" + item.firstImage }} style={styles.cardNewImg} />
                       <Text style={styles.txtPrice1}>{ConvertToMoneyV2(item.price) + "/tháng"}</Text>
+                      <Text
+                        style={{ padding: 5, backgroundColor: COLOR.white, color: COLOR.primary, position: "absolute", bottom: 5, left: 5, borderRadius: 10 }}
+                      >
+                        {item.typeName}
+                      </Text>
                     </View>
                     <View>
-                      <Text numberOfLines={1} style={styles.cardNewPosition}>{item.title}</Text>
+                      <Text numberOfLines={1} style={styles.cardNewPosition}>
+                        {item.title}
+                      </Text>
                       <View>
                         <Text style={{ color: COLOR.grey }}>
                           <FontAwesome6 name="location-dot" color={COLOR.primary} size={16} />{" "}
@@ -135,9 +142,16 @@ const TenantDashboardScreen = ({ navigation }) => {
                     <View style={{ position: "relative" }}>
                       <Image source={{ uri: IMAGE_DOMAIN + "/" + item.firstImage }} style={styles.cardNewImg} />
                       <Text style={styles.txtPrice1}>{ConvertToMoneyV2(item.price) + "/tháng"}</Text>
+                      <Text
+                        style={{ padding: 5, backgroundColor: COLOR.white, color: COLOR.primary, position: "absolute", bottom: 5, left: 5, borderRadius: 10 }}
+                      >
+                        {item.typeName}
+                      </Text>
                     </View>
                     <View>
-                      <Text numberOfLines={1} style={styles.cardNewPosition}>{item.title}</Text>
+                      <Text numberOfLines={1} style={styles.cardNewPosition}>
+                        {item.title}
+                      </Text>
                       <View>
                         <Text style={{ color: COLOR.grey }}>
                           <FontAwesome6 name="location-dot" color={COLOR.primary} size={16} />{" "}
@@ -178,7 +192,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.light,
     borderRadius: 10,
     margin: 5,
-    elevation: 2
+    elevation: 2,
   },
 
   cardNewPosition: {
@@ -186,7 +200,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontWeight: "600",
     paddingVertical: 10,
-    
   },
 
   cardNewImg: {
