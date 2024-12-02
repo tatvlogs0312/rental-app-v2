@@ -26,7 +26,7 @@ export function ConvertToMoneyV2(amount) {
 }
 
 export function ConvertMoneyV3(amount) {
-  if (amount !== null) {
+  if (amount !== null && amount !== undefined) {
     return amount.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
   }
   return "0 đ";

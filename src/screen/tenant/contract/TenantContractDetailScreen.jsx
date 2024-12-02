@@ -84,9 +84,6 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
 
   const handleInputReject = () => {
     if (reason === null || reason === "") {
-      console.log("====================================");
-      console.log(reason);
-      console.log("====================================");
       setReasonMsg("Vui lòng nhập lý do từ chối");
       return false;
     }
@@ -245,6 +242,14 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
                     }
                   >
                     <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Ký hợp đồng</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              {contract.contractStatusCode === "SIGNED" && (
+                <View style={{ marginVertical: 10 }}>
+                  <TouchableOpacity style={{ backgroundColor: COLOR.primary, borderRadius: 10 }}>
+                    <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Yêu cầu kết thúc hợp đồng</Text>
                   </TouchableOpacity>
                 </View>
               )}

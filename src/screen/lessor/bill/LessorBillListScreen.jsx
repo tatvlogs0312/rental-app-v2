@@ -16,6 +16,7 @@ const LessorBillListScreen = ({ navigation, route }) => {
   const auth = useAuth();
   const load = useLoading();
 
+  const [status, setStatus] = useState("DRAFT");
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
 
@@ -28,7 +29,7 @@ const LessorBillListScreen = ({ navigation, route }) => {
     if (auth.token !== "") {
       getBill();
     }
-  }, [auth.token]);
+  }, [auth.token, route.params?.refresh]);
 
   const getBill = async () => {
     try {
@@ -85,6 +86,19 @@ const LessorBillListScreen = ({ navigation, route }) => {
       <LoadingModal modalVisible={load.loading} />
       <View style={{ flex: 1 }}>
         <HeaderBarPlus title={"Hóa đơn"} plus={() => navigation.navigate("LessorBillCreate")} back={() => navigation.goBack()} />
+        <View style={{ backgroundColor: COLOR.white, flexDirection: "row" }}>
+          <Pressable style={[styles.button, status === "DRAFT" && styles.selectedButton]} onPress={() => setStatus("DRAFT")}>
+            <Text style={[styles.text, status === "DRAFT" && styles.selectedText]}>Nháp</Text>
+          </Pressable>
+
+          <Pressable style={[styles.button, status === "PENDING" && styles.selectedButton]} onPress={() => setStatus("PENDING")}>
+            <Text style={[styles.text, status === "PENDING" && styles.selectedText]}>Chờ thanh toán</Text>
+          </Pressable>
+
+          <Pressable style={[styles.button, status === "PAYED" && styles.selectedButton]} onPress={() => setStatus("PAYED")}>
+            <Text style={[styles.text, status === "PAYED" && styles.selectedText]}>Đã thanh toán</Text>
+          </Pressable>
+        </View>
         <View style={{ margin: 10, flex: 1 }}>
           <View style={{ backgroundColor: COLOR.white, padding: 10, borderRadius: 10 }}>
             <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" }}>

@@ -5,12 +5,13 @@ import { useAuth } from "../../../hook/AuthProvider";
 import { useLoading } from "../../../hook/LoadingProvider";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 import { COLOR } from "../../../constants/COLORS";
-import { get } from "../../../api/ApiManager";
+import { get, post } from "../../../api/ApiManager";
 import LoadingModal from "react-native-loading-modal";
 import { TouchableOpacity } from "react-native";
-import { ConvertMoneyV3 } from "../../../utils/Utils";
+import { ConvertMoneyV3, getUUID } from "../../../utils/Utils";
 import { CheckBox } from "@rneui/base";
 import { MonthList } from "../../../constants/Month";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const LessorBillCreateScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -67,6 +68,40 @@ const LessorBillCreateScreen = ({ navigation, route }) => {
     }
   };
 
+  const createBill = async () => {
+    try {
+      load.isLoading();
+      const res = await post(
+        "/rental-service/bill/create",
+        {
+          contractId: contract.contractId,
+          month: month,
+          year: year,
+          isRentContinue: isContinue,
+          details: utilities.map((u) => ({
+            utilityId: u.utilityId,
+            numberUsed: u.numberUsed,
+          })),
+        },
+        auth.token,
+      );
+
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: "Tạo hóa đơn thành công",
+        title: "Thông báo",
+      });
+
+      navigation.navigate("LessorBillList", {
+        refresh: getUUID(),
+      });
+    } catch (error) {
+      setUtilities(res);
+    } finally {
+      load.nonLoading();
+    }
+  };
+
   const updateQuantity = (id, type) => {
     setUtilities((prevItems) =>
       prevItems.map((item) =>
@@ -97,7 +132,7 @@ const LessorBillCreateScreen = ({ navigation, route }) => {
   const getTotal = () => {
     let billTotal = utilities.reduce((total, item) => total + item.utilityPrice * item.numberUsed, 0);
     if (isContinue === true) {
-      billTotal += 3000000;
+      billTotal += Number(contract.contractPrice);
     }
     return billTotal;
   };
@@ -120,7 +155,7 @@ const LessorBillCreateScreen = ({ navigation, route }) => {
       <LoadingModal modalVisible={load.loading} />
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1 }}>
-          <HeaderBarNoPlus title={"Tạo hóa đơn"} back={() => navigation.navigate()} />
+          <HeaderBarNoPlus title={"Tạo hóa đơn"} back={() => navigation.goBack()} />
           <View style={{ margin: 10, marginTop: 10, backgroundColor: COLOR.white, borderRadius: 10 }}>
             <View style={{ margin: 5 }}>
               <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" }}>
@@ -192,7 +227,7 @@ const LessorBillCreateScreen = ({ navigation, route }) => {
                     <View style={styles.extraServiceContainer}>
                       <View>
                         <Text style={styles.extraServiceText}>Tiếp tục thuê trọ:</Text>
-                        <Text style={{}}>({ConvertMoneyV3(3000000)})</Text>
+                        <Text style={{}}>({ConvertMoneyV3(contract.contractPrice)})</Text>
                       </View>
                       <CheckBox checked={isContinue} onPress={() => setIsContinue(!isContinue)} />
                     </View>
@@ -205,7 +240,7 @@ const LessorBillCreateScreen = ({ navigation, route }) => {
                   </View>
 
                   <View style={{ padding: 10 }}>
-                    <TouchableOpacity onPress={() => {}}>
+                    <TouchableOpacity onPress={createBill }>
                       <Text style={styles.btn}>Tạo hóa đơn</Text>
                     </TouchableOpacity>
                   </View>

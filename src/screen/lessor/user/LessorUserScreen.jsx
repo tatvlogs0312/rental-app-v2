@@ -5,11 +5,11 @@ import { TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { DOMAIN, IMAGE_DOMAIN } from "../../../constants/URL";
-import { get } from "../../../api/ApiManager";
+import { get, post } from "../../../api/ApiManager";
 import { COLOR } from "../../../constants/COLORS";
 import { useAuth } from "../../../hook/AuthProvider";
 
-const LessorUserScreen = () => {
+const LessorUserScreen = ({ navigation }) => {
   const auth = useAuth();
 
   const [user, setUser] = useState(null);
@@ -58,6 +58,11 @@ const LessorUserScreen = () => {
     }
   };
 
+  const logout = async () => {
+    const unSubrile = await post("/rental-service/fcm/unsubscribe/" + fcm.deviceId, {}, auth.token);
+    auth.logout();
+  };
+
   return (
     <>
       {user && (
@@ -89,26 +94,52 @@ const LessorUserScreen = () => {
             {/* </LinearGradient> */}
           </View>
           <ScrollView style={{ flex: 1 }}>
-            <View style={{ padding: 10, margin: 10, backgroundColor: COLOR.white, elevation: 5, borderRadius: 5 }}>
-              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                <Text style={{ fontSize: 20, fontWeight: "bold", color: COLOR.primary }}>Thông tin cá nhân:</Text>
-                <Pressable>
-                  <FontAwesome6 name="pen-to-square" size={20} color={COLOR.primary} />
-                </Pressable>
-              </View>
-              <View>
-                <View style={styles.info}>
-                  <Text>Số điện thoại:</Text>
-                  <TextInput value={user.phoneNumber} style={styles.infoInput} />
+            <View style={{ margin: 10, backgroundColor: COLOR.white, elevation: 5, borderRadius: 5 }}>
+              <TouchableOpacity style={styles.menu}>
+                <View style={{ width: "10%", justifyContent: "center", alignItems: "center" }}>
+                  <FontAwesome6 name="user" size={16} color={COLOR.primary} />
                 </View>
-                <View style={styles.info}>
-                  <Text>Email:</Text>
-                  <TextInput value={user.email} style={styles.infoInput} />
+                <View style={{ width: "90%", flexDirection: "row", justifyContent: "space-between" }}>
+                  <View>
+                    <Text style={{ fontSize: 16 }}>Thông tin cá nhân</Text>
+                  </View>
+                  <View style={{ justifyContent: "center", alignItems: "center", padding: 5 }}>
+                    <FontAwesome6 name="angle-right" size={15} color={COLOR.primary} />
+                  </View>
                 </View>
-              </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.menu} onPress={() => navigation.navigate("ChangePassword")}>
+                <View style={{ width: "10%", justifyContent: "center", alignItems: "center" }}>
+                  <FontAwesome6 name="retweet" size={16} color={COLOR.primary} />
+                </View>
+                <View style={{ width: "90%", flexDirection: "row", justifyContent: "space-between" }}>
+                  <View>
+                    <Text style={{ fontSize: 16 }}>Đổi mật khẩu</Text>
+                  </View>
+                  <View style={{ justifyContent: "center", alignItems: "center", padding: 5 }}>
+                    <FontAwesome6 name="angle-right" size={15} color={COLOR.primary} />
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.menu}>
+                <View style={{ width: "10%", justifyContent: "center", alignItems: "center" }}>
+                  <FontAwesome6 name="book" size={16} color={COLOR.primary} />
+                </View>
+                <View style={{ width: "90%", flexDirection: "row", justifyContent: "space-between" }}>
+                  <View>
+                    <Text style={{ fontSize: 16 }}>Điều khoản và chính sách</Text>
+                  </View>
+                  <View style={{ justifyContent: "center", alignItems: "center", padding: 5 }}>
+                    <FontAwesome6 name="angle-right" size={15} color={COLOR.primary} />
+                  </View>
+                </View>
+              </TouchableOpacity>
             </View>
-            <View>
-              <TouchableOpacity onPress={() => auth.logout()}>
+
+            <View style={{ margin: 10 }}>
+              <TouchableOpacity onPress={logout}>
                 <Text style={styles.btn}>Đăng xuất</Text>
               </TouchableOpacity>
             </View>
@@ -130,15 +161,26 @@ const styles = StyleSheet.create({
 
   btn: {
     marginTop: 20,
+    width: "100%",
     textAlign: "center",
-    width: 200,
     margin: "auto",
     padding: 10,
     borderRadius: 10,
-    backgroundColor: COLOR.primary,
-    color: COLOR.white,
+    backgroundColor: COLOR.lightOrange,
+    color: COLOR.primary,
     fontWeight: "bold",
     fontSize: 17,
+  },
+
+  menu: {
+    padding: 10,
+    marginVertical: 3,
+    borderRadius: 10,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignContent: "center",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: COLOR.grey,
   },
 });
 

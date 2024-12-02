@@ -2,7 +2,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { createStackNavigator } from "@react-navigation/stack";
 import LessorBookScreen from "../screen/lessor/book/LessorBookScreen";
-import NotificationScreen from "../screen/common/NotificationScreen";
 import LessorDashboradScreen from "../screen/lessor/dashboard/LessorDashboradScreen";
 import LessorPostListScreen from "../screen/lessor/post/LessorPostListScreen";
 import LessorAddPostScreen from "../screen/lessor/post/LessorAddPostScreen";
@@ -21,6 +20,8 @@ import SignSuccessScreen from "../screen/common/SignSuccessScreen";
 import LessorBillDetailScreen from "../screen/lessor/bill/LessorBillDetailScreen";
 import LessorBillListScreen from "../screen/lessor/bill/LessorBillListScreen";
 import LessorBillCreateScreen from "../screen/lessor/bill/LessorBillCreateScreen";
+import LessorNotificationScreen from "../screen/lessor/notification/LessorNotificationScreen";
+import ChangePasswordScreen from "../screen/common/ChangePasswordScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -45,6 +46,8 @@ const HomeStack = () => {
       <Stack.Screen name="LessorBillCreate" component={LessorBillCreateScreen} />
       <Stack.Screen name="LessorBillDetail" component={LessorBillDetailScreen} />
       <Stack.Screen name="LessorBillList" component={LessorBillListScreen} />
+
+      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
     </Stack.Navigator>
   );
 };
@@ -53,7 +56,7 @@ const NotificationStack = () => {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator initialRouteName="Notification" screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Notification" component={NotificationScreen} />
+      <Stack.Screen name="Notification" component={LessorNotificationScreen} />
 
       <Stack.Screen name="LessorBook" component={LessorBookScreen} />
       <Stack.Screen name="LessorPostList" component={LessorPostListScreen} />
@@ -70,6 +73,8 @@ const NotificationStack = () => {
       <Stack.Screen name="LessorBillCreate" component={LessorBillCreateScreen} />
       <Stack.Screen name="LessorBillDetail" component={LessorBillDetailScreen} />
       <Stack.Screen name="LessorBillList" component={LessorBillListScreen} />
+
+      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
     </Stack.Navigator>
   );
 };
@@ -95,6 +100,8 @@ const UserStack = () => {
       <Stack.Screen name="LessorBillCreate" component={LessorBillCreateScreen} />
       <Stack.Screen name="LessorBillDetail" component={LessorBillDetailScreen} />
       <Stack.Screen name="LessorBillList" component={LessorBillListScreen} />
+
+      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
     </Stack.Navigator>
   );
 };

@@ -14,6 +14,7 @@ import SignSuccessScreen from "../screen/common/SignSuccessScreen";
 import NotificationScreen from "../screen/common/NotificationScreen";
 import TenantBillListScreen from "../screen/tenant/bill/TenantBillListScreen";
 import TenantBillDetailScreen from "../screen/tenant/bill/TenantBillDetailScreen";
+import ChangePasswordScreen from "../screen/common/ChangePasswordScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,6 +33,8 @@ const NotificationStack = () => {
 
       <Stack.Screen name="TenantBillList" component={TenantBillListScreen} />
       <Stack.Screen name="TenantBillDetail" component={TenantBillDetailScreen} />
+
+      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
     </Stack.Navigator>
   );
 };
@@ -51,6 +54,8 @@ const PostStack = () => {
 
       <Stack.Screen name="TenantBillList" component={TenantBillListScreen} />
       <Stack.Screen name="TenantBillDetail" component={TenantBillDetailScreen} />
+
+      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
     </Stack.Navigator>
   );
 };
@@ -70,6 +75,8 @@ const UserStack = () => {
 
       <Stack.Screen name="TenantBillList" component={TenantBillListScreen} />
       <Stack.Screen name="TenantBillDetail" component={TenantBillDetailScreen} />
+
+      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
     </Stack.Navigator>
   );
 };

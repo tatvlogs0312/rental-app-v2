@@ -3,11 +3,13 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import HeaderBarNoPlus from "../../../components/header/HeaderBarNoPlus";
 import { useAuth } from "../../../hook/AuthProvider";
 import { useLoading } from "../../../hook/LoadingProvider";
-import { get } from "../../../api/ApiManager";
+import { get, post } from "../../../api/ApiManager";
 import { COLOR } from "../../../constants/COLORS";
-import { ConvertMoneyV3 } from "../../../utils/Utils";
+import { ConvertMoneyV3, getUUID } from "../../../utils/Utils";
 import { FlatList } from "react-native";
 import { TouchableOpacity } from "react-native";
+import LoadingModal from "react-native-loading-modal";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const LessorBillDetailScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -32,6 +34,66 @@ const LessorBillDetailScreen = ({ navigation, route }) => {
     }
   };
 
+  const sendUser = async () => {
+    try {
+      load.isLoading();
+      const res = await post("/rental-service/bill/send-user/" + billId, {}, auth.token);
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: "Gửi hóa đơn thành công",
+        title: "Thông báo",
+      });
+
+      navigation.navigate("LessorBillList", {
+        refresh: getUUID(),
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      load.nonLoading();
+    }
+  };
+
+  const cancel = async () => {
+    try {
+      load.isLoading();
+      const res = await post("/rental-service/bill/delete/" + billId, {}, auth.token);
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: "Xóa hóa đơn thành công",
+        title: "Thông báo",
+      });
+
+      navigation.navigate("LessorBillList", {
+        refresh: getUUID(),
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      load.nonLoading();
+    }
+  };
+
+  const updatePayment = async () => {
+    try {
+      load.isLoading();
+      const res = await post("/rental-service/bill/update-payment/" + billId, {}, auth.token);
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: "Xóa hóa đơn thành công",
+        title: "Thông báo",
+      });
+
+      navigation.navigate("LessorBillList", {
+        refresh: getUUID(),
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      load.nonLoading();
+    }
+  };
+
   const Row = ({ title, value }) => {
     return (
       <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 15 }}>
@@ -47,6 +109,7 @@ const LessorBillDetailScreen = ({ navigation, route }) => {
 
   return (
     <>
+      <LoadingModal modalVisible={load.loading} />
       <View style={{ flex: 1 }}>
         <HeaderBarNoPlus title={"Quay lại"} back={() => navigation.goBack()} />
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -65,6 +128,12 @@ const LessorBillDetailScreen = ({ navigation, route }) => {
                       </View>
                       <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                         <Row title={"Phòng:"} value={bill.roomName} />
+                      </View>
+                      <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                        <Row title={"Khách thuê:"} value={bill.tenantFullName} />
+                      </View>
+                      <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                        <Row title={"Số điện thoại:"} value={bill.tenantPhoneNumber} />
                       </View>
                       <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                         <Row title={"Tháng:"} value={bill.month} />
@@ -110,12 +179,22 @@ const LessorBillDetailScreen = ({ navigation, route }) => {
                 <View>
                   {bill.status === "DRAFT" && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                      <TouchableOpacity style={{ width: "49%", backgroundColor: COLOR.primary, borderRadius: 10 }}>
-                        <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Hủy hóa đơn</Text>
+                      <TouchableOpacity style={{ width: "49%", backgroundColor: COLOR.primary, borderRadius: 10 }} onPress={cancel}>
+                        <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Xóa hóa đơn</Text>
                       </TouchableOpacity>
 
-                      <TouchableOpacity style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 10 }}>
+                      <TouchableOpacity style={{ width: "45%", backgroundColor: COLOR.primary, borderRadius: 10 }} onPress={sendUser}>
                         <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Gửi khách thuê</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+
+                <View>
+                  {bill.status === "PENDING" && (
+                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                      <TouchableOpacity style={{ width: "100%", backgroundColor: COLOR.primary, borderRadius: 10 }} onPress={updatePayment}>
+                        <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Khách thuê đã đóng</Text>
                       </TouchableOpacity>
                     </View>
                   )}

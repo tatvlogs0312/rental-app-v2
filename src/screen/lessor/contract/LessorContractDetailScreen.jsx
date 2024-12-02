@@ -232,9 +232,17 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
               )}
 
               {contract.contractStatusCode === "PENDING_SIGNED" && (
-                <View style={{ padding: 15, marginBottom: 20 }}>
-                  <TouchableOpacity style={{ backgroundColor: COLOR.primary, borderRadius: 20 }} onPress={sendUser}>
+                <View style={{ marginVertical: 10 }}>
+                  <TouchableOpacity style={{ backgroundColor: COLOR.primary, borderRadius: 10 }} onPress={sendUser}>
                     <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Gửi lại khách thuê ký</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              {contract.contractStatusCode === "SIGNED" && (
+                <View style={{ marginVertical: 10 }}>
+                  <TouchableOpacity style={{ backgroundColor: COLOR.primary, borderRadius: 10 }}>
+                    <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Kết thúc hợp đồng</Text>
                   </TouchableOpacity>
                 </View>
               )}
