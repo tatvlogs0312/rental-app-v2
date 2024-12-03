@@ -21,7 +21,11 @@ export const FcmProvider = ({ children }) => {
     }
   };
 
-  return <FcmContext.Provider value={{ deviceId, saveDeviceId, setUnRead, plusUnRead, minusUnRead }}>{children}</FcmContext.Provider>;
+  const setUnReadApp = (number) => {
+    setUnRead(number);
+  };
+
+  return <FcmContext.Provider value={{ deviceId, saveDeviceId, unRead, setUnReadApp, plusUnRead, minusUnRead }}>{children}</FcmContext.Provider>;
 };
 
 export const useFcm = () => {

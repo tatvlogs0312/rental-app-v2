@@ -10,7 +10,7 @@ const features = [
   { id: "2", icon: "pen-to-square", title: "Bài đăng", color: "#f1c40f", navigate: "LessorPostList" },
   { id: "3", icon: "file-signature", title: "Hợp đồng", color: "#6F1E51", navigate: "LessorContractList" },
   { id: "4", icon: "file-invoice-dollar", title: "Hóa đơn", color: "#00a34c", navigate: "LessorBillList" },
-  { id: "4", icon: "user", title: "Khách thuê", color: "#007bff", navigate: "LessorBillList" },
+  { id: "5", icon: "user", title: "Khách thuê", color: "#007bff", navigate: "TenantRented" },
 ];
 
 const LessorDashboradScreen = ({ navigation }) => {

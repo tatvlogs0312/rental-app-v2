@@ -6,6 +6,8 @@ import { get, post } from "../../api/ApiManager";
 import { COLOR } from "../../constants/COLORS";
 import LoadingModal from "react-native-loading-modal";
 import { useFcm } from "../../hook/FcmProvider";
+import { TimeAgo } from "../../utils/Utils";
+import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 
 const NotificationScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -72,6 +74,11 @@ const NotificationScreen = ({ navigation, route }) => {
         console.log("CONTRACT");
         navigation.navigate("TenantContractDetail", { contractId: dataObj.id });
       }
+
+      if (dataObj.type === "BILL") {
+        console.log("BILL");
+        navigation.navigate("TenantBillDetail", { billId: dataObj.id });
+      }
     } catch (error) {
       console.error("Error parsing JSON:", error);
     }
@@ -91,13 +98,28 @@ const NotificationScreen = ({ navigation, route }) => {
           onEndReachedThreshold={0}
           data={notifications}
           renderItem={({ item }) => (
-            <View style={{ backgroundColor: item.isRead ? COLOR.white : COLOR.primary, margin: 5, padding: 10, borderRadius: 10 }}>
+            <View
+              style={{
+                backgroundColor: item.isRead ? COLOR.white : COLOR.primary,
+                marginHorizontal: 10,
+                marginVertical: 5,
+                padding: 10,
+                borderRadius: 10,
+                elevation: 5,
+              }}
+            >
               <Pressable onPress={() => read(item.id, item.data)}>
                 <View>
-                  <Text style={{ marginBottom: 10, color: item.isRead ? COLOR.primary : COLOR.white, fontSize: 17, fontWeight: "bold" }}>{item.title}</Text>
+                  <Text style={{ marginBottom: 5, color: item.isRead ? COLOR.primary : COLOR.white, fontSize: 17, fontWeight: "bold" }}>{item.title}</Text>
                 </View>
                 <View>
                   <Text style={{ color: item.isRead ? COLOR.black : COLOR.white }}>{item.content}</Text>
+                </View>
+                <View>
+                  <Text style={{ textAlign: "right" }}>
+                    <FontAwesome6Icon name="clock" />
+                    {" " + TimeAgo(item.timeSend)}
+                  </Text>
                 </View>
               </Pressable>
             </View>

@@ -8,9 +8,14 @@ import { DOMAIN, IMAGE_DOMAIN } from "../../../constants/URL";
 import { get, post } from "../../../api/ApiManager";
 import { COLOR } from "../../../constants/COLORS";
 import { useAuth } from "../../../hook/AuthProvider";
+import { useFcm } from "../../../hook/FcmProvider";
+import LoadingModal from "react-native-loading-modal";
+import { useLoading } from "./../../../hook/LoadingProvider";
 
 const LessorUserScreen = ({ navigation }) => {
   const auth = useAuth();
+  const fcm = useFcm();
+  const load = useLoading();
 
   const [user, setUser] = useState(null);
   const [avatar, setAvatar] = useState(null);
@@ -59,12 +64,21 @@ const LessorUserScreen = ({ navigation }) => {
   };
 
   const logout = async () => {
-    const unSubrile = await post("/rental-service/fcm/unsubscribe/" + fcm.deviceId, {}, auth.token);
-    auth.logout();
+    try {
+      console.log("logout");
+      load.isLoading();
+      await post("/rental-service/fcm/unsubscribe/" + fcm.deviceId, {}, auth.token);
+      auth.logout();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      load.nonLoading();
+    }
   };
 
   return (
     <>
+      <LoadingModal modalVisible={load.loading} />
       {user && (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLOR.white }}>
           <View>

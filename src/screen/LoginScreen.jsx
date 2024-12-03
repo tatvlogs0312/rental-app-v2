@@ -49,7 +49,7 @@ const LoginScreen = ({ navigation }) => {
         load.isLoading();
         var data = await apiCall("/rental-service/auth/login", "POST", { username: username, password: password, device: fcm.deviceId }, {}, auth.token);
         var subrile = await post("/rental-service/fcm/subscribe/" + fcm.deviceId, {}, data.token);
-        fcm.setUnRead(subrile);
+        fcm.setUnReadApp(subrile);
         if (data.status === "ACTIVE") {
           // var info = await get("/rental-service/user-profile/get-information", {}, data.token);
           // if (info !== undefined && info !== null) {

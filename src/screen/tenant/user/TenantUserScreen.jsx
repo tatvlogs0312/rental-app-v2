@@ -9,10 +9,13 @@ import { get, post } from "../../../api/ApiManager";
 import { COLOR } from "../../../constants/COLORS";
 import { useAuth } from "../../../hook/AuthProvider";
 import { useFcm } from "../../../hook/FcmProvider";
+import { useLoading } from "../../../hook/LoadingProvider";
+import LoadingModal from "react-native-loading-modal";
 
 const TenantUserScreen = ({ navigation }) => {
   const auth = useAuth();
   const fcm = useFcm();
+  const load = useLoading();
 
   const [user, setUser] = useState(null);
   const [avatar, setAvatar] = useState(null);
@@ -61,12 +64,21 @@ const TenantUserScreen = ({ navigation }) => {
   };
 
   const logout = async () => {
-    const unSubrile = await post("/rental-service/fcm/unsubscribe/" + fcm.deviceId, {}, auth.token);
-    auth.logout();
+    try {
+      console.log("logout");
+      load.isLoading();
+      await post("/rental-service/fcm/unsubscribe/" + fcm.deviceId, {}, auth.token);
+      auth.logout();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      load.nonLoading();
+    }
   };
 
   return (
     <>
+      <LoadingModal modalVisible={load.loading} />
       {user && (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLOR.white }}>
           <View>
@@ -90,7 +102,12 @@ const TenantUserScreen = ({ navigation }) => {
           </View>
           <ScrollView style={{ flex: 1 }}>
             <View style={{ margin: 10, backgroundColor: COLOR.white, elevation: 5, borderRadius: 5 }}>
-              <TouchableOpacity style={styles.menu}>
+              <TouchableOpacity
+                style={styles.menu}
+                onPress={() => {
+                  navigation.navigate("RoomRented");
+                }}
+              >
                 <View style={{ width: "10%", justifyContent: "center", alignItems: "center" }}>
                   <FontAwesome6 name="house" size={16} color={COLOR.primary} />
                 </View>

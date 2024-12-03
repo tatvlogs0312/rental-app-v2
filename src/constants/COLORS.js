@@ -9,6 +9,8 @@ export const COLOR = {
   darkBlue: "#0a3d62",
   red: "red",
   tranparent: "rgba(0,0,0,0)",
+  lightGreen: "rgba(85, 239, 196,1.0)",
+  green: "rgba(46, 204, 113,1.0)",
   darkGreen: "#079992",
   lightYellow: "#ffeaa7",
   orange: "#f39c12",

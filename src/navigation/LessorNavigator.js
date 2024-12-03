@@ -9,7 +9,7 @@ import HouseListScreen from "../screen/lessor/house/HouseListScreen";
 import AddHouseScreen from "../screen/lessor/house/AddHouseScreen";
 import RoomListScreen from "../screen/lessor/room/RoomListScreen";
 import LessorPostDetailScreen from "../screen/lessor/post/LessorPostDetailScreen";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import LessorUserScreen from "../screen/lessor/user/LessorUserScreen";
 import { COLOR } from "../constants/COLORS";
 import LessorContractListScreen from "../screen/lessor/contract/LessorContractListScreen";
@@ -22,91 +22,15 @@ import LessorBillListScreen from "../screen/lessor/bill/LessorBillListScreen";
 import LessorBillCreateScreen from "../screen/lessor/bill/LessorBillCreateScreen";
 import LessorNotificationScreen from "../screen/lessor/notification/LessorNotificationScreen";
 import ChangePasswordScreen from "../screen/common/ChangePasswordScreen";
+import TenantRentedScreen from "../screen/lessor/tenant/TenantRentedScreen";
+import { useState } from "react";
+import { useFcm } from "../hook/FcmProvider";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-const HomeStack = () => {
-  const Stack = createStackNavigator();
-  return (
-    <Stack.Navigator initialRouteName="LessorDashboard" screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="LessorDashboard" component={LessorDashboradScreen} />
-
-      <Stack.Screen name="LessorBook" component={LessorBookScreen} />
-      <Stack.Screen name="LessorPostList" component={LessorPostListScreen} />
-      <Stack.Screen name="LessorAddPost" component={LessorAddPostScreen} />
-      <Stack.Screen name="HouseList" component={HouseListScreen} />
-      <Stack.Screen name="AddHouse" component={AddHouseScreen} />
-      <Stack.Screen name="RoomList" component={RoomListScreen} />
-      <Stack.Screen name="LessorPostDetail" component={LessorPostDetailScreen} />
-      <Stack.Screen name="LessorContractList" component={LessorContractListScreen} />
-      <Stack.Screen name="LessorContractDetail" component={LessorContractDetailScreen} />
-      <Stack.Screen name="LessorContractCreate" component={LessorContractCreateScreen} />
-      <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
-
-      <Stack.Screen name="LessorBillCreate" component={LessorBillCreateScreen} />
-      <Stack.Screen name="LessorBillDetail" component={LessorBillDetailScreen} />
-      <Stack.Screen name="LessorBillList" component={LessorBillListScreen} />
-
-      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
-    </Stack.Navigator>
-  );
-};
-
-const NotificationStack = () => {
-  const Stack = createStackNavigator();
-  return (
-    <Stack.Navigator initialRouteName="Notification" screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Notification" component={LessorNotificationScreen} />
-
-      <Stack.Screen name="LessorBook" component={LessorBookScreen} />
-      <Stack.Screen name="LessorPostList" component={LessorPostListScreen} />
-      <Stack.Screen name="LessorAddPost" component={LessorAddPostScreen} />
-      <Stack.Screen name="HouseList" component={HouseListScreen} />
-      <Stack.Screen name="AddHouse" component={AddHouseScreen} />
-      <Stack.Screen name="RoomList" component={RoomListScreen} />
-      <Stack.Screen name="LessorPostDetail" component={LessorPostDetailScreen} />
-      <Stack.Screen name="LessorContractList" component={LessorContractListScreen} />
-      <Stack.Screen name="LessorContractDetail" component={LessorContractDetailScreen} />
-      <Stack.Screen name="LessorContractCreate" component={LessorContractCreateScreen} />
-      <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
-
-      <Stack.Screen name="LessorBillCreate" component={LessorBillCreateScreen} />
-      <Stack.Screen name="LessorBillDetail" component={LessorBillDetailScreen} />
-      <Stack.Screen name="LessorBillList" component={LessorBillListScreen} />
-
-      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
-    </Stack.Navigator>
-  );
-};
-
-const UserStack = () => {
-  const Stack = createStackNavigator();
-  return (
-    <Stack.Navigator initialRouteName="LessorUser" screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="LessorUser" component={LessorUserScreen} />
-
-      <Stack.Screen name="LessorBook" component={LessorBookScreen} />
-      <Stack.Screen name="LessorPostList" component={LessorPostListScreen} />
-      <Stack.Screen name="LessorAddPost" component={LessorAddPostScreen} />
-      <Stack.Screen name="HouseList" component={HouseListScreen} />
-      <Stack.Screen name="AddHouse" component={AddHouseScreen} />
-      <Stack.Screen name="RoomList" component={RoomListScreen} />
-      <Stack.Screen name="LessorPostDetail" component={LessorPostDetailScreen} />
-      <Stack.Screen name="LessorContractList" component={LessorContractListScreen} />
-      <Stack.Screen name="LessorContractDetail" component={LessorContractDetailScreen} />
-      <Stack.Screen name="LessorContractCreate" component={LessorContractCreateScreen} />
-      <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
-
-      <Stack.Screen name="LessorBillCreate" component={LessorBillCreateScreen} />
-      <Stack.Screen name="LessorBillDetail" component={LessorBillDetailScreen} />
-      <Stack.Screen name="LessorBillList" component={LessorBillListScreen} />
-
-      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
-    </Stack.Navigator>
-  );
-};
-
-const LessorNavigator = () => {
+const MainTab = () => {
+  const { unRead } = useFcm();
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -123,17 +47,61 @@ const LessorNavigator = () => {
             iconName = "user"; // Icon cho cài đặt
           }
 
-          // Trả về biểu tượng FontAwesome
-          return <FontAwesome6 name={iconName} size={18} color={focused ? COLOR.primary : COLOR.grey} solid />;
+          return (
+            <View style={{ position: "relative" }}>
+              <FontAwesome6 name={iconName} size={18} color={focused ? COLOR.primary : COLOR.grey} solid />
+              {route.name === "Notification" && (
+                <Text
+                  style={{
+                    position: "absolute",
+                    top: -5,
+                    left: 10,
+                    backgroundColor: "red",
+                    borderRadius: 10,
+                    color: "white",
+                    fontSize: 10,
+                    paddingHorizontal: 5,
+                    paddingVertical: 2,
+                  }}
+                >
+                  {unRead}
+                </Text>
+              )}
+            </View>
+          );
         },
         tabBarActiveTintColor: COLOR.primary,
         tabBarInactiveTintColor: COLOR.grey,
       })}
     >
-      <Tab.Screen name="Home" component={HomeStack} options={{ title: "Trang chủ" }} />
-      <Tab.Screen name="Notification" component={NotificationStack} options={{ title: "Thông báo" }} />
-      <Tab.Screen name="User" component={UserStack} options={{ title: "Tôi" }} />
+      <Tab.Screen name="Home" component={LessorDashboradScreen} options={{ title: "Trang chủ" }} />
+      <Tab.Screen name="Notification" component={LessorNotificationScreen} options={{ title: "Thông báo" }} />
+      <Tab.Screen name="User" component={LessorUserScreen} options={{ title: "Tôi" }} />
     </Tab.Navigator>
+  );
+};
+
+const LessorNavigator = () => {
+  return (
+    <Stack.Navigator initialRouteName="MainTab" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MainTab" component={MainTab} />
+      <Stack.Screen name="LessorBook" component={LessorBookScreen} />
+      <Stack.Screen name="LessorPostList" component={LessorPostListScreen} />
+      <Stack.Screen name="LessorAddPost" component={LessorAddPostScreen} />
+      <Stack.Screen name="HouseList" component={HouseListScreen} />
+      <Stack.Screen name="AddHouse" component={AddHouseScreen} />
+      <Stack.Screen name="RoomList" component={RoomListScreen} />
+      <Stack.Screen name="LessorPostDetail" component={LessorPostDetailScreen} />
+      <Stack.Screen name="LessorContractList" component={LessorContractListScreen} />
+      <Stack.Screen name="LessorContractDetail" component={LessorContractDetailScreen} />
+      <Stack.Screen name="LessorContractCreate" component={LessorContractCreateScreen} />
+      <Stack.Screen name="SignSuccess" component={SignSuccessScreen} />
+      <Stack.Screen name="LessorBillCreate" component={LessorBillCreateScreen} />
+      <Stack.Screen name="LessorBillDetail" component={LessorBillDetailScreen} />
+      <Stack.Screen name="LessorBillList" component={LessorBillListScreen} />
+      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+      <Stack.Screen name="TenantRented" component={TenantRentedScreen} />
+    </Stack.Navigator>
   );
 };
 
