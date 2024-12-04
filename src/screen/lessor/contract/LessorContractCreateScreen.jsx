@@ -299,7 +299,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
         </View>
       </View>
 
-      <Modal visible={dateVisiable} transparent={true} animationType="slide" onRequestClose={() => setProvinceVisiable(false)}>
+      <Modal visible={dateVisiable} transparent={true} animationType="slide">
         <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center" }}>
           <View style={{ width: "80%", backgroundColor: "white", borderRadius: 8, padding: 20 }}>
             <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Chọn ngày hiệu lực:</Text>
@@ -318,7 +318,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
         </View>
       </Modal>
 
-      <Modal visible={utilityVisiable} transparent={true} animationType="slide" onRequestClose={() => setProvinceVisiable(false)}>
+      <Modal visible={utilityVisiable} transparent={true} animationType="slide">
         <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center" }}>
           <View style={{ width: "80%", backgroundColor: "white", borderRadius: 8, padding: 20 }}>
             <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Chọn dịch vụ:</Text>
@@ -374,7 +374,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
         </View>
       </Modal>
 
-      <Modal visible={houseVisiable} transparent={true} animationType="slide" onRequestClose={() => setProvinceVisiable(false)}>
+      <Modal visible={houseVisiable} transparent={true} animationType="slide">
         <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center" }}>
           <View style={{ width: "80%", height: 400, backgroundColor: "white", borderRadius: 8, padding: 20 }}>
             <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Chọn nhà:</Text>
@@ -406,7 +406,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
         </View>
       </Modal>
 
-      <Modal visible={roomVisiable} transparent={true} animationType="slide" onRequestClose={() => setProvinceVisiable(false)}>
+      <Modal visible={roomVisiable} transparent={true} animationType="slide">
         <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center" }}>
           <View style={{ width: "80%", height: 400, backgroundColor: "white", borderRadius: 8, padding: 20 }}>
             <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Chọn phòng:</Text>

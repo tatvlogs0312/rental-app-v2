@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Modal, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import HeaderBarNoPlus from "../../../components/header/HeaderBarNoPlus";
 import { COLOR } from "../../../constants/COLORS";
 import { useState } from "react";
@@ -8,27 +8,28 @@ import { useAuth } from "../../../hook/AuthProvider";
 import { useLoading } from "../../../hook/LoadingProvider";
 import { TouchableOpacity } from "react-native";
 import LoadingModal from "react-native-loading-modal";
-import { ConvertMoneyV3, getUUID } from "../../../utils/Utils";
+import { convertDate, ConvertMoneyV3, getUUID } from "../../../utils/Utils";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
+import { Calendar } from "react-native-calendars";
 
 const TenantContractDetailScreen = ({ navigation, route }) => {
-  console.log(route.params);
-
   const auth = useAuth();
   const load = useLoading();
 
   const contractId = route.params?.contractId;
-  const stackNavigate = route.params?.stack || null;
-  const screenNavigate = route.params?.screen || null;
 
   const [contract, setContract] = useState(null);
 
   const [reason, setReason] = useState(null);
-
   const [reasonMsg, setReasonMsg] = useState(null);
 
+  const [dateEnd, setDateEnd] = useState(null);
+  const [dateEndMsg, setDateEndMsg] = useState(null);
+
   const [rejectVisiable, setRejectVisiable] = useState(false);
+  const [endVisiable, setEndVisiable] = useState(false);
+  const [dateVisiable, setDateVisiable] = useState(false);
 
   useEffect(() => {
     if (auth.token !== "") {
@@ -77,9 +78,39 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
     }
   };
 
+  const requestEnd = async () => {
+    if (handleInputEnd()) {
+      try {
+        load.isLoading();
+        const res = await post(
+          "/rental-service/contract/request-end-contract",
+          {
+            contractId: contractId,
+            dateEnd: dateEnd,
+            reason: reason,
+          },
+          auth.token,
+        );
+
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          textBody: "Yêu cầu kết thúc hợp đồng thành công",
+          title: "Thông báo",
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        load.nonLoading();
+        setEndVisiable(false);
+        setReason(null);
+        setDateEnd(null);
+      }
+    }
+  };
+
   const setInputReason = (text) => {
     setReason(text);
-    setReasonMsg("");
+    setReasonMsg(null);
   };
 
   const handleInputReject = () => {
@@ -89,6 +120,21 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
     }
 
     return true;
+  };
+
+  const handleInputEnd = () => {
+    let isValid = true;
+    if (reason === null || reason === "") {
+      setReasonMsg("Vui lòng nhập lý do từ chối");
+      isValid = false;
+    }
+
+    if (dateEnd === null || dateEnd === "") {
+      setDateEndMsg("Vui lòng chọn ngày trả phòng dự kiến");
+      isValid = false;
+    }
+
+    return isValid;
   };
 
   const Row = ({ title, value }) => {
@@ -248,7 +294,7 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
 
               {contract.contractStatusCode === "SIGNED" && (
                 <View style={{ marginVertical: 10 }}>
-                  <TouchableOpacity style={{ backgroundColor: COLOR.primary, borderRadius: 10 }}>
+                  <TouchableOpacity style={{ backgroundColor: COLOR.primary, borderRadius: 10 }} onPress={() => setEndVisiable(true)}>
                     <Text style={{ textAlign: "center", padding: 15, color: COLOR.white, fontWeight: "bold" }}>Yêu cầu kết thúc hợp đồng</Text>
                   </TouchableOpacity>
                 </View>
@@ -271,7 +317,7 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
                 onChangeText={(t) => setInputReason(t)}
                 value={reason}
               />
-              <Text style={{ color: COLOR.red, fontSize: 13 }}>{reasonMsg}</Text>
+              {(reasonMsg !== "" || reasonMsg !== null) && <Text style={{ color: COLOR.red, fontSize: 13 }}>{reasonMsg}</Text>}
             </View>
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 20 }}>
               <TouchableOpacity
@@ -288,6 +334,69 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
                 <Text style={styles.cancelText}>Xác nhận</Text>
               </TouchableOpacity>
             </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Trả phòng */}
+      <Modal visible={endVisiable} transparent={true} animationType="slide">
+        <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center" }}>
+          <View style={{ width: "80%", backgroundColor: "white", borderRadius: 8, padding: 20 }}>
+            <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Kết thúc hợp đồng</Text>
+            <View>
+              <Text style={{ color: COLOR.primary, fontWeight: "bold", fontSize: 15 }}>* Ngày trả phòng:</Text>
+              <Pressable onPress={() => setDateVisiable(true)} style={{ zIndex: 10 }}>
+                <TextInput placeholder="Chọn ngày trả phòng" readOnly style={styles.input} value={dateEnd} />
+                {(dateEndMsg !== "" || dateEndMsg !== null) && <Text style={{ color: COLOR.red, fontSize: 13 }}>{dateEndMsg}</Text>}
+              </Pressable>
+            </View>
+            <View style={{ marginTop: 20 }}>
+              <Text style={{ color: COLOR.primary, fontWeight: "bold", fontSize: 15 }}>* Nhập lý do trả phòng:</Text>
+              <TextInput
+                style={styles.inputMutiline}
+                placeholder="Nhập lý do trả phòng của bạn"
+                multiline
+                onChangeText={(t) => setInputReason(t)}
+                value={reason}
+              />
+              {(reasonMsg !== "" || reasonMsg !== null) && <Text style={{ color: COLOR.red, fontSize: 13 }}>{reasonMsg}</Text>}
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 20 }}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => {
+                  setEndVisiable(false);
+                  setReasonMsg(null);
+                  setDateEndMsg(null);
+                }}
+              >
+                <Text style={styles.cancelText}>Hủy</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.accessButton} onPress={requestEnd}>
+                <Text style={styles.cancelText}>Xác nhận</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={dateVisiable} transparent={true} animationType="slide">
+        <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center" }}>
+          <View style={{ width: "80%", backgroundColor: "white", borderRadius: 8, padding: 20 }}>
+            <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Chọn ngày hiệu lực:</Text>
+            <View>
+              <Calendar
+                onDayPress={(day) => {
+                  setDateEnd(convertDate(day.dateString, "DD/MM/YYYY"));
+                  setDateEndMsg(null);
+                  setDateVisiable(false);
+                }}
+              />
+            </View>
+            <TouchableOpacity onPress={() => setDateVisiable(false)} style={{ padding: 10, marginTop: 10 }}>
+              <Text style={{ color: "red", textAlign: "center" }}>Đóng</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -324,6 +433,22 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     marginVertical: 10,
     height: 100,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: COLOR.grey,
+    borderRadius: 10,
+    backgroundColor: COLOR.white,
+    // Đổ bóng
+    shadowColor: "#000", // Màu đổ bóng
+    shadowOffset: { width: 0, height: 5 }, // Vị trí bóng đổ
+    shadowOpacity: 0.2, // Độ mờ của bóng
+    shadowRadius: 3.5, // Độ lan của bóng
+    elevation: 5, // Đổ bóng cho Android
+  },
+
+  input: {
+    color: COLOR.black,
+    marginVertical: 10,
     padding: 10,
     borderWidth: 1,
     borderColor: COLOR.grey,

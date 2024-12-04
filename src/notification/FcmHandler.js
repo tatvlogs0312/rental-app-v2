@@ -43,6 +43,7 @@ const FcmHandler = () => {
 
     messaging().setBackgroundMessageHandler(async (remoteMessage) => {
       console.log("setBackgroundMessageHandler!", remoteMessage);
+      plusUnRead();
     });
 
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
