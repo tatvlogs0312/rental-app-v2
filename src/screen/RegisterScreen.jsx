@@ -93,8 +93,9 @@ const RegisterScreen = ({ navigation }) => {
         navigation.navigate("Login");
       } catch (error) {
         console.log(error);
+      } finally {
+        load.nonLoading();
       }
-      load.nonLoading();
     }
   };
 
