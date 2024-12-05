@@ -23,8 +23,8 @@ const ForgotPasswordRequestScreen = ({ navigation, route }) => {
         load.isLoading();
         const res = await get("/rental-service/user-profile/get/" + username, {}, null);
         if (res) {
-          // navigation.navigate("ForgotPasswordOtp", { username: username });
-          navigation.navigate("ForgotPasswordChange", { username: username });
+          navigation.navigate("ForgotPasswordOtp", { username: username });
+          // navigation.navigate("ForgotPasswordChange", { username: username });
         }
       } catch (error) {
         console.log(error);
