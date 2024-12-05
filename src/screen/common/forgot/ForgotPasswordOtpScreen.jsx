@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import HeaderBarNoPlus from "../../../components/header/HeaderBarNoPlus";
 import { OtpInput } from "react-native-otp-entry";
 import { COLOR } from "../../../constants/COLORS";
-import { TouchableOpacity } from "react-native";
-import { useAuth } from "../../../hook/AuthProvider";
 import { useLoading } from "../../../hook/LoadingProvider";
+import { TouchableOpacity } from "react-native";
+import LoadingModal from "react-native-loading-modal";
 import { get, post } from "../../../api/ApiManager";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
-import LoadingModal from "react-native-loading-modal";
 
-const TenantContractSignScreen = ({ navigation, route }) => {
-  const auth = useAuth();
+const ForgotPasswordOtpScreen = ({ navigation, route }) => {
+  const username = route.params.username;
+
   const load = useLoading();
-
-  const contractId = route.params.id;
 
   const [timeLeft, setTimeLeft] = useState(5 * 60);
   const [otp, setOpt] = useState(null);
+
+  useEffect(() => {
+    retryOtp();
+  }, []);
 
   useEffect(() => {
     if (timeLeft === 0) return;
@@ -29,10 +31,6 @@ const TenantContractSignScreen = ({ navigation, route }) => {
     return () => clearInterval(timer); // Xóa timer khi component bị unmount
   }, [timeLeft]);
 
-  useEffect(() => {
-    retryOtp();
-  }, []);
-
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -43,7 +41,13 @@ const TenantContractSignScreen = ({ navigation, route }) => {
     try {
       setTimeLeft(5 * 60);
       load.isLoading();
-      const res = get("/rental-service/contract/get-otp/" + contractId, {}, auth.token);
+      const res = post(
+        "/rental-service/auth/request-forgot-password",
+        {
+          username: username,
+        },
+        null,
+      );
 
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
@@ -61,15 +65,15 @@ const TenantContractSignScreen = ({ navigation, route }) => {
     try {
       load.isLoading();
       const res = await post(
-        "/rental-service/contract/sign",
+        "/rental-service/auth/verify-otp",
         {
-          contractId: contractId,
+          username: username,
           otp: otp,
         },
-        auth.token,
+        null,
       );
 
-      navigation.navigate("SignSuccess");
+      navigation.navigate("ForgotPasswordChange", { username: username });
     } catch (error) {
       console.log(error);
     } finally {
@@ -78,11 +82,11 @@ const TenantContractSignScreen = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLOR.white }}>
+    <View style={{ flex: 1 }}>
       <LoadingModal modalVisible={load.loading} />
-      <HeaderBarNoPlus title={"Quay lại"} back={() => navigation.goBack()} />
-      <View style={{ flex: 1 }}>
-        <Text style={{ textAlign: "center", marginTop: 30, fontSize: 20, fontWeight: "bold", color: COLOR.primary }}>Ký hợp đồng</Text>
+      <HeaderBarNoPlus title="Quay lại" back={() => navigation.goBack()} />
+      <View style={{ flex: 1, margin: 5, backgroundColor: COLOR.white }}>
+        <Text style={{ textAlign: "center", marginTop: 30, fontSize: 20, fontWeight: "bold", color: COLOR.primary }}>Xác thực tài khoản</Text>
         <View style={{ flex: 1, padding: 20, marginTop: 50, flexDirection: "column", justifyContent: "space-between" }}>
           <View>
             <View>
@@ -92,11 +96,11 @@ const TenantContractSignScreen = ({ navigation, route }) => {
               <View>
                 <Text style={{ fontWeight: "bold", color: COLOR.primary }}>{formatTime(timeLeft)}</Text>
               </View>
-              <Pressable onPress={retryOtp}>
+              <TouchableOpacity onPress={retryOtp}>
                 <Text>
                   Bạn chưa nhận được? <Text style={{ fontWeight: "bold", color: COLOR.primary }}>Thử lại</Text>
                 </Text>
-              </Pressable>
+              </TouchableOpacity>
             </View>
           </View>
           <View>
@@ -124,4 +128,4 @@ const TenantContractSignScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({});
 
-export default TenantContractSignScreen;
+export default ForgotPasswordOtpScreen;

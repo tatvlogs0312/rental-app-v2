@@ -51,14 +51,6 @@ const LoginScreen = ({ navigation }) => {
         var subrile = await post("/rental-service/fcm/subscribe/" + fcm.deviceId, {}, data.token);
         fcm.setUnReadApp(subrile);
         if (data.status === "ACTIVE") {
-          // var info = await get("/rental-service/user-profile/get-information", {}, data.token);
-          // if (info !== undefined && info !== null) {
-          //   console.log('====================================');
-          //   console.log(info);
-          //   console.log('====================================');
-          //   auth.setInfoApp(info);
-          //   auth.login(data);
-          // }
           auth.login(data);
         } else {
           navigation.navigate("CompleteInfo", {
@@ -106,14 +98,16 @@ const LoginScreen = ({ navigation }) => {
             {msgPassword !== "" && <Text style={{ color: "red", fontSize: 12, textAlign: "left" }}>{msgPassword}</Text>}
           </View>
 
-          <Text style={{ textAlign: "right", fontWeight: "500", color: COLOR.primary }}>Quên mật khẩu?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("ForgotPasswordRequest")}>
+            <Text style={{ textAlign: "right", fontWeight: "500", color: COLOR.primary }}>Quên mật khẩu?</Text>
+          </TouchableOpacity>
         </View>
 
-        <Pressable onPress={loginApp} style={styles.btnLogin}>
+        <TouchableOpacity onPress={loginApp} style={styles.btnLogin}>
           <View>
             <Text style={{ color: COLOR.white, fontWeight: "bold" }}>Đăng nhập</Text>
           </View>
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <HideWithKeyboard>
@@ -171,15 +165,13 @@ const LoginScreen = ({ navigation }) => {
 
         <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
           <Text>Bạn chưa có tài khoản? </Text>
-          <Text
-            style={{ color: COLOR.primary }}
+          <TouchableOpacity
             onPress={() => {
               navigation.navigate("Register");
             }}
           >
-            {" "}
-            Tạo tài khoản mới.
-          </Text>
+            <Text style={{ color: COLOR.primary }}> Tạo tài khoản mới.</Text>
+          </TouchableOpacity>
         </View>
       </HideWithKeyboard>
     </SafeAreaView>
