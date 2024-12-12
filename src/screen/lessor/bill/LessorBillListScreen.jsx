@@ -31,6 +31,10 @@ const LessorBillListScreen = ({ navigation, route }) => {
     }
   }, [auth.token, route.params?.refresh]);
 
+  useEffect(() => {
+    getBill();
+  }, [status])
+
   const getBill = async () => {
     try {
       load.isLoading();
@@ -39,7 +43,7 @@ const LessorBillListScreen = ({ navigation, route }) => {
         {
           page: 0,
           size: 10,
-          status: null,
+          status: status,
           month: month,
           year: year,
         },
@@ -63,7 +67,7 @@ const LessorBillListScreen = ({ navigation, route }) => {
             {
               page: page + 1,
               size: 10,
-              status: null,
+              status: status,
               month: month,
               year: year,
             },
@@ -247,6 +251,23 @@ const styles = StyleSheet.create({
     color: COLOR.grey,
     marginTop: 10,
     marginBottom: 5,
+  },
+
+  button: {
+    width: "33%",
+    padding: 10,
+  },
+  selectedButton: {
+    borderBottomWidth: 2, // Đường viền dưới
+    borderBottomColor: COLOR.primary, // Màu của đường viền
+  },
+  text: {
+    textAlign: "center",
+    color: "#000", // Màu chữ mặc định
+  },
+  selectedText: {
+    color: COLOR.primary, // Màu chữ của nút được chọn
+    fontWeight: "bold", // Chữ đậm cho nút được chọn
   },
 });
 

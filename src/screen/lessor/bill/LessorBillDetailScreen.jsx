@@ -80,7 +80,7 @@ const LessorBillDetailScreen = ({ navigation, route }) => {
       const res = await post("/rental-service/bill/update-payment/" + billId, {}, auth.token);
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
-        textBody: "Xóa hóa đơn thành công",
+        textBody: "Cập nhật hóa đơn thành công",
         title: "Thông báo",
       });
 

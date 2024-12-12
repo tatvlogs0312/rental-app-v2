@@ -44,7 +44,7 @@ const TenantDashboardScreen = ({ navigation }) => {
           <Text style={{ fontSize: 21, fontWeight: "800", color: COLOR.primary }}>{auth.user.name}</Text>
         </View>
         <View>
-          <Image source={require("../../../../assets/favicon.png")} />
+        <Image source={{ uri: `${IMAGE_DOMAIN}/${auth.user.avatar}` }} style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 100 }} />
         </View>
       </View>
       <View style={{ padding: 10, flex: 1 }}>

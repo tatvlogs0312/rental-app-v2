@@ -4,13 +4,15 @@ import { useAuth } from "../../../hook/AuthProvider";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { COLOR } from "../../../constants/COLORS";
 import { TouchableOpacity } from "react-native";
+import { IMAGE_DOMAIN } from "../../../constants/URL";
 
 const features = [
   { id: "1", icon: "house", title: "Nhà", color: "#007bff", navigate: "HouseList" },
   { id: "2", icon: "pen-to-square", title: "Bài đăng", color: "#f1c40f", navigate: "LessorPostList" },
   { id: "3", icon: "file-signature", title: "Hợp đồng", color: "#6F1E51", navigate: "LessorContractList" },
   { id: "4", icon: "file-invoice-dollar", title: "Hóa đơn", color: "#00a34c", navigate: "LessorBillList" },
-  { id: "5", icon: "user", title: "Khách thuê", color: "#007bff", navigate: "TenantRented" },
+  { id: "5", icon: "triangle-exclamation", title: "Sự cố", color: "#007bff", navigate: "LessorWarningList" },
+  { id: "6", icon: "user", title: "Khách thuê", color: "#007bff", navigate: "TenantRented" },
 ];
 
 const LessorDashboradScreen = ({ navigation }) => {
@@ -27,7 +29,7 @@ const LessorDashboradScreen = ({ navigation }) => {
             <Text style={{ fontSize: 35, fontWeight: "600", color: COLOR.white }}>{auth.user.name}</Text>
           </View>
           <View>
-            <Image source={require("../../../../assets/favicon.png")} />
+          <Image source={{ uri: `${IMAGE_DOMAIN}/${auth.user.avatar}` }} style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 100 }} />
           </View>
         </View>
         <View style={{ backgroundColor: COLOR.white, padding: 20, borderRadius: 20, flexDirection: "row", elevation: 10 }}>
@@ -54,7 +56,7 @@ const styles = StyleSheet.create({
   item: {
     width: "25%",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 20,
   },
   iconContainer: {
     width: 40,

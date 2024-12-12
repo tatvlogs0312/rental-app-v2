@@ -21,6 +21,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useFcm } from "../hook/FcmProvider";
 import { View } from "react-native";
 import { Text } from "react-native";
+import TenantWarningListScreen from './../screen/tenant/warning/TenantWarningListScreen';
+import TenantWarningDetailScreen from './../screen/tenant/warning/TenantWarningDetailScreen';
+import TenantWaringCreateScreen from './../screen/tenant/warning/TenantWaringCreateScreen';
+import UserInfomationScreen from "../screen/common/UserInfomationScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -91,6 +95,10 @@ const TenantNaigator = () => {
       <Stack.Screen name="TenantBillDetail" component={TenantBillDetailScreen} />
       <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
       <Stack.Screen name="RoomRented" component={RoomRentedScreen} />
+      <Stack.Screen name="TenantWarningList" component={TenantWarningListScreen} />
+      <Stack.Screen name="TenantWarningDetail" component={TenantWarningDetailScreen} />
+      <Stack.Screen name="TenantWaringCreate" component={TenantWaringCreateScreen} />
+      <Stack.Screen name="UserInfomation" component={UserInfomationScreen} />
     </Stack.Navigator>
   );
 };
