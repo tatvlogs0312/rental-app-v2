@@ -22,6 +22,7 @@ export const FcmProvider = ({ children }) => {
   };
 
   const setUnReadApp = (number) => {
+    console.log("number: " + number);
     setUnRead(number);
   };
 

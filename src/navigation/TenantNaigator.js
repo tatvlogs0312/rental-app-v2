@@ -1,7 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import TenantBookScreen from "../screen/tenant/book/TenantBookScreen";
-import TenantDarshboardScreen from "../screen/tenant/dashboard/TenantDashboardScreen";
 import TenantPostListScreen from "../screen/tenant/post/TenantPostListScreen";
 import TenantPostDetailScreen from "../screen/tenant/post/TenantPostDetailScreen";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
@@ -17,14 +15,13 @@ import TenantBillDetailScreen from "../screen/tenant/bill/TenantBillDetailScreen
 import ChangePasswordScreen from "../screen/common/ChangePasswordScreen";
 import RoomRentedScreen from "../screen/tenant/room/RoomRentedScreen";
 import TenantDashboardScreen from "../screen/tenant/dashboard/TenantDashboardScreen";
-import { NavigationContainer } from "@react-navigation/native";
 import { useFcm } from "../hook/FcmProvider";
 import { View } from "react-native";
 import { Text } from "react-native";
-import TenantWarningListScreen from './../screen/tenant/warning/TenantWarningListScreen';
-import TenantWarningDetailScreen from './../screen/tenant/warning/TenantWarningDetailScreen';
-import TenantWaringCreateScreen from './../screen/tenant/warning/TenantWaringCreateScreen';
+import TenantWarningListScreen from "./../screen/tenant/warning/TenantWarningListScreen";
+import TenantWarningDetailScreen from "./../screen/tenant/warning/TenantWarningDetailScreen";
 import UserInfomationScreen from "../screen/common/UserInfomationScreen";
+import TenantWarningCreateScreen from "../screen/tenant/warning/TenantWarningCreateScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -97,7 +94,7 @@ const TenantNaigator = () => {
       <Stack.Screen name="RoomRented" component={RoomRentedScreen} />
       <Stack.Screen name="TenantWarningList" component={TenantWarningListScreen} />
       <Stack.Screen name="TenantWarningDetail" component={TenantWarningDetailScreen} />
-      <Stack.Screen name="TenantWaringCreate" component={TenantWaringCreateScreen} />
+      <Stack.Screen name="TenantWarningCreate" component={TenantWarningCreateScreen} />
       <Stack.Screen name="UserInfomation" component={UserInfomationScreen} />
     </Stack.Navigator>
   );

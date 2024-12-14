@@ -162,7 +162,7 @@ const TenantUserScreen = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.menu}>
+              <TouchableOpacity style={styles.menu} onPress={() => navigation.navigate("TenantWarningList")}>
                 <View style={{ width: "10%", justifyContent: "center", alignItems: "center" }}>
                   <FontAwesome6 name="triangle-exclamation" size={16} color={COLOR.primary} />
                 </View>

@@ -23,16 +23,16 @@ export default function App() {
 
   return (
     <AlertNotificationRoot>
-      <FcmProvider>
+      <LoadingProvider>
         <AuthProvider>
-          <LoadingProvider>
+          <FcmProvider>
             <StatusBar />
             <AppNav />
             <ModalPortal />
-          </LoadingProvider>
+            <FcmHandler />
+          </FcmProvider>
         </AuthProvider>
-        <FcmHandler />
-      </FcmProvider>
+      </LoadingProvider>
     </AlertNotificationRoot>
   );
 }

@@ -9,6 +9,7 @@ import { TimeAgo } from "../../../utils/Utils";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 import NoData from "../../../components/NoData";
 import { COLOR } from "../../../constants/COLORS";
+import { Text } from "react-native";
 
 const TenantWarningListScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -76,9 +77,9 @@ const TenantWarningListScreen = ({ navigation, route }) => {
     }
   };
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <LoadingModal modalVisible={load.loading} />
-      <HeaderBarPlus title={"Sự cố"} plus={() => navigation.navigate("TenantWaringCreate")} back={() => navigation.goBack()} />
+      <HeaderBarPlus title={"Sự cố"} plus={() => navigation.navigate("TenantWarningCreate")} back={() => navigation.goBack()} />
       <View style={{ backgroundColor: COLOR.white, flexDirection: "row" }}>
         <Pressable style={[styles.button, status === "PENDING" && styles.selectedButton]} onPress={() => setStatus("PENDING")}>
           <Text style={[styles.text, status === "PENDING" && styles.selectedText]}>Chờ giải quyết</Text>
@@ -89,7 +90,7 @@ const TenantWarningListScreen = ({ navigation, route }) => {
         </Pressable>
 
         <Pressable style={[styles.button, status === "CANCEL" && styles.selectedButton]} onPress={() => setStatus("CANCEL")}>
-          <Text style={[styles.text, status === "CANCEL" && styles.selectedText]}>Đã giải quyết</Text>
+          <Text style={[styles.text, status === "CANCEL" && styles.selectedText]}>Hủy</Text>
         </Pressable>
       </View>
 
@@ -105,31 +106,42 @@ const TenantWarningListScreen = ({ navigation, route }) => {
               <View style={{ margin: 10, padding: 15, backgroundColor: COLOR.white, borderRadius: 10, elevation: 5 }}>
                 <Pressable>
                   <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey }}>
-                    <Text style={{ fontSize: 20, color: COLOR.primary }}>{item.title}</Text>
+                    <Text style={{ fontSize: 20, color: COLOR.primary, fontWeight: "bold" }}>{item.title}</Text>
                   </View>
+
                   <View style={{ marginTop: 10, flexDirection: "row" }}>
-                    <Text style={{ minWidth: "50%" }}>
+                    <Text style={{ minWidth: "49%" }}>
                       <Text style={{ fontSize: 14, color: COLOR.grey }}>Nhà: </Text>
                       <Text style={{ fontWeight: "bold" }}>{item.houseName}</Text>
                     </Text>
-                    <Text>
+
+                    <Text style={{ marginLeft: 5 }}>
                       <Text style={{ fontSize: 14, color: COLOR.grey }}>Phòng: </Text>
                       <Text style={{ fontWeight: "bold" }}>{item.roomName}</Text>
                     </Text>
                   </View>
-                  <View style={{ marginTop: 10, flexDirection: "row" }}>
-                    <Text>
+
+                  <View style={{ marginTop: 10, flexDirection: "row", alignItems: "center" }}>
+                    <FontAwesome6Icon name="user" size={14} color={COLOR.grey} solid />
+                    <Text style={{ marginLeft: 5 }}>
                       <Text style={{ fontSize: 14, color: COLOR.grey }}>Người xử lý: </Text>
                       <Text style={{ fontWeight: "bold" }}>{item.lessorFullName}</Text>
                     </Text>
                   </View>
-                  <View style={{ marginTop: 10, flexDirection: "row" }}>
-                    <Text>
-                      <Text style={{ fontSize: 14, color: COLOR.grey }}>Thời gian tạo: </Text>
-                      <Text style={{ fontWeight: "bold" }}>{TimeAgo(item.createTimeV2)}</Text>
+
+                  <View style={{ marginTop: 10, flexDirection: "row", alignItems: "center" }}>
+                    <FontAwesome6Icon name="phone" size={14} color={COLOR.grey} />
+                    <Text style={{ marginLeft: 5 }}>
+                      <Text style={{ fontSize: 14, color: COLOR.grey }}>Liên hệ: </Text>
+                      <Text style={{ fontWeight: "bold" }}>{item.lessorPhoneNumber}</Text>
                     </Text>
                   </View>
-                  <View style={{ flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end", marginTop: 15 }}>
+
+                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: 15 }}>
+                    <View style={{ marginTop: 10, flexDirection: "row", alignItems: "center" }}>
+                      <FontAwesome6Icon name="clock" size={14} color={COLOR.black} />
+                      <Text style={{ fontWeight: "bold", marginLeft: 5 }}>{TimeAgo(item.createTimeV2)}</Text>
+                    </View>
                     <Pressable
                       onPress={() => {
                         navigation.navigate("TenantWarningDetail", {
@@ -137,7 +149,7 @@ const TenantWarningListScreen = ({ navigation, route }) => {
                         });
                       }}
                     >
-                      <Text style={{ color: COLOR.primary }}>
+                      <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>
                         {"Chi tiết  "}
                         <FontAwesome6Icon name="angle-right" />
                       </Text>
