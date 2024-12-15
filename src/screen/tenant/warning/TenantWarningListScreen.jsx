@@ -122,7 +122,7 @@ const TenantWarningListScreen = ({ navigation, route }) => {
                   </View>
 
                   <View style={{ marginTop: 10, flexDirection: "row", alignItems: "center" }}>
-                    <FontAwesome6Icon name="user" size={14} color={COLOR.grey} solid />
+                    <FontAwesome6Icon name="user" size={14} color={COLOR.yellow} solid />
                     <Text style={{ marginLeft: 5 }}>
                       <Text style={{ fontSize: 14, color: COLOR.grey }}>Người xử lý: </Text>
                       <Text style={{ fontWeight: "bold" }}>{item.lessorFullName}</Text>
@@ -130,7 +130,7 @@ const TenantWarningListScreen = ({ navigation, route }) => {
                   </View>
 
                   <View style={{ marginTop: 10, flexDirection: "row", alignItems: "center" }}>
-                    <FontAwesome6Icon name="phone" size={14} color={COLOR.grey} />
+                    <FontAwesome6Icon name="phone" size={14} color={COLOR.green} />
                     <Text style={{ marginLeft: 5 }}>
                       <Text style={{ fontSize: 14, color: COLOR.grey }}>Liên hệ: </Text>
                       <Text style={{ fontWeight: "bold" }}>{item.lessorPhoneNumber}</Text>

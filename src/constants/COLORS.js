@@ -13,6 +13,7 @@ export const COLOR = {
   green: "rgba(46, 204, 113,1.0)",
   darkGreen: "#079992",
   lightYellow: "#ffeaa7",
+  yellow: "rgba(254, 211, 48,1.0)",
   orange: "#f39c12",
   lightOrange: "rgba(241, 196, 15,0.2)",
 };

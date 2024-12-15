@@ -116,7 +116,7 @@ const LessorWarningListScreen = ({ navigation, route }) => {
                   </View>
 
                   <View style={{ marginTop: 10, flexDirection: "row", alignItems: "center" }}>
-                    <FontAwesome6Icon name="user" size={14} color={COLOR.grey} solid />
+                    <FontAwesome6Icon name="user" size={14} color={COLOR.yellow} solid />
                     <Text style={{ marginLeft: 5 }}>
                       <Text style={{ fontSize: 14, color: COLOR.grey }}>Người thông báo: </Text>
                       <Text style={{ fontWeight: "bold" }}>{item.tenantFullName}</Text>
