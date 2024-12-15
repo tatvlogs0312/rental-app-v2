@@ -74,6 +74,10 @@ const LessorNotificationScreen = ({ navigation, route }) => {
         console.log("CONTRACT");
         navigation.navigate("LessorContractDetail", { contractId: dataObj.id });
       }
+
+      if (dataObj.type === "WARNING") {
+        navigation.navigate("LessorWarningDetail", { id: dataObj.id });
+      }
     } catch (error) {
       console.error("Error parsing JSON:", error);
     }

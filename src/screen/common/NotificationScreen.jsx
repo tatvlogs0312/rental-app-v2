@@ -79,6 +79,10 @@ const NotificationScreen = ({ navigation, route }) => {
         console.log("BILL");
         navigation.navigate("TenantBillDetail", { billId: dataObj.id });
       }
+
+      if (dataObj.type === "WARNING") {
+        navigation.navigate("TenantWarningDetail", { id: dataObj.id });
+      }
     } catch (error) {
       console.error("Error parsing JSON:", error);
     }
