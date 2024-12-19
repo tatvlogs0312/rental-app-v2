@@ -8,6 +8,8 @@ export const COLOR = {
   lightBlue: "#74b9ff",
   darkBlue: "#0a3d62",
   red: "red",
+  lightRed: "rgba(255, 107, 107,1.0)",
+  lightPuple: "rgba(156, 136, 255,1.0)",
   tranparent: "rgba(0,0,0,0)",
   lightGreen: "rgba(85, 239, 196,1.0)",
   green: "rgba(46, 204, 113,1.0)",

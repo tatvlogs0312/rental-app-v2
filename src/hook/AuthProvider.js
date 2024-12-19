@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { get } from "../api/ApiManager";
 
 export const AuthContext = createContext();
 
@@ -9,6 +10,15 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [info, setInfo] = useState(null);
 
+  const getUser = async (token) => {
+    try {
+      const data = await get("/rental-service/user-profile/get-information", null, token);
+      setInfo(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -16,6 +26,7 @@ export const AuthProvider = ({ children }) => {
         const storedToken = await AsyncStorage.getItem("token");
 
         if (storedUser && storedToken) {
+          await getUser(storedToken);
           setUser(JSON.parse(storedUser));
           setToken(storedToken);
         }
@@ -30,17 +41,11 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const setInfoApp = (infoReq) => {
-    console.log("====================================");
-    console.log(infoReq);
-    console.log("====================================");
     setInfo(infoReq);
-    console.log("====================================");
-    console.log(info);
-    console.log("====================================");
-    AsyncStorage.setItem("info", JSON.stringify(infoReq));
   };
 
-  const login = (user) => {
+  const login = async (user) => {
+    await getUser(user.token);
     setUser(user);
     setToken(user.token);
     AsyncStorage.setItem("user", JSON.stringify(user));
@@ -50,13 +55,12 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     AsyncStorage.removeItem("user");
     AsyncStorage.removeItem("token");
-    AsyncStorage.removeItem("info");
     setUser(null);
     setInfo(null);
     setToken("");
   };
 
-  return <AuthContext.Provider value={{ user, token, setInfoApp, login, logout, loading }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, token, info, setInfoApp, login, logout, loading }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { TouchableOpacity } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import axios from "axios";
 import { DOMAIN, IMAGE_DOMAIN } from "../../../constants/URL";
 import { get, post } from "../../../api/ApiManager";
 import { COLOR } from "../../../constants/COLORS";
@@ -17,51 +15,13 @@ const TenantUserScreen = ({ navigation }) => {
   const fcm = useFcm();
   const load = useLoading();
 
-  const [user, setUser] = useState(null);
-  const [avatar, setAvatar] = useState(null);
+  const [user, setUser] = useState(auth.info);
 
   useEffect(() => {
     if (auth.token !== "") {
-      getUser();
+      // getUser();
     }
   }, [auth.token]);
-
-  const getUser = async () => {
-    try {
-      const data = await get("/rental-service/user-profile/get-information", null, auth.token);
-      setUser(data);
-      setAvatar(data.avatar);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const uploadAvatar = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [1, 1],
-    });
-
-    if (result.assets !== null) {
-      const file = result.assets[0];
-      const formData = new FormData();
-      formData.append("file", {
-        uri: file.uri,
-        type: "image/jpeg", // hoặc định dạng phù hợp với ảnh của bạn
-        name: "photo.jpg",
-      });
-      axios
-        .post(DOMAIN + "/rental-service/user-profile/upload-avatar", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: auth.token,
-          },
-        })
-        .then((res) => setAvatar(res.data))
-        .catch((err) => console.log(JSON.stringify(err)));
-    }
-  };
 
   const logout = async () => {
     try {
@@ -79,29 +39,23 @@ const TenantUserScreen = ({ navigation }) => {
   return (
     <>
       <LoadingModal modalVisible={load.loading} />
-      {user && (
-        <SafeAreaView style={{ flex: 1, backgroundColor: COLOR.white }}>
+      {user !== null && (
+        <ScrollView style={{ flex: 1, backgroundColor: COLOR.white }} showsVerticalScrollIndicator={false}>
           <View>
-            {/* <LinearGradient colors={["#4c669f", "#3b5998", "#192f6a"]}> */}
-            <View style={{ padding: 20, flexDirection: "row", borderBottomWidth: 0.5, borderColor: COLOR.primary, backgroundColor: COLOR.primary }}>
-              <View style={{ position: "relative", marginTop: 10 }}>
-                <Image source={{ uri: `${IMAGE_DOMAIN}/${avatar}` }} style={{ width: 100, height: 100, objectFit: "cover", borderRadius: 100 }} />
-                <Pressable
-                  style={{ position: "absolute", right: 0, bottom: 0, padding: 5, backgroundColor: COLOR.white, borderRadius: 100 }}
-                  onPress={uploadAvatar}
-                >
-                  <FontAwesome6 name="camera" size={20} />
-                </Pressable>
-              </View>
-              <View style={{ flexDirection: "column", justifyContent: "flex-end", marginLeft: 20 }}>
-                <Text style={{ fontSize: 18, color: COLOR.black }}>{user.role === "LESSOR" ? "Chủ trọ" : "Khách thuê"}</Text>
-                <Text style={{ fontSize: 20, fontWeight: "bold", color: COLOR.black }}>{user.firstName + " " + user.lastName}</Text>
-              </View>
+            <View style={styles.profileHeader}>
+              <Image
+                source={{ uri: `${IMAGE_DOMAIN}/${auth.info.avatar}` }} // Avatar Image
+                style={styles.avatar}
+              />
+              <Text style={styles.name}>{auth.info.firstName + " " + auth.info.lastName}</Text>
+              <Text style={styles.email}>{auth.info.email}</Text>
+              <TouchableOpacity style={styles.editButton}>
+                <Text style={styles.editButtonText}>Chỉnh sửa</Text>
+              </TouchableOpacity>
             </View>
-            {/* </LinearGradient> */}
           </View>
-          <ScrollView style={{ flex: 1 }}>
-            <View style={{ margin: 10, backgroundColor: COLOR.white, elevation: 5, borderRadius: 5 }}>
+          <View style={{ flex: 1 }}>
+            <View style={{ marginHorizontal: 20, backgroundColor: COLOR.white, elevation: 5, borderRadius: 10 }}>
               <TouchableOpacity
                 style={styles.menu}
                 onPress={() => {
@@ -162,7 +116,10 @@ const TenantUserScreen = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.menu} onPress={() => navigation.navigate("TenantWarningList")}>
+              <TouchableOpacity
+                style={{ padding: 12, marginVertical: 3, borderRadius: 10, flexDirection: "row", justifyContent: "flex-start", alignContent: "center" }}
+                onPress={() => navigation.navigate("TenantWarningList")}
+              >
                 <View style={{ width: "10%", justifyContent: "center", alignItems: "center" }}>
                   <FontAwesome6 name="triangle-exclamation" size={16} color={COLOR.primary} />
                 </View>
@@ -178,8 +135,8 @@ const TenantUserScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
 
-            <View style={{ margin: 10, backgroundColor: COLOR.white, elevation: 5, borderRadius: 5 }}>
-              <TouchableOpacity style={styles.menu}>
+            <View style={{ margin: 20, backgroundColor: COLOR.white, elevation: 5, borderRadius: 10 }}>
+              <TouchableOpacity style={styles.menu} onPress={() => navigation.navigate("UserInfomation")}>
                 <View style={{ width: "10%", justifyContent: "center", alignItems: "center" }}>
                   <FontAwesome6 name="user" size={16} color={COLOR.primary} />
                 </View>
@@ -220,15 +177,30 @@ const TenantUserScreen = ({ navigation }) => {
                   </View>
                 </View>
               </TouchableOpacity>
-            </View>
 
-            <View style={{ margin: 10 }}>
-              <TouchableOpacity onPress={logout}>
-                <Text style={styles.btn}>Đăng xuất</Text>
+              <TouchableOpacity
+                style={{
+                  padding: 12,
+                  marginVertical: 3,
+                  borderRadius: 10,
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignContent: "center",
+                }}
+                onPress={logout}
+              >
+                <View style={{ width: "10%", justifyContent: "center", alignItems: "center" }}>
+                  <FontAwesome6 name="right-from-bracket" size={16} color={COLOR.primary} />
+                </View>
+                <View style={{ width: "90%", flexDirection: "row", justifyContent: "space-between" }}>
+                  <View>
+                    <Text style={{ fontSize: 16 }}>Đăng xuất</Text>
+                  </View>
+                </View>
               </TouchableOpacity>
             </View>
-          </ScrollView>
-        </SafeAreaView>
+          </View>
+        </ScrollView>
       )}
     </>
   );
@@ -257,7 +229,7 @@ const styles = StyleSheet.create({
   },
 
   menu: {
-    padding: 10,
+    padding: 12,
     marginVertical: 3,
     borderRadius: 10,
     flexDirection: "row",
@@ -265,6 +237,37 @@ const styles = StyleSheet.create({
     alignContent: "center",
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: COLOR.grey,
+  },
+
+  profileHeader: {
+    alignItems: "center",
+    paddingVertical: 30,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginTop: 10,
+    marginBottom: 5,
+  },
+  email: {
+    fontSize: 14,
+    color: "#888",
+  },
+  editButton: {
+    marginTop: 20,
+    backgroundColor: COLOR.primary,
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+  },
+  editButtonText: {
+    color: "#fff",
+    fontWeight: "600",
   },
 });
 

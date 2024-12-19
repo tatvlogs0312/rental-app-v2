@@ -1,35 +1,64 @@
-import React, { useEffect } from "react";
-import { FlatList, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, Image, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../../../hook/AuthProvider";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { COLOR } from "../../../constants/COLORS";
 import { TouchableOpacity } from "react-native";
 import { IMAGE_DOMAIN } from "../../../constants/URL";
+import { useLoading } from "./../../../hook/LoadingProvider";
+import { get } from "../../../api/ApiManager";
 
 const features = [
   { id: "1", icon: "house", title: "Nhà", color: "#007bff", navigate: "HouseList" },
   { id: "2", icon: "pen-to-square", title: "Bài đăng", color: "#f1c40f", navigate: "LessorPostList" },
   { id: "3", icon: "file-signature", title: "Hợp đồng", color: "#6F1E51", navigate: "LessorContractList" },
   { id: "4", icon: "file-invoice-dollar", title: "Hóa đơn", color: "#00a34c", navigate: "LessorBillList" },
-  { id: "5", icon: "triangle-exclamation", title: "Sự cố", color: "#007bff", navigate: "LessorWarningList" },
-  { id: "6", icon: "user", title: "Khách thuê", color: "#007bff", navigate: "TenantRented" },
+  { id: "5", icon: "triangle-exclamation", title: "Sự cố", color: "#8c7ae6", navigate: "LessorWarningList" },
+  { id: "6", icon: "user", title: "Khách thuê", color: "#c23616", navigate: "TenantRented" },
+];
+
+const data = [
+  { title: "Hợp đồng chưa gửi", count: 0 },
+  { title: "Hợp đồng chờ ký", count: 0 },
+  { title: "Hóa đơn chưa gửi", count: 0, date: "12/2024" },
+  { title: "Hóa đơn chưa thanh toán", count: 0, date: "12/2024" },
+  { title: "Sự cố chưa xử lý", count: 0 },
 ];
 
 const LessorDashboradScreen = ({ navigation }) => {
   const auth = useAuth();
+  const load = useLoading();
 
-  useEffect(() => {}, []);
+  const [dashboard, setDashboard] = useState(null);
+
+  useEffect(() => {
+    if (auth.token !== "") {
+      getDashboard();
+    }
+  }, []);
+
+  const getDashboard = async () => {
+    try {
+      load.isLoading();
+      const res = await get("/rental-service/dashboard/lessor", {}, auth.token);
+      setDashboard(res);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      load.nonLoading();
+    }
+  };
 
   return (
     <View style={{ flex: 1 }}>
       <View style={{ backgroundColor: COLOR.primary, borderBottomLeftRadius: 20, borderBottomRightRadius: 20, padding: 20, elevation: 20 }}>
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-          <View style={{ marginBottom: 20 }}>
-            <Text style={{ fontSize: 20, color: COLOR.white }}>Xin chào,</Text>
-            <Text style={{ fontSize: 35, fontWeight: "600", color: COLOR.white }}>{auth.user.name}</Text>
+        <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 20 }}>
+          <View style={{}}>
+            <Text style={{ fontSize: 18, color: COLOR.white }}>Xin chào,</Text>
+            <Text style={{ fontSize: 25, fontWeight: "600", color: COLOR.white }}>{auth.info.firstName + " " + auth.info.lastName}</Text>
           </View>
           <View>
-          <Image source={{ uri: `${IMAGE_DOMAIN}/${auth.user.avatar}` }} style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 100 }} />
+            <Image source={{ uri: `${IMAGE_DOMAIN}/${auth.info.avatar}` }} style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 100 }} />
           </View>
         </View>
         <View style={{ backgroundColor: COLOR.white, padding: 20, borderRadius: 20, flexDirection: "row", elevation: 10 }}>
@@ -47,6 +76,80 @@ const LessorDashboradScreen = ({ navigation }) => {
             numColumns={4}
           />
         </View>
+      </View>
+
+      <View style={{ flex: 1, marginTop: 20, backgroundColor: COLOR.white, borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+        {dashboard !== null && (
+          <ScrollView
+            style={{ flex: 1, margin: 20 }}
+            showsVerticalScrollIndicator={false}
+            refreshControl={<RefreshControl refreshing={load.loading} onRefresh={getDashboard} />}
+          >
+            <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-start", alignItems: "center", flexWrap: "wrap" }}>
+              <TouchableOpacity style={{ width: "50%", height: 150, marginBottom: 20 }} onPress={() => navigation.navigate("LessorContractList")}>
+                <View style={[styles.card, { backgroundColor: COLOR.lightGreen }]}>
+                  <View>
+                    <Text style={styles.icon}>🗒️</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.title2}>Hợp đồng chưa gửi</Text>
+                    <Text style={styles.count}>{dashboard.contractDraft}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{ width: "50%", height: 150, marginBottom: 20 }} onPress={() => navigation.navigate("LessorContractList")}>
+                <View style={[styles.card, { backgroundColor: COLOR.lightRed }]}>
+                  <View>
+                    <Text style={styles.icon}>📝</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.title2}>Hợp đồng chờ ký</Text>
+                    <Text style={styles.count}>{dashboard.contractPending}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{ width: "50%", height: 150, marginBottom: 20 }} onPress={() => navigation.navigate("LessorBillList")}>
+                <View style={[styles.card, { backgroundColor: COLOR.lightYellow }]}>
+                  <View>
+                    <Text style={styles.icon}>💵</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.date}>12/2024</Text>
+                    <Text style={styles.title2}>Hóa đơn chưa gửi</Text>
+                    <Text style={styles.count}>{dashboard.billDraft}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{ width: "50%", height: 150, marginBottom: 20 }} onPress={() => navigation.navigate("LessorBillList")}>
+                <View style={[styles.card, { backgroundColor: COLOR.lightBlue }]}>
+                  <View>
+                    <Text style={styles.icon}>💴</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.date}>12/2024</Text>
+                    <Text style={styles.title2}>Hóa đơn chờ thanh toán</Text>
+                    <Text style={styles.count}>{dashboard.billPending}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{ width: "50%", height: 150, marginBottom: 20 }} onPress={() => navigation.navigate("LessorWarningList")}>
+                <View style={[styles.card, { backgroundColor: COLOR.lightPuple }]}>
+                  <View>
+                    <Text style={styles.icon}>⚠️</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.title2}>Sự cố chưa xử lý</Text>
+                    <Text style={styles.count}>{dashboard.warningPending}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        )}
       </View>
     </View>
   );
@@ -96,6 +199,36 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
     marginVertical: 10,
     elevation: 10,
+  },
+
+  icon: {
+    fontSize: 40,
+    textAlign: "center",
+  },
+
+  card: {
+    margin: "auto",
+    width: "93%",
+    height: "100%",
+    borderRadius: 20,
+    padding: 10,
+    justifyContent: "space-between",
+  },
+
+  date: {
+    fontSize: 14,
+    textAlign: "center",
+  },
+  title2: {
+    fontSize: 14,
+    fontWeight: "bold",
+    textAlign: "center",
+    textAlign: "center",
+  },
+  count: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 

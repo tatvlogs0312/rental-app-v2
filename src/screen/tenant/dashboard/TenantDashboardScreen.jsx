@@ -41,10 +41,10 @@ const TenantDashboardScreen = ({ navigation }) => {
       <View style={styles.hearder}>
         <View>
           <Text style={{ fontSize: 18, fontWeight: "600", color: COLOR.primary }}>Xin chào,</Text>
-          <Text style={{ fontSize: 21, fontWeight: "800", color: COLOR.primary }}>{auth.user.name}</Text>
+          <Text style={{ fontSize: 21, fontWeight: "800", color: COLOR.primary }}>{auth.info.firstName + " " + auth.info.lastName}</Text>
         </View>
         <View>
-        <Image source={{ uri: `${IMAGE_DOMAIN}/${auth.user.avatar}` }} style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 100 }} />
+          <Image source={{ uri: `${IMAGE_DOMAIN}/${auth.info.avatar}` }} style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 100 }} />
         </View>
       </View>
       <View style={{ padding: 10, flex: 1 }}>
@@ -172,7 +172,7 @@ const TenantDashboardScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   hearder: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
     justifyContent: "space-between",
     paddingHorizontal: 30,
     paddingVertical: 20,

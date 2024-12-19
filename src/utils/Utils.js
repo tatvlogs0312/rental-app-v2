@@ -92,7 +92,7 @@ export const getUUID = () => {
 
 export const convertDate = (date, format) => {
   if (date === null) {
-    return null;
+    return "";
   }
   return dayjs(date).format(format);
 };
