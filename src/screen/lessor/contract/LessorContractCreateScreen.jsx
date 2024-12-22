@@ -11,8 +11,9 @@ import { TouchableOpacity } from "react-native";
 import { err } from "react-native-svg";
 import { SelectList } from "react-native-dropdown-select-list";
 import { Calendar } from "react-native-calendars";
-import { convertDate, getUUID } from "../../../utils/Utils";
+import { convertDate, ConvertMoneyV3, ConvertMoneyV4, getUUID } from "../../../utils/Utils";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import MsgInputError from "../../../components/MsgInputError";
 
 const LessorContractCreateScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -30,6 +31,10 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
   const [uPrice, setUPrice] = useState(null);
   const [uType, setUType] = useState(null);
 
+  const [uIdMsg, setUIdMsg] = useState(null);
+  const [uPriceMsg, setUPriceMsg] = useState(null);
+  const [uTypeMsg, setUTypeMsg] = useState(null);
+
   const [tenant, setTenant] = useState(null);
   const [tenantInfo, setTenantInfo] = useState(null);
 
@@ -42,6 +47,15 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
   const [roomVisiable, setRoomVisiable] = useState(false);
   const [utilityVisiable, setUtilityVisiable] = useState(false);
   const [dateVisiable, setDateVisiable] = useState(false);
+
+  const [houseMsg, setHouseMsg] = useState(null);
+  const [roomMsg, setRoomMsg] = useState(null);
+  const [priceMsg, setPriceMsg] = useState(null);
+  const [startMsg, setStartMsg] = useState(null);
+  const [utilityMsg, setUtilityMsg] = useState(null);
+
+  const [priceValue, setPriceValue] = useState(null);
+  const [uPriceValue, setUPriceValue] = useState(null);
 
   useEffect(() => {
     if (auth.token !== "") {
@@ -106,33 +120,35 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
 
   const createContract = async () => {
     try {
-      load.isLoading();
-      const res = await post(
-        "/rental-service/contract/create",
-        {
-          tenant: tenantInfo.username,
-          houseId: houseId,
-          roomId: roomId,
-          price: price,
-          startDate: startDate,
-          utilities: utilities.map((u) => ({
-            utilityId: u.utilityId,
-            price: u.utilityPrice,
-            unit: u.utilityUnit,
-          })),
-        },
-        auth.token,
-      );
+      if (createValidate() === true) {
+        load.isLoading();
+        await post(
+          "/rental-service/contract/create",
+          {
+            tenant: tenantInfo.username,
+            houseId: houseId,
+            roomId: roomId,
+            price: price,
+            startDate: startDate,
+            utilities: utilities.map((u) => ({
+              utilityId: u.utilityId,
+              price: u.utilityPrice,
+              unit: u.utilityUnit,
+            })),
+          },
+          auth.token,
+        );
 
-      Toast.show({
-        type: ALERT_TYPE.SUCCESS,
-        textBody: "Tạo hợp đồng thành công",
-        title: "Thông báo",
-      });
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          textBody: "Tạo hợp đồng thành công",
+          title: "Thông báo",
+        });
 
-      navigation.navigate("LessorContractList", {
-        refresh: getUUID(),
-      });
+        navigation.navigate("LessorContractList", {
+          refresh: getUUID(),
+        });
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -140,20 +156,74 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
     }
   };
 
-  const addUtility = () => {
-    const utility = utilityData.filter((u) => u.id === uId)[0];
-    const newUtilities = utilities.filter((u) => u.utilityId !== uId);
-    newUtilities.push({
-      utilityId: utility.id,
-      utilityName: utility.name,
-      utilityPrice: uPrice,
-      utilityUnit: uType,
-    });
+  const createValidate = () => {
+    let isValid = true;
 
-    setUtilities(newUtilities);
-    setUPrice(null);
-    setUType(null);
-    setUtilityVisiable(false);
+    if (houseId === null || houseId === "") {
+      setHouseMsg("Vui lòng chọn nhà");
+      isValid = false;
+    }
+
+    if (roomId === null || roomId === "") {
+      setRoomMsg("Vui lòng chọn phòng");
+      isValid = false;
+    }
+
+    if (price === null || price === "") {
+      setPriceMsg("Vui lòng nhập giá cho thuê");
+      isValid = false;
+    }
+
+    if (startDate === null || startDate === "") {
+      setStartMsg("Vui lòng chọn ngày vào ở");
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
+  const setInputPrice = (t) => {
+    setPrice(t.replace(".", ""));
+    setPriceValue(ConvertMoneyV4(t));
+    setPriceMsg(null);
+  };
+
+  const addUtility = () => {
+    if (addUtilityValidate() === true) {
+      const utility = utilityData.filter((u) => u.id === uId)[0];
+      const newUtilities = utilities.filter((u) => u.utilityId !== uId);
+      newUtilities.push({
+        utilityId: utility.id,
+        utilityName: utility.name,
+        utilityPrice: uPrice,
+        utilityUnit: uType,
+      });
+
+      setUtilities(newUtilities);
+      setUPrice(null);
+      setUType(null);
+      setUtilityVisiable(false);
+    }
+  };
+
+  const addUtilityValidate = () => {
+    let isValid = true;
+    if (uId === null || uId === "") {
+      isValid = false;
+      setUIdMsg("Vui lòng chọn dịch vụ");
+    }
+
+    if (uPrice === null || uPrice === "") {
+      isValid = false;
+      setUPriceMsg("Vui lòng nhập đơn giá");
+    }
+
+    if (uType === null || uType === "") {
+      isValid = false;
+      setUTypeMsg("Vui lòng chọn đơn vị tính");
+    }
+
+    return isValid;
   };
 
   const Row = ({ title, value }) => {
@@ -237,6 +307,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                           <Pressable onPress={() => setHouseVisiable(true)} style={{ zIndex: 10 }}>
                             <TextInput placeholder="Chọn nhà" readOnly style={styles.input} value={houseName} />
                           </Pressable>
+                          {houseMsg !== null && houseMsg !== "" && <MsgInputError msg={houseMsg} />}
                         </View>
 
                         <View>
@@ -244,6 +315,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                           <Pressable onPress={() => setRoomVisiable(true)} style={{ zIndex: 10 }}>
                             <TextInput placeholder="Chọn phòng" readOnly style={styles.input} value={roomName} />
                           </Pressable>
+                          {roomMsg !== null && roomMsg !== "" && <MsgInputError msg={roomMsg} />}
                         </View>
 
                         <View>
@@ -252,9 +324,10 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                             placeholder="Nhập giá cho thuê"
                             style={styles.input}
                             keyboardType="number-pad"
-                            onChangeText={(t) => setPrice(t)}
-                            value={price}
+                            onChangeText={(t) => setInputPrice(t)}
+                            value={priceValue}
                           />
+                          {priceMsg !== null && priceMsg !== "" && <MsgInputError msg={priceMsg} />}
                         </View>
 
                         <View>
@@ -262,6 +335,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                           <Pressable onPress={() => setDateVisiable(true)} style={{ zIndex: 10 }}>
                             <TextInput placeholder="Chọn ngày vào ở" readOnly style={styles.input} value={convertDate(startDate, "DD/MM/YYYY")} />
                           </Pressable>
+                          {startMsg !== null && startMsg !== "" && <MsgInputError msg={startMsg} />}
                         </View>
                       </View>
                     </View>
@@ -308,6 +382,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                 onDayPress={(day) => {
                   setStartDate(day.dateString);
                   setDateVisiable(false);
+                  setStartMsg(null);
                 }}
               />
             </View>
@@ -323,30 +398,48 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
           <View style={{ width: "80%", backgroundColor: "white", borderRadius: 8, padding: 20 }}>
             <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Chọn dịch vụ:</Text>
             <View>
-              <SelectList
-                data={utilityData.map(({ id, name }) => ({ key: id, value: name }))}
-                save="key"
-                placeholder="Chọn dịch vụ"
-                setSelected={(val) => setUId(val)}
-              />
-              <TextInput
-                style={{ borderWidth: 1, height: 50, paddingVertical: 5, paddingHorizontal: 20, marginVertical: 10, borderRadius: 10 }}
-                placeholder="Đơn giá"
-                inputMode="numeric"
-                value={uPrice}
-                onChangeText={(val) => setUPrice(val)}
-              />
-              <SelectList
-                setSelected={(val) => setUType(val)}
-                data={[
-                  { key: 1, value: "Người" },
-                  { key: 2, value: "Phòng" },
-                  { key: 3, value: "Số" },
-                  { key: 4, value: "Khối" },
-                ]}
-                save="value"
-                placeholder="Đơn vị tính"
-              />
+              <View>
+                <SelectList
+                  data={utilityData.map(({ id, name }) => ({ key: id, value: name }))}
+                  save="key"
+                  placeholder="Chọn dịch vụ"
+                  setSelected={(val) => {
+                    setUId(val);
+                    setUIdMsg(null);
+                  }}
+                />
+                {uIdMsg !== null && uIdMsg !== "" && <MsgInputError msg={uIdMsg} />}
+              </View>
+              <View>
+                <TextInput
+                  style={{ borderWidth: 1, height: 50, paddingVertical: 5, paddingHorizontal: 20, marginVertical: 10, borderRadius: 10 }}
+                  placeholder="Đơn giá"
+                  inputMode="numeric"
+                  value={uPrice}
+                  onChangeText={(val) => {
+                    setUPrice(val);
+                    setUPriceMsg(null);
+                  }}
+                />
+                {uPriceMsg !== null && uPriceMsg !== "" && <MsgInputError msg={uPriceMsg} />}
+              </View>
+              <View>
+                <SelectList
+                  setSelected={(val) => {
+                    setUType(val);
+                    setUTypeMsg(null);
+                  }}
+                  data={[
+                    { key: 1, value: "Người" },
+                    { key: 2, value: "Phòng" },
+                    { key: 3, value: "Số" },
+                    { key: 4, value: "Khối" },
+                  ]}
+                  save="value"
+                  placeholder="Đơn vị tính"
+                />
+                {uTypeMsg !== null && uTypeMsg !== "" && <MsgInputError msg={uTypeMsg} />}
+              </View>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 20 }}>
               <TouchableOpacity
@@ -356,6 +449,9 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                   setUId(null);
                   setUPrice(null);
                   setUType(null);
+                  setUIdMsg(null);
+                  setUPriceMsg(null);
+                  setUTypeMsg(null);
                 }}
               >
                 <Text style={styles.cancelText}>Hủy</Text>
@@ -393,6 +489,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                     setRoomId(null);
                     setRoomName(null);
                     setHouseVisiable(false);
+                    setHouseMsg(null);
                   }}
                 >
                   <Text style={{ fontSize: 16 }}>{item.houseName}</Text>
@@ -422,6 +519,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                     setRoomId(item.id);
                     setRoomName(item.roomName);
                     setRoomVisiable(false);
+                    setRoomMsg(null);
                   }}
                 >
                   <Text style={{ fontSize: 16 }}>{item.roomName}</Text>
@@ -450,10 +548,8 @@ const styles = StyleSheet.create({
   input: {
     paddingVertical: 5,
     paddingHorizontal: 15,
-    borderWidth: 0.5,
     borderRadius: 5,
     color: COLOR.black,
-    borderColor: COLOR.grey,
     backgroundColor: COLOR.white,
   },
 

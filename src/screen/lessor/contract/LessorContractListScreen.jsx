@@ -12,11 +12,6 @@ import HeaderBarSliderPlus from "../../../components/header/HeaderBarSliderPlus"
 
 const contractStauts = [
   {
-    code: null,
-    name: "Tất cả",
-  },
-
-  {
     code: "DRAFT",
     name: "Nháp",
   },
@@ -29,6 +24,11 @@ const contractStauts = [
   {
     code: "SIGNED",
     name: "Đã ký",
+  },
+
+  {
+    code: "END",
+    name: "Hết hạn",
   },
 
   {
@@ -49,7 +49,7 @@ const LessorContractListScreen = ({ navigation, route }) => {
   const [contracts, setContracts] = useState([]);
   const [totalPage, setTotalPage] = useState(null);
 
-  const [statusI, setStatusI] = useState(0);
+  const [statusI, setStatusI] = useState(route.params?.status || 0);
 
   const [status, setStatus] = useState(null);
   const [page, setPage] = useState(0);
@@ -154,7 +154,7 @@ const LessorContractListScreen = ({ navigation, route }) => {
             showsVerticalScrollIndicator={false}
             data={contracts}
             keyExtractor={(item) => item.contractId}
-            refreshControl={<RefreshControl refreshing={load.loading} onRefresh={getContracts} />}
+            refreshControl={<RefreshControl refreshing={load.loading} onRefresh={() => getContracts(contractStauts[statusI].code)} />}
             onEndReached={getMoreContracts}
             onEndReachedThreshold={0}
             renderItem={({ item }) => (

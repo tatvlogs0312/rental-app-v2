@@ -17,14 +17,6 @@ const features = [
   { id: "6", icon: "user", title: "Khách thuê", color: "#c23616", navigate: "TenantRented" },
 ];
 
-const data = [
-  { title: "Hợp đồng chưa gửi", count: 0 },
-  { title: "Hợp đồng chờ ký", count: 0 },
-  { title: "Hóa đơn chưa gửi", count: 0, date: "12/2024" },
-  { title: "Hóa đơn chưa thanh toán", count: 0, date: "12/2024" },
-  { title: "Sự cố chưa xử lý", count: 0 },
-];
-
 const LessorDashboradScreen = ({ navigation }) => {
   const auth = useAuth();
   const load = useLoading();
@@ -35,11 +27,12 @@ const LessorDashboradScreen = ({ navigation }) => {
     if (auth.token !== "") {
       getDashboard();
     }
-  }, []);
+  }, [auth.token]);
 
   const getDashboard = async () => {
     try {
       load.isLoading();
+      console.log("get dashboard");
       const res = await get("/rental-service/dashboard/lessor", {}, auth.token);
       setDashboard(res);
     } catch (error) {
@@ -50,7 +43,7 @@ const LessorDashboradScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={load.loading} onRefresh={getDashboard} />}>
       <View style={{ backgroundColor: COLOR.primary, borderBottomLeftRadius: 20, borderBottomRightRadius: 20, padding: 20, elevation: 20 }}>
         <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 20 }}>
           <View style={{}}>
@@ -78,15 +71,14 @@ const LessorDashboradScreen = ({ navigation }) => {
         </View>
       </View>
 
-      <View style={{ flex: 1, marginTop: 20, backgroundColor: COLOR.white, borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+      <View style={{ marginTop: 20, backgroundColor: COLOR.white, borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
         {dashboard !== null && (
-          <ScrollView
-            style={{ flex: 1, margin: 20 }}
-            showsVerticalScrollIndicator={false}
-            refreshControl={<RefreshControl refreshing={load.loading} onRefresh={getDashboard} />}
-          >
-            <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-start", alignItems: "center", flexWrap: "wrap" }}>
-              <TouchableOpacity style={{ width: "50%", height: 150, marginBottom: 20 }} onPress={() => navigation.navigate("LessorContractList")}>
+          <View style={{ margin: 20 }}>
+            <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", flexWrap: "wrap" }}>
+              <TouchableOpacity
+                style={{ width: "50%", height: 150, marginBottom: 20 }}
+                onPress={() => navigation.navigate("LessorContractList", { status: 0 })}
+              >
                 <View style={[styles.card, { backgroundColor: COLOR.lightGreen }]}>
                   <View>
                     <Text style={styles.icon}>🗒️</Text>
@@ -98,7 +90,10 @@ const LessorDashboradScreen = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity style={{ width: "50%", height: 150, marginBottom: 20 }} onPress={() => navigation.navigate("LessorContractList")}>
+              <TouchableOpacity
+                style={{ width: "50%", height: 150, marginBottom: 20 }}
+                onPress={() => navigation.navigate("LessorContractList", { status: 1 })}
+              >
                 <View style={[styles.card, { backgroundColor: COLOR.lightRed }]}>
                   <View>
                     <Text style={styles.icon}>📝</Text>
@@ -110,7 +105,10 @@ const LessorDashboradScreen = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity style={{ width: "50%", height: 150, marginBottom: 20 }} onPress={() => navigation.navigate("LessorBillList")}>
+              <TouchableOpacity
+                style={{ width: "50%", height: 150, marginBottom: 20 }}
+                onPress={() => navigation.navigate("LessorBillList", { status: "DRAFT" })}
+              >
                 <View style={[styles.card, { backgroundColor: COLOR.lightYellow }]}>
                   <View>
                     <Text style={styles.icon}>💵</Text>
@@ -123,7 +121,10 @@ const LessorDashboradScreen = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity style={{ width: "50%", height: 150, marginBottom: 20 }} onPress={() => navigation.navigate("LessorBillList")}>
+              <TouchableOpacity
+                style={{ width: "50%", height: 150, marginBottom: 20 }}
+                onPress={() => navigation.navigate("LessorBillList", { status: "PENDING" })}
+              >
                 <View style={[styles.card, { backgroundColor: COLOR.lightBlue }]}>
                   <View>
                     <Text style={styles.icon}>💴</Text>
@@ -148,10 +149,10 @@ const LessorDashboradScreen = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
             </View>
-          </ScrollView>
+          </View>
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

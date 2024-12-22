@@ -16,7 +16,7 @@ const LessorBillListScreen = ({ navigation, route }) => {
   const auth = useAuth();
   const load = useLoading();
 
-  const [status, setStatus] = useState("DRAFT");
+  const [status, setStatus] = useState(route.params?.status || "DRAFT");
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
 
@@ -33,7 +33,7 @@ const LessorBillListScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     getBill();
-  }, [status])
+  }, [status]);
 
   const getBill = async () => {
     try {

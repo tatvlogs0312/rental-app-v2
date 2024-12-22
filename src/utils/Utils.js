@@ -25,11 +25,43 @@ export function ConvertToMoneyV2(amount) {
   }
 }
 
+// Dùng khi hiển thị
 export function ConvertMoneyV3(amount) {
-  if (amount !== null && amount !== undefined) {
-    return amount.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+  if (amount !== null && amount !== undefined && amount !== "") {
+    // Chuyển chuỗi thành số, loại bỏ các ký tự không phải số
+    const numericAmount = parseInt(amount, 10) || 0;
+
+    const res = numericAmount
+      .toLocaleString("vi-VN", {
+        style: "currency",
+        currency: "VND",
+        minimumFractionDigits: 0,
+      })
+      .replace("₫", "")
+      .trim();
+
+    return res;
   }
-  return "0 đ";
+  return "";
+}
+
+// Dùng khi nhập
+export function ConvertMoneyV4(amount) {
+  if (amount !== null && amount !== undefined && amount !== "") {
+    // Chuyển chuỗi thành số, loại bỏ các ký tự không phải số
+    const numericAmount = parseInt(amount.replace(/[^0-9]/g, ""), 10) || 0;
+
+    const res = numericAmount
+      .toLocaleString("vi-VN", {
+        style: "currency",
+        currency: "VND",
+        minimumFractionDigits: 0,
+      })
+      .replace("₫", "")
+      .trim();
+    return res;
+  }
+  return "";
 }
 
 export const TimeAgo = (dateString) => {

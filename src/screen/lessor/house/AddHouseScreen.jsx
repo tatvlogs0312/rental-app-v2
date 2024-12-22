@@ -180,6 +180,7 @@ const AddHouseScreen = ({ navigation }) => {
                     setWard(null);
                     setProvinceVisiable(false);
                     getDistricts(item.province_id);
+                    setWards([]);
                   }}
                 >
                   <Text style={{ fontSize: 16 }}>{item.province_name}</Text>
