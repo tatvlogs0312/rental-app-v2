@@ -69,9 +69,9 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
       load.isLoading();
       try {
         const res = await get(
-          "/rental-service/user-profile/get",
+          "/rental-service/user-profile/get-by-keyword",
           {
-            username: tenant,
+            keyword: tenant,
             role: "TENANT",
           },
           auth.token,
@@ -260,7 +260,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
               >
                 <TextInput
                   style={styles.searchInput}
-                  placeholder="Tìm kiếm khách thuê"
+                  placeholder="Tài khoản, số điện thoại, email khách thuê"
                   placeholderTextColor={COLOR.grey}
                   onChangeText={(t) => setTenant(t)}
                   value={tenant}

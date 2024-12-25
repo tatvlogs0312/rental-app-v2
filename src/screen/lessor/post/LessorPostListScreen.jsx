@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../../../hook/AuthProvider";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { COLOR } from "../../../constants/COLORS";
 import { post } from "../../../api/ApiManager";
 import HeaderBarPlus from "../../../components/header/HeaderBarPlus";
 import { useLoading } from "../../../hook/LoadingProvider";
+import { IMAGE_DOMAIN } from "../../../constants/URL";
 
 const LessorPostListScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -23,7 +24,7 @@ const LessorPostListScreen = ({ navigation, route }) => {
 
   const fetchData = async () => {
     try {
-      const response = await post("/rental-service/post/search-for-lessor", { page: 0, size: size }, auth.token);
+      const response = await post("/rental-service/post/search-for-lessor/v2", { page: 0, size: size }, auth.token);
       setPosts(response.data);
       setTotalPage(response.totalPage);
       setPage(0);
@@ -38,7 +39,7 @@ const LessorPostListScreen = ({ navigation, route }) => {
 
     if (totalPage !== null && page + 1 < totalPage) {
       try {
-        const response = await post("/rental-service/post/search-for-lessor", { page: page + 1, size: size }, auth.token);
+        const response = await post("/rental-service/post/search-for-lessor/v2", { page: page + 1, size: size }, auth.token);
         const newPosts = response.data || [];
         setPosts([...posts, ...newPosts]);
         setPage(page + 1);
@@ -72,6 +73,15 @@ const LessorPostListScreen = ({ navigation, route }) => {
       }
     >
       {/* Thông tin bài đăng */}
+      <View style={{ position: "relative" }}>
+        <Image source={{ uri: IMAGE_DOMAIN + "/" + item.firstImage }} style={styles.cardNewImg} />
+        <View style={{ position: "absolute", right: 10, bottom: 10, backgroundColor: COLOR.white, padding: 4, borderRadius: 5 }}>
+          <Text>
+            <FontAwesome6 name="camera" size={16} />
+            {" " + item.numImage}
+          </Text>
+        </View>
+      </View>
       <Text style={{ fontSize: 17, fontWeight: "bold", marginBottom: 5, color: COLOR.primary }}>{item.title}</Text>
       <View>
         <Text>
@@ -113,6 +123,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  cardNewImg: {
+    width: "100%",
+    height: 200,
+    objectFit: "cover",
+    borderRadius: 10,
   },
 });
 

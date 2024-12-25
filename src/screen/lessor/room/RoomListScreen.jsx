@@ -10,6 +10,7 @@ import NoData from "../../../components/NoData";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import ConfirmPopup from "../../../components/ConfirmPopup";
+import MsgInputError from './../../../components/MsgInputError';
 
 const RoomListScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -26,6 +27,12 @@ const RoomListScreen = ({ navigation, route }) => {
   const [roomName, setRoomName] = useState(null);
   const [number, setNumber] = useState(null);
   const [acreage, setAcreage] = useState(null);
+  const [floor, setFloor] = useState(null);
+
+  const [roomNameMsg, setRoomNameMsg] = useState(null);
+  const [numberMsg, setNumberMsg] = useState(null);
+  const [acreageMsg, setAcreageMsg] = useState(null);
+  const [floorMsg, setFloorMsg] = useState(null);
 
   const [roomId, setRoomId] = useState(null);
 
@@ -49,17 +56,29 @@ const RoomListScreen = ({ navigation, route }) => {
 
   const addRoom = async () => {
     try {
-      load.isLoading();
-      const res = await post("/rental-service/room/create/v2", { houseId: houseId, roomName: roomName, acreage: acreage, numberOfRoom: number }, auth.token);
-      Toast.show({
-        type: ALERT_TYPE.SUCCESS,
-        textBody: "Thêm phòng thành công",
-        title: "Thông báo",
-      });
+      if (validateAdd() === true) {
+        load.isLoading();
+        const res = await post(
+          "/rental-service/room/create/v2",
+          {
+            houseId: houseId,
+            roomName: roomName,
+            acreage: acreage,
+            numberOfRoom: number,
+            floor: floor,
+          },
+          auth.token,
+        );
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          textBody: "Thêm phòng thành công",
+          title: "Thông báo",
+        });
 
-      await getRoom();
-      clearData();
-      setAddVisiable(false);
+        await getRoom();
+        clearData();
+        setAddVisiable(false);
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -67,10 +86,41 @@ const RoomListScreen = ({ navigation, route }) => {
     }
   };
 
+  const validateAdd = () => {
+    let isValid = true;
+    if (roomName === null || roomName === "") {
+      setRoomNameMsg("Vui lòng điền tên phòng");
+      isValid = false;
+    }
+
+    if (acreage === null || acreage === "") {
+      setAcreageMsg("Vui lòng điền diện tích phòng");
+      isValid = false;
+    }
+
+    if (number === null || number === "") {
+      setNumberMsg("Vui lòng điền số phòng ngủ");
+      isValid = false;
+    }
+
+    if (floor === null || floor === "") {
+      setFloorMsg("Vui lòng điền tầng");
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
   const clearData = () => {
     setRoomName(null);
     setAcreage(null);
     setNumber(null);
+  };
+
+  const clearDataMsg = () => {
+    setRoomNameMsg(null);
+    setAcreageMsg(null);
+    setNumberMsg(null);
   };
 
   const deleteRoom = async () => {
@@ -155,9 +205,15 @@ const RoomListScreen = ({ navigation, route }) => {
         </View>
       </View>
 
-      <Modal visible={addVisiable} animationType="slide" onRequestClose={() => setAddVisiable(false)}>
+      <Modal visible={addVisiable} animationType="slide">
         <View style={{ position: "relative" }}>
-          <TouchableOpacity onPress={() => setAddVisiable(false)} style={{ zIndex: 1, position: "absolute", top: 15, right: 15 }}>
+          <TouchableOpacity
+            onPress={() => {
+              clearDataMsg();
+              setAddVisiable(false);
+            }}
+            style={{ zIndex: 1, position: "absolute", top: 15, right: 15 }}
+          >
             <FontAwesome6 name="x" size={25} color={COLOR.primary} />
           </TouchableOpacity>
           <View>
@@ -165,15 +221,61 @@ const RoomListScreen = ({ navigation, route }) => {
             <View style={{ padding: 20, marginTop: 20 }}>
               <View style={{ marginBottom: 20 }}>
                 <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Tên phòng</Text>
-                <TextInput style={styles.input} placeholder="Nhập tên phòng" value={roomName} onChangeText={(t) => setRoomName(t)} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Nhập tên phòng"
+                  value={roomName}
+                  onChangeText={(t) => {
+                    setRoomName(t);
+                    setRoomNameMsg(null);
+                  }}
+                />
+                {roomNameMsg !== null && roomNameMsg !== "" && <MsgInputError msg={roomNameMsg} />}
               </View>
+
+              <View style={{ marginBottom: 20 }}>
+                <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Tầng</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Nhập tầng"
+                  value={floor}
+                  onChangeText={(t) => {
+                    setFloor(t);
+                    setFloorMsg(null);
+                  }}
+                  keyboardType="number-pad"
+                />
+                {floorMsg !== null && floorMsg !== "" && <MsgInputError msg={floorMsg} />}
+              </View>
+
               <View style={{ marginBottom: 20 }}>
                 <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Diện tích</Text>
-                <TextInput style={styles.input} placeholder="Nhập diện tích" value={acreage} onChangeText={(t) => setAcreage(t)} keyboardType="number-pad" />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Nhập diện tích"
+                  value={acreage}
+                  onChangeText={(t) => {
+                    setAcreage(t);
+                    setAcreageMsg(null);
+                  }}
+                  keyboardType="number-pad"
+                />
+                {acreageMsg !== null && acreageMsg !== "" && <MsgInputError msg={acreageMsg} />}
               </View>
+
               <View>
                 <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Số phòng ngủ</Text>
-                <TextInput style={styles.input} placeholder="Nhập số phòng ngủ" value={number} onChangeText={(t) => setNumber(t)} keyboardType="number-pad" />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Nhập số phòng ngủ"
+                  value={number}
+                  onChangeText={(t) => {
+                    setNumber(t);
+                    setNumberMsg(null);
+                  }}
+                  keyboardType="number-pad"
+                />
+                {numberMsg !== null && numberMsg !== "" && <MsgInputError msg={numberMsg} />}
               </View>
             </View>
             <View>

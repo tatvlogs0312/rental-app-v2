@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import uuid from "react-native-uuid";
 import { getUUID } from "../../../utils/Utils";
+import MsgInputError from "../../../components/MsgInputError";
 
 const AddHouseScreen = ({ navigation }) => {
   const auth = useAuth();
@@ -26,6 +27,12 @@ const AddHouseScreen = ({ navigation }) => {
   const [district, setDistrict] = useState(null);
   const [province, setProvince] = useState(null);
   const [detail, setDetail] = useState(null);
+
+  const [houseNameMsg, setHouseNameMsg] = useState(null);
+  const [wardMsg, setWardMsg] = useState(null);
+  const [districtMsg, setDistrictMsg] = useState(null);
+  const [provinceMsg, setProvinceMsg] = useState(null);
+  const [detailMsg, setDetailMsg] = useState(null);
 
   const [provinceVisiable, setProvinceVisiable] = useState(false);
   const [wardVisiable, setWardVisiable] = useState(false);
@@ -94,26 +101,28 @@ const AddHouseScreen = ({ navigation }) => {
   };
 
   const handleInput = () => {
-    if (
-      houseName === null ||
-      houseName === "" ||
-      detail === null ||
-      detail === "" ||
-      ward === null ||
-      ward === "" ||
-      district === null ||
-      district === "" ||
-      province === null ||
-      province === ""
-    ) {
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        textBody: "Vui lòng nhập đầy đủ thông tin",
-        title: "Thông báo",
-      });
-      return false;
+    let isValid = true;
+    if (houseName === null || houseName === "") {
+      setHouseNameMsg("Vui lòng điền tên nhà");
+      isValid = false;
     }
-    return true;
+    if (province === null || province === "") {
+      setProvinceMsg("Vui lòng chọn tỉnh/thành phố");
+      isValid = false;
+    }
+    if (district === null || district === "") {
+      setDistrictMsg("Vui lòng chọn quận/huyện");
+      isValid = false;
+    }
+    if (ward === null || ward === "") {
+      setWardMsg("Vui lòng chọn xã/phường");
+      isValid = false;
+    }
+    if (detail === null || detail === "") {
+      setDetailMsg("Vui lòng điền địa chỉ cụ thể");
+      isValid = false;
+    }
+    return isValid;
   };
 
   return (
@@ -127,29 +136,49 @@ const AddHouseScreen = ({ navigation }) => {
               <View style={{ marginHorizontal: 10 }}>
                 <View style={styles.inputBackgroud}>
                   <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Tên nhà:</Text>
-                  <TextInput style={styles.input} placeholder="Nhập tên nhà" onChangeText={(t) => setHouseName(t)} value={houseName} />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Nhập tên nhà"
+                    onChangeText={(t) => {
+                      setHouseName(t);
+                      setHouseNameMsg(null);
+                    }}
+                    value={houseName}
+                  />
+                  {houseNameMsg !== null && houseNameMsg !== "" && <MsgInputError msg={houseNameMsg} />}
                 </View>
+
                 <Pressable onPress={() => setProvinceVisiable(true)} style={styles.inputBackgroud}>
                   <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Tỉnh/Thành phố:</Text>
                   <TextInput style={styles.input} placeholder="Chọn tỉnh/thành phố" readOnly value={province} />
+                  {provinceMsg !== null && provinceMsg !== "" && <MsgInputError msg={provinceMsg} />}
                 </Pressable>
+
                 <Pressable onPress={() => setDistrictVisiable(true)} style={styles.inputBackgroud}>
                   <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Quận/Huyện:</Text>
                   <TextInput style={styles.input} placeholder="Chọn quận/huyện" readOnly value={district} />
+                  {districtMsg !== null && districtMsg !== "" && <MsgInputError msg={districtMsg} />}
                 </Pressable>
+
                 <Pressable onPress={() => setWardVisiable(true)} style={styles.inputBackgroud}>
                   <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Xã/Phường:</Text>
                   <TextInput style={styles.input} placeholder="Chọn xã/phường" readOnly value={ward} />
+                  {wardMsg !== null && wardMsg !== "" && <MsgInputError msg={wardMsg} />}
                 </Pressable>
+
                 <View style={{ marginTop: 10 }}>
                   <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Địa chỉ chi tiết:</Text>
                   <TextInput
                     style={styles.inputMutiline}
                     placeholder="Nhập địa chỉ (Số nhà, ngõ, ngách, đường, ...)"
                     multiline
-                    onChangeText={(t) => setDetail(t)}
+                    onChangeText={(t) => {
+                      setDetail(t);
+                      setDetailMsg(null);
+                    }}
                     value={detail}
                   />
+                  {detailMsg !== null && detailMsg !== "" && <MsgInputError msg={detailMsg} />}
                 </View>
               </View>
               <View>
@@ -181,6 +210,7 @@ const AddHouseScreen = ({ navigation }) => {
                     setProvinceVisiable(false);
                     getDistricts(item.province_id);
                     setWards([]);
+                    setProvinceMsg(null);
                   }}
                 >
                   <Text style={{ fontSize: 16 }}>{item.province_name}</Text>
@@ -211,6 +241,7 @@ const AddHouseScreen = ({ navigation }) => {
                     setWard(null);
                     setDistrictVisiable(false);
                     getWard(item.district_id);
+                    setDistrictMsg(null);
                   }}
                 >
                   <Text style={{ fontSize: 16 }}>{item.district_name}</Text>
@@ -239,6 +270,7 @@ const AddHouseScreen = ({ navigation }) => {
                   onPress={() => {
                     setWard(item.ward_name);
                     setWardVisiable(false);
+                    setWardMsg(null);
                   }}
                 >
                   <Text style={{ fontSize: 16 }}>{item.ward_name}</Text>

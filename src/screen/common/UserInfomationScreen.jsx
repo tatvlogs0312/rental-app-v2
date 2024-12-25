@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useAuth } from "../../hook/AuthProvider";
 import { useLoading } from "../../hook/LoadingProvider";
-import { get } from "../../api/ApiManager";
+import { get, post } from "../../api/ApiManager";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 import { DOMAIN, IMAGE_DOMAIN } from "../../constants/URL";
 import { convertDate } from "./../../utils/Utils";
@@ -24,6 +24,8 @@ const UserInfomationScreen = ({ navigation, route }) => {
   const [email, setEmail] = useState(auth.info.email);
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [emailModalVisible, setEmailModalVisible] = useState(false);
+  const [numberModalVisible, setNumberModalVisible] = useState(false);
 
   useEffect(() => {
     if (auth.token !== "") {
@@ -74,9 +76,31 @@ const UserInfomationScreen = ({ navigation, route }) => {
     }
   };
 
-  const updateGender = (gender) => {
+  const updateGender = async (gender) => {
     setGender(gender);
     setModalVisible(false);
+    await updateInfo();
+  };
+
+  const updateInfo = async () => {
+    try {
+      load.isLoading();
+      await post(
+        "/rental-service/user-profile/update-information",
+        {
+          gender: gender,
+          phoneNumber: phoneNumber,
+          email: email,
+        },
+        auth.token,
+      );
+
+      await getUser();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      load.nonLoading();
+    }
   };
 
   return (
@@ -134,36 +158,36 @@ const UserInfomationScreen = ({ navigation, route }) => {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.field}>
+            <TouchableOpacity style={styles.field} onPress={() => setNumberModalVisible(true)}>
               <Text style={styles.fieldLabel}>Số điện thoại</Text>
               <View>
-                <Text style={styles.fieldValue}>{phoneNumber}</Text>
+                <Text style={styles.fieldValue}>{user.phoneNumber}</Text>
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.field}>
+            <TouchableOpacity style={styles.field} onPress={() => setEmailModalVisible(true)}>
               <Text style={styles.fieldLabel}>Email</Text>
               <View>
-                <Text style={styles.fieldValue}>{email}</Text>
+                <Text style={styles.fieldValue}>{user.email}</Text>
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.field}>
+            {/* <TouchableOpacity style={styles.field}>
               <Text style={styles.fieldLabel}>Số CMND/CCCD</Text>
               <View>
-                <Text style={styles.fieldValue}>{identityNumber || ""}</Text>
+                <Text style={styles.fieldValue}>{user.identityNumber || ""}</Text>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
-          <View style={styles.section}>
+          {/* <View style={styles.section}>
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>Liên kết</Text>
               <TouchableOpacity>
                 <Text style={styles.fieldPlaceholder}>Thêm</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
         </ScrollView>
       )}
 
@@ -186,6 +210,60 @@ const UserInfomationScreen = ({ navigation, route }) => {
             <View style={{ marginTop: 20 }}>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
                 <Text style={{ color: COLOR.red }}>Đóng</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={emailModalVisible} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={{ alignItems: "center", width: "100%" }}>
+              <Text style={styles.modalTitle}>Cập nhật email</Text>
+              <TextInput style={{ width: "100%", padding: 2, borderBottomWidth: 0.5, marginVertical: 10 }} value={email} onChangeText={setEmail} />
+            </View>
+
+            <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => {
+                  setEmail(auth.info.email);
+                  setEmailModalVisible(false);
+                }}
+              >
+                <Text style={styles.cancelText}>Hủy</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.accessButton} onPress={updateInfo}>
+                <Text style={styles.cancelText}>Xác nhận</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={numberModalVisible} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={{ alignItems: "center", width: "100%" }}>
+              <Text style={styles.modalTitle}>Cập nhật số điện thoại</Text>
+              <TextInput style={{ width: "100%", padding: 2, borderBottomWidth: 0.5, marginVertical: 10 }} value={phoneNumber} onChangeText={setPhoneNumber} />
+            </View>
+
+            <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => {
+                  setPhoneNumber(auth.info.phoneNumber);
+                  setNumberModalVisible(false);
+                }}
+              >
+                <Text style={styles.cancelText}>Hủy</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.accessButton} onPress={updateInfo}>
+                <Text style={styles.cancelText}>Xác nhận</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -289,7 +367,34 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
   },
-  modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+
+  cancelButton: {
+    marginTop: 10,
+    marginHorizontal: 4,
+    backgroundColor: "#ff4444",
+    padding: 10,
+    borderRadius: 5,
+    width: 100,
+  },
+
+  accessButton: {
+    marginTop: 10,
+    marginHorizontal: 4,
+    backgroundColor: "blue",
+    padding: 10,
+    borderRadius: 5,
+    width: 100,
+  },
+
+  cancelText: {
+    color: "white",
+    textAlign: "center",
+  },
 });
 
 export default UserInfomationScreen;
