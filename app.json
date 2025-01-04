@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "rental-app-v2",
+    "name": "Rental Việt",
     "slug": "rental-app-v2",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/2603710.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/2603710.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

@@ -12,7 +12,7 @@ import LoadingModal from "react-native-loading-modal";
 import { TouchableOpacity } from "react-native";
 
 const TenantPostListScreen = ({ navigation, route }) => {
-  const type = route?.params.type || "NEW";
+  const type = route.params?.type || "NEW";
 
   const auth = useAuth();
   const load = useLoading();
@@ -21,7 +21,7 @@ const TenantPostListScreen = ({ navigation, route }) => {
   const [totalPage, setTotalPage] = useState(null);
 
   const [roomTypeId, setRoomTypeId] = useState(null);
-  const [keyword, setKeyword] = useState(null);
+  const [keyword, setKeyword] = useState(route.params?.keyword || null);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
 

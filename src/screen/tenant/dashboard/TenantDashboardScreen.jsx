@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { COLOR } from "../../../constants/COLORS";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { useAuth } from "../../../hook/AuthProvider";
@@ -12,6 +12,8 @@ const TenantDashboardScreen = ({ navigation }) => {
 
   const [news, setNews] = useState([]);
   const [recommends, setRecommends] = useState([]);
+
+  const [keyword, setKeyword] = useState(null);
 
   useEffect(() => {
     getNews();
@@ -59,10 +61,19 @@ const TenantDashboardScreen = ({ navigation }) => {
             margin: 10,
           }}
         >
-          <TextInput style={styles.searchInput} placeholder="Tìm kiếm" placeholderTextColor={COLOR.grey} />
-          <Pressable style={{ height: 50, width: 50, backgroundColor: COLOR.primary, justifyContent: "center", alignItems: "center", borderRadius: 10 }}>
-            <FontAwesome6 name="sliders" color={COLOR.white} size={20} />
-          </Pressable>
+          <TextInput style={styles.searchInput} placeholder="Tìm kiếm" placeholderTextColor={COLOR.grey} value={keyword} onChangeText={setKeyword} />
+          <TouchableOpacity
+            style={{ height: 50, width: 50, backgroundColor: COLOR.primary, justifyContent: "center", alignItems: "center", borderRadius: 10 }}
+            disabled={keyword === null || keyword === ""}
+            onPress={() =>
+              navigation.navigate("TenantPostList", {
+                type: "NEW",
+                keyword: keyword,
+              })
+            }
+          >
+            <FontAwesome6 name="magnifying-glass" color={COLOR.white} size={20} />
+          </TouchableOpacity>
         </View>
 
         <ScrollView style={{ flex: 1, padding: 5, marginTop: 10 }} showsVerticalScrollIndicator={false}>

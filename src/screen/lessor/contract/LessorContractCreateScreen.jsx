@@ -14,6 +14,7 @@ import { Calendar } from "react-native-calendars";
 import { convertDate, ConvertMoneyV3, ConvertMoneyV4, getUUID } from "../../../utils/Utils";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import MsgInputError from "../../../components/MsgInputError";
+import { SwipeListView } from "react-native-swipe-list-view";
 
 const LessorContractCreateScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -61,6 +62,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
     if (auth.token !== "") {
       getHouses();
       getUtility();
+      // getUser();
     }
   }, [auth.token]);
 
@@ -179,6 +181,11 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
       isValid = false;
     }
 
+    if (utilities.length < 1) {
+      setUtilityMsg("Vui lòng thêm dịch vụ");
+      isValid = false;
+    }
+
     return isValid;
   };
 
@@ -203,6 +210,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
       setUPrice(null);
       setUType(null);
       setUtilityVisiable(false);
+      setUtilityMsg(null);
     }
   };
 
@@ -226,6 +234,11 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
     return isValid;
   };
 
+  const handleDelete = (rowKey) => {
+    const newData = utilities.filter((item) => item.utilityId !== rowKey);
+    setUtilities(newData);
+  };
+
   const Row = ({ title, value }) => {
     return (
       <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 15 }}>
@@ -238,6 +251,20 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
       </View>
     );
   };
+
+  const renderItem = ({ item }) => (
+    <View style={styles.rowFront}>
+      <Row title={item.utilityName + ":"} value={item.utilityPrice + "/" + item.utilityUnit} />
+    </View>
+  );
+
+  const renderHiddenItem = (data, rowMap) => (
+    <View style={styles.rowBack}>
+      <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(data.item.utilityId)}>
+        <FontAwesome6 name="trash" size={16} color={COLOR.red} />
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <>
@@ -285,12 +312,12 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                 <ScrollView showsVerticalScrollIndicator={false}>
                   <View style={{ padding: 10 }}>
                     <View>
-                      <Text style={{ fontSize: 16, fontWeight: "bold" }}>Thông tin khách thuê</Text>
-                      <View style={{ borderColor: COLOR.grey, borderRadius: 10, borderWidth: StyleSheet.hairlineWidth }}>
-                        <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                      {/* <Text style={{ fontSize: 16, fontWeight: "bold" }}>Thông tin khách thuê</Text> */}
+                      <View style={{ borderColor: COLOR.grey, borderRadius: 10, borderWidth: 0.5 }}>
+                        <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                           <Row title={"Họ tên:"} value={tenantInfo.firstName + " " + tenantInfo.lastName} />
                         </View>
-                        <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
+                        <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                           <Row title={"Số điện thoại:"} value={tenantInfo.phoneNumber} />
                         </View>
                         <View style={{ borderColor: COLOR.grey, marginHorizontal: 15 }}>
@@ -341,9 +368,14 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                     </View>
 
                     <View style={{ marginTop: 20, backgroundColor: COLOR.light, padding: 10, borderRadius: 10 }}>
-                      <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 10 }}>Dịch vụ</Text>
-                      <View style={{ borderColor: COLOR.grey, borderRadius: 10, borderWidth: 0.5, backgroundColor: COLOR.white }}>
-                        {utilities.map((item, index) => (
+                      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", padding: 5, marginBottom: 5 }}>
+                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Dịch vụ</Text>
+                        <TouchableOpacity style={{ marginTop: 10 }} onPress={() => setUtilityVisiable(true)}>
+                          <FontAwesome6 name="plus" solid size={20} color={COLOR.primary} />
+                        </TouchableOpacity>
+                      </View>
+                      <View style={{ borderColor: COLOR.grey, borderRadius: 0, borderWidth: 0.5, backgroundColor: COLOR.white }}>
+                        {/* {utilities.map((item, index) => (
                           <View
                             style={
                               index === utilities.length - 1
@@ -351,13 +383,28 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                                 : { borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }
                             }
                           >
-                            <Row title={item.utilityName + ":"} value={item.utilityPrice + "/" + item.utilityUnit} />
+                            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                              <View style={{ width: "90%" }}>
+                                <Row title={item.utilityName + ":"} value={item.utilityPrice + "/" + item.utilityUnit} />
+                              </View>
+                              <TouchableOpacity
+                                style={{ width: 25, height: 25, borderRadius: 25, backgroundColor: COLOR.grey, justifyContent: "center", alignItems: "center" }}
+                              >
+                                <Text style={{ color: COLOR.red, fontWeight: "bold" }}>X</Text>
+                              </TouchableOpacity>
+                            </View>
                           </View>
-                        ))}
+                        ))} */}
+                        <SwipeListView
+                          data={utilities}
+                          renderItem={renderItem}
+                          renderHiddenItem={renderHiddenItem}
+                          leftOpenValue={0}
+                          rightOpenValue={-50} // Vuốt sang trái để mở nút
+                          keyExtractor={(item) => item.id}
+                        />
                       </View>
-                      <TouchableOpacity style={{ marginTop: 10 }} onPress={() => setUtilityVisiable(true)}>
-                        <Text style={[styles.btn, { width: 160, margin: "auto" }]}>Thêm dịch vụ</Text>
-                      </TouchableOpacity>
+                      {utilityMsg !== null && utilityMsg !== "" && <MsgInputError msg={utilityMsg} />}
                     </View>
                   </View>
 
@@ -593,6 +640,30 @@ const styles = StyleSheet.create({
   cancelText: {
     color: "white",
     textAlign: "center",
+  },
+
+  rowFront: {
+    backgroundColor: COLOR.white,
+    borderColor: COLOR.grey,
+    paddingHorizontal: 15,
+    borderBottomWidth: 0.5,
+    height: 50,
+  },
+
+  rowBack: {
+    alignItems: "center",
+    // backgroundColor: COLOR.red,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    height: 50,
+  },
+
+  deleteButton: {
+    // backgroundColor: "#ff3b30",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 50,
+    height: "100%",
   },
 });
 
