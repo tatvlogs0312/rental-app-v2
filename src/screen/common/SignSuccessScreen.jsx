@@ -12,7 +12,7 @@ const SignSuccessScreen = ({ navigation }) => {
           <Text style={{ marginTop: 20, fontSize: 20, color: COLOR.primary, fontWeight: "bold" }}>Ký hợp đồng thành công</Text>
         </View>
         <View>
-          <TouchableOpacity onPress={() => navigation.navigate("TenantUser")}>
+          <TouchableOpacity onPress={() => navigation.navigate("MainTab")}>
             <Text
               style={{
                 textAlign: "center",

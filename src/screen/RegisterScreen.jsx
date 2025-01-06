@@ -12,6 +12,7 @@ import { apiCall } from "../api/ApiManager";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import { useLoading } from "../hook/LoadingProvider";
 import LoadingModal from "react-native-loading-modal";
+import { validPassword } from "../utils/Utils";
 
 const RegisterScreen = ({ navigation }) => {
   const load = useLoading();
@@ -65,23 +66,7 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   const registerApp = async () => {
-    if (username === "") {
-      setMsgUsername("Vui lòng nhập tài khoản");
-    }
-
-    if (password === "") {
-      setMsgPassword("Vui lòng nhập mật khẩu");
-    }
-
-    if (confirmPassword === "") {
-      setMsgConfirmPassword("Vui lòng nhập lại mật khẩu");
-    }
-
-    if (password !== "" && confirmPassword !== "" && password !== confirmPassword) {
-      setMsgConfirmPassword("Mật khẩu không trùng khớp");
-    }
-
-    if (username !== "" && password !== "" && confirmPassword !== "" && password === confirmPassword) {
+    if (validateInput() === true) {
       load.isLoading();
       try {
         var data = await apiCall("/rental-service/auth/register", "POST", { username: username, password: password, role: role }, {}, null);
@@ -97,6 +82,36 @@ const RegisterScreen = ({ navigation }) => {
         load.nonLoading();
       }
     }
+  };
+
+  const validateInput = () => {
+    let isValid = true;
+    if (username === "" || username === null) {
+      isValid = false;
+      setMsgUsername("Vui lòng nhập tài khoản");
+    }
+
+    if (password === "" || password === null) {
+      isValid = false;
+      setMsgPassword("Vui lòng nhập mật khẩu");
+    }
+
+    if (!validPassword(password)) {
+      isValid = false;
+      setMsgPassword("Mật khẩu không đúng định dạng");
+    }
+
+    if (confirmPassword === "" || confirmPassword === null) {
+      isValid = false;
+      setMsgConfirmPassword("Vui lòng nhập lại mật khẩu");
+    }
+
+    if (password !== confirmPassword) {
+      isValid = false;
+      setMsgConfirmPassword("Mật khẩu không trùng khớp");
+    }
+
+    return isValid;
   };
 
   return (
@@ -130,6 +145,17 @@ const RegisterScreen = ({ navigation }) => {
               secureTextEntry={true}
             />
             {msgConfirmPassword !== "" && <Text style={{ color: "red", fontSize: 12, textAlign: "left" }}>{msgConfirmPassword}</Text>}
+          </View>
+
+          <View>
+            <Text style={{ fontSize: 12 }}>
+              <Text style={{ color: "red" }}>* </Text>
+              <Text>Mật khẩu tối thiểu 8 ký tự</Text>
+            </Text>
+            <Text style={{ fontSize: 12 }}>
+              <Text style={{ color: "red" }}>* </Text>
+              <Text>Chứa 1 ký tự in hoa, 1 số, 1 ký tự đặc biệt</Text>
+            </Text>
           </View>
 
           <View style={{ marginTop: 20, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>

@@ -2,6 +2,10 @@ import { Dimensions } from "react-native";
 import uuid from "react-native-uuid";
 import dayjs from "dayjs";
 
+const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
+
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 const formatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "VND",
@@ -99,8 +103,11 @@ export const witdhScreen = Dimensions.get("window").width;
 export const heighScreen = Dimensions.get("window").height;
 
 export const validateEmail = (email) => {
-  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return regex.test(email);
+  return EMAIL_REGEX.test(email);
+};
+
+export const validPassword = (password) => {
+  return PASSWORD_REGEX.test(password);
 };
 
 export const toMoneyDot = (number) => {
