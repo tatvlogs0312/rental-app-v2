@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Modal, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, Modal, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { useAuth } from "../../../hook/AuthProvider";
 import { useLoading } from "../../../hook/LoadingProvider";
@@ -11,6 +11,7 @@ import { TouchableOpacity } from "react-native";
 import ConfirmPopup from "../../../components/ConfirmPopup";
 import LoadingModal from "react-native-loading-modal";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import { IMAGE_DOMAIN } from "../../../constants/URL";
 
 const HouseListScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -83,7 +84,7 @@ const HouseListScreen = ({ navigation, route }) => {
                 >
                   <TouchableOpacity
                     style={{
-                      backgroundColor: COLOR.primary,
+                      backgroundColor: COLOR.white,
                       position: "absolute",
                       top: 5,
                       right: 5,
@@ -99,9 +100,10 @@ const HouseListScreen = ({ navigation, route }) => {
                       setDeleteVisiable(true);
                     }}
                   >
-                    <FontAwesome6 name="x" size={10} color={COLOR.white} />
+                    <FontAwesome6 name="x" size={13} color={COLOR.red}/>
                   </TouchableOpacity>
                   <View>
+                    <Image source={{ uri: IMAGE_DOMAIN + "/" + item.image }} style={styles.cardNewImg} />
                     <Text style={{ fontSize: 20, fontWeight: "bold", paddingBottom: 1, borderBottomWidth: StyleSheet.hairlineWidth, color: COLOR.primary }}>
                       {item.houseName}
                     </Text>
@@ -150,6 +152,13 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     // Thiết lập đổ bóng cho Android
     elevation: 5,
+  },
+
+  cardNewImg: {
+    width: "100%",
+    height: 200,
+    objectFit: "cover",
+    borderRadius: 10,
   },
 });
 

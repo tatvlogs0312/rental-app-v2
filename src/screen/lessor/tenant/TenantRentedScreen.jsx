@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { FlatList, Linking, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../../../hook/AuthProvider";
 import { useLoading } from "./../../../hook/LoadingProvider";
 import { get } from "./../../../api/ApiManager";
@@ -75,7 +75,10 @@ const TenantRentedScreen = ({ navigation, route }) => {
                   borderRadius: 100,
                   position: "absolute",
                   top: 10,
-                  right: 10, 
+                  right: 10,
+                }}
+                onPress={() => {
+                  Linking.openURL(`tel:$${item.tenantPhoneNumber}`);
                 }}
               >
                 <FontAwesome6Icon name="phone" color={COLOR.white} size={20} />

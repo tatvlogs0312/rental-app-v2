@@ -10,7 +10,7 @@ import NoData from "../../../components/NoData";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import ConfirmPopup from "../../../components/ConfirmPopup";
-import MsgInputError from './../../../components/MsgInputError';
+import MsgInputError from "./../../../components/MsgInputError";
 
 const RoomListScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -39,18 +39,23 @@ const RoomListScreen = ({ navigation, route }) => {
   const [addVisiable, setAddVisiable] = useState(false);
   const [deleteVisiable, setDeleteVisiable] = useState(false);
 
+  const [status, setStatus] = useState("EMPTY");
+
   useEffect(() => {
     if (auth.token) {
       getRoom();
     }
-  }, [auth.token]);
+  }, [auth.token, status]);
 
   const getRoom = async () => {
     try {
-      const res = await get("/rental-service/room/search/v2", { houseId: houseId, page: page, size: size }, auth.token);
+      load.isLoading();
+      const res = await get("/rental-service/room/search/v2", { houseId: houseId, status: status, page: page, size: size }, auth.token);
       setRooms(res.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      load.nonLoading();
     }
   };
 
@@ -146,6 +151,15 @@ const RoomListScreen = ({ navigation, route }) => {
       <LoadingModal modalVisible={load.loading} />
       <View style={{ flex: 1 }}>
         <HeaderBarPlus title={"Danh sách phòng"} back={() => navigation.goBack()} plus={() => setAddVisiable(true)} />
+        <View style={{ backgroundColor: COLOR.white, flexDirection: "row" }}>
+          <Pressable style={[styles.button, status === "EMPTY" && styles.selectedButton]} onPress={() => setStatus("EMPTY")}>
+            <Text style={[styles.text, status === "EMPTY" && styles.selectedText]}>Còn trống</Text>
+          </Pressable>
+
+          <Pressable style={[styles.button, status === "RENTED" && styles.selectedButton]} onPress={() => setStatus("RENTED")}>
+            <Text style={[styles.text, status === "RENTED" && styles.selectedText]}>Đã cho thuê</Text>
+          </Pressable>
+        </View>
         <View style={{ paddingHorizontal: 5, marginTop: 10, flex: 1 }}>
           {rooms.length > 0 ? (
             <View>
@@ -158,7 +172,7 @@ const RoomListScreen = ({ navigation, route }) => {
                   <View style={styles.card}>
                     <Pressable
                       style={{
-                        backgroundColor: COLOR.primary,
+                        backgroundColor: COLOR.white,
                         position: "absolute",
                         top: 5,
                         right: 5,
@@ -174,7 +188,7 @@ const RoomListScreen = ({ navigation, route }) => {
                         setDeleteVisiable(true);
                       }}
                     >
-                      <FontAwesome6 name="x" size={10} color={COLOR.white} />
+                      <FontAwesome6 name="x" size={13} color={COLOR.red} />
                     </Pressable>
                     <Text style={{ fontSize: 20, fontWeight: "bold", paddingBottom: 1, borderBottomWidth: StyleSheet.hairlineWidth, color: COLOR.primary }}>
                       {item.roomName}
@@ -361,6 +375,23 @@ const styles = StyleSheet.create({
     color: COLOR.primary,
     borderRadius: 10,
     marginRight: 10,
+  },
+
+  button: {
+    width: "50%",
+    padding: 10,
+  },
+  selectedButton: {
+    borderBottomWidth: 2, // Đường viền dưới
+    borderBottomColor: COLOR.primary, // Màu của đường viền
+  },
+  text: {
+    textAlign: "center",
+    color: "#000", // Màu chữ mặc định
+  },
+  selectedText: {
+    color: COLOR.primary, // Màu chữ của nút được chọn
+    fontWeight: "bold", // Chữ đậm cho nút được chọn
   },
 });
 

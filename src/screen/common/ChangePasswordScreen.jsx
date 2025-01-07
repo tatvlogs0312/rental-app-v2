@@ -8,6 +8,7 @@ import { useAuth } from "./../../hook/AuthProvider";
 import { useLoading } from "../../hook/LoadingProvider";
 import { post } from "../../api/ApiManager";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import { validPassword } from "../../utils/Utils";
 
 const ChangePasswordScreen = ({ navigation }) => {
   const auth = useAuth();
@@ -74,12 +75,17 @@ const ChangePasswordScreen = ({ navigation }) => {
       isValid = false;
     }
 
+    if (newPassword !== "" && !validPassword(newPassword)) {
+      setNewPasswordMsg("Mật khẩu mới không đúng định dạng");
+      isValid = false;
+    }
+
     if (confirmNewPassword === "" || confirmNewPassword === null) {
       setConfirmNewPasswordMsg("Vui lòng nhập lại mật khẩu mới");
       isValid = false;
     }
 
-    if (confirmNewPassword !== "" && confirmNewPassword !== null && confirmNewPassword !== newPassword) {
+    if (confirmNewPassword !== newPassword) {
       setConfirmNewPasswordMsg("Mật khẩu mới không trùng khớp");
       isValid = false;
     }
@@ -101,6 +107,7 @@ const ChangePasswordScreen = ({ navigation }) => {
             <TextInput style={styles.input} placeholder="Nhập mật khẩu cũ" value={oldPassword} secureTextEntry onChangeText={(t) => setInputOldPassword(t)} />
             {oldPasswordMsg !== "" && <Text style={{ color: "red", fontSize: 12, textAlign: "left" }}>{oldPasswordMsg}</Text>}
           </View>
+
           <View style={{ marginBottom: 20 }}>
             <Text>
               <Text style={{ color: COLOR.red }}>* </Text>
@@ -109,6 +116,7 @@ const ChangePasswordScreen = ({ navigation }) => {
             <TextInput style={styles.input} placeholder="Nhập mật khẩu mới" value={newPassword} secureTextEntry onChangeText={(t) => setInputNewPassword(t)} />
             {newPasswordMsg !== "" && <Text style={{ color: "red", fontSize: 12, textAlign: "left" }}>{newPasswordMsg}</Text>}
           </View>
+
           <View>
             <Text>
               <Text style={{ color: COLOR.red }}>* </Text>
@@ -122,6 +130,17 @@ const ChangePasswordScreen = ({ navigation }) => {
               onChangeText={(t) => setInputConfirmNewPassword(t)}
             />
             {confirmNewPasswordMsg !== "" && <Text style={{ color: "red", fontSize: 12, textAlign: "left" }}>{confirmNewPasswordMsg}</Text>}
+          </View>
+
+          <View style={{ padding: 5 }}>
+            <Text style={{ fontSize: 12 }}>
+              <Text style={{ color: "red" }}>* </Text>
+              <Text>Mật khẩu tối thiểu 8 ký tự</Text>
+            </Text>
+            <Text style={{ fontSize: 12 }}>
+              <Text style={{ color: "red" }}>* </Text>
+              <Text>Chứa 1 ký tự in hoa, 1 số, 1 ký tự đặc biệt</Text>
+            </Text>
           </View>
         </View>
         <View style={{ marginBottom: 10 }}>

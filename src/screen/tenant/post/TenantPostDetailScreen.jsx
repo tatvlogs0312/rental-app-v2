@@ -44,21 +44,7 @@ const TenantPostDetailScreen = ({ navigation, route }) => {
   };
 
   const openDialer = () => {
-    const url = `tel:${postData.lessorNumber}`;
-    console.log(url);
-
-    Linking.canOpenURL(url)
-      .then((supported) => {
-        if (supported) {
-          Linking.openURL(url); // Mở ứng dụng điện thoại
-        } else {
-          Toast.show({
-            type: ALERT_TYPE.DANGER,
-            textBody: "Không thể mở ứng dụng điện thoại của bạn",
-          });
-        }
-      })
-      .catch((err) => console.error("Lỗi khi mở ứng dụng gọi điện:", err));
+    Linking.openURL(`tel:$${postData.lessorNumber}`);
   };
 
   useEffect(() => {

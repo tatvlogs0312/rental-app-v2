@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View, Pressable, Modal, FlatList } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, View, Pressable, Modal, FlatList, Image } from "react-native";
 import HeaderBarNoPlus from "../../../components/header/HeaderBarNoPlus";
 import { COLOR } from "../../../constants/COLORS";
 import { useAuth } from "../../../hook/AuthProvider";
@@ -10,9 +10,13 @@ import { TouchableOpacity } from "react-native";
 import { get, post } from "../../../api/ApiManager";
 import { useEffect } from "react";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
-import uuid from "react-native-uuid";
+import * as ImagePicker from "expo-image-picker";
 import { getUUID } from "../../../utils/Utils";
 import MsgInputError from "../../../components/MsgInputError";
+import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
+import { faL } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import { DOMAIN } from "../../../constants/URL";
 
 const AddHouseScreen = ({ navigation }) => {
   const auth = useAuth();
@@ -27,12 +31,14 @@ const AddHouseScreen = ({ navigation }) => {
   const [district, setDistrict] = useState(null);
   const [province, setProvince] = useState(null);
   const [detail, setDetail] = useState(null);
+  const [image, setImage] = useState(null);
 
   const [houseNameMsg, setHouseNameMsg] = useState(null);
   const [wardMsg, setWardMsg] = useState(null);
   const [districtMsg, setDistrictMsg] = useState(null);
   const [provinceMsg, setProvinceMsg] = useState(null);
   const [detailMsg, setDetailMsg] = useState(null);
+  const [imageMsg, setImageMsg] = useState(null);
 
   const [provinceVisiable, setProvinceVisiable] = useState(false);
   const [wardVisiable, setWardVisiable] = useState(false);
@@ -100,6 +106,59 @@ const AddHouseScreen = ({ navigation }) => {
     }
   };
 
+  const addHouseV2 = async () => {
+    if (handleInput() === true) {
+      try {
+        load.isLoading();
+        const formData = new FormData();
+        formData.append("houseName", houseName);
+        formData.append("positionDetail", detail);
+        formData.append("ward", ward);
+        formData.append("district", district);
+        formData.append("province", province);
+        formData.append("image", {
+          uri: image.uri,
+          type: "image/jpeg",
+          name: getUUID() + ".jpg",
+        });
+        await axios.post(DOMAIN + "/rental-service/house/create/v2", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: auth.token,
+          },
+        });
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          textBody: "Thêm nhà thành công",
+          title: "Thông báo",
+        });
+        navigation.navigate("HouseList", {
+          refresh: getUUID(),
+        });
+      } catch (error) {
+        console.log("====================================");
+        console.log(JSON.stringify(error));
+        console.log("====================================");
+        let errorMessage = "Đã có lỗi xảy ra, vui lòng thử lại sau.";
+
+        if (error.response) {
+          errorMessage = error.response.data.message || errorMessage;
+        } else if (error.request) {
+          // The request was made but no response was received
+          errorMessage = "Network error. Please check your connection.";
+        }
+
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          textBody: errorMessage,
+          title: "Lỗi",
+        });
+      } finally {
+        load.nonLoading();
+      }
+    }
+  };
+
   const handleInput = () => {
     let isValid = true;
     if (houseName === null || houseName === "") {
@@ -122,7 +181,24 @@ const AddHouseScreen = ({ navigation }) => {
       setDetailMsg("Vui lòng điền địa chỉ cụ thể");
       isValid = false;
     }
+    if (image === null) {
+      setImageMsg("Vui lòng thêm hình ảnh nhà");
+      isValid = false;
+    }
     return isValid;
+  };
+
+  const selectImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [6, 4],
+    });
+
+    if (result.assets !== null) {
+      setImage(result.assets[0]);
+      setImageMsg(null);
+    }
   };
 
   return (
@@ -180,9 +256,39 @@ const AddHouseScreen = ({ navigation }) => {
                   />
                   {detailMsg !== null && detailMsg !== "" && <MsgInputError msg={detailMsg} />}
                 </View>
+
+                <View style={{ marginTop: 10 }}>
+                  <Text style={{ color: COLOR.primary, fontWeight: "bold" }}>Hình ảnh nhà:</Text>
+                  {image === null ? (
+                    <TouchableOpacity style={styles.image} onPress={() => selectImage()}>
+                      <FontAwesome6Icon name="plus" size={30} color={COLOR.black} />
+                    </TouchableOpacity>
+                  ) : (
+                    <View style={{ position: "relative", width: 100, height: 100 }}>
+                      <Image source={{ uri: image.uri }} style={styles.image} />
+                      <Pressable
+                        style={{
+                          backgroundColor: COLOR.white,
+                          position: "absolute",
+                          top: 5,
+                          right: 5,
+                          width: 25,
+                          height: 25,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          borderRadius: 20,
+                        }}
+                        onPress={() => setImage(null)}
+                      >
+                        <FontAwesome6Icon name="x" size={10} color={COLOR.red} />
+                      </Pressable>
+                    </View>
+                  )}
+                  {imageMsg !== null && imageMsg !== "" && <MsgInputError msg={imageMsg} />}
+                </View>
               </View>
               <View>
-                <TouchableOpacity onPress={addHouse}>
+                <TouchableOpacity onPress={addHouseV2}>
                   <Text style={styles.btn}>Thêm</Text>
                 </TouchableOpacity>
               </View>
@@ -338,6 +444,17 @@ const styles = StyleSheet.create({
 
   inputBackgroud: {
     marginTop: 10,
+  },
+
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+    marginRight: 10,
+    marginBottom: 10,
+    backgroundColor: COLOR.light,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
