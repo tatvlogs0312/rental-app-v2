@@ -28,6 +28,7 @@ import { useFcm } from "../hook/FcmProvider";
 import LessorWarningListScreen from "./../screen/lessor/warning/LessorWarningListScreen";
 import LessorWarningDetailScreen from "./../screen/lessor/warning/LessorWarningDetailScreen";
 import UserInfomationScreen from "../screen/common/UserInfomationScreen";
+import StatisticalScreen from "../screen/lessor/statistical/StatisticalScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -107,6 +108,7 @@ const LessorNavigator = () => {
       <Stack.Screen name="LessorWarningList" component={LessorWarningListScreen} />
       <Stack.Screen name="LessorWarningDetail" component={LessorWarningDetailScreen} />
       <Stack.Screen name="UserInfomation" component={UserInfomationScreen} />
+      <Stack.Screen name="Statistical" component={StatisticalScreen} />
     </Stack.Navigator>
   );
 };

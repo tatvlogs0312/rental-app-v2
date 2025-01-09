@@ -96,7 +96,14 @@ const TenantBillDetailScreen = ({ navigation, route }) => {
                       />
 
                       <View style={{ marginHorizontal: 15 }}>
-                        <Row title={"Tổng hóa đơn:"} value={ConvertMoneyV3(bill.moneyPayment)} />
+                        <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 15 }}>
+                          <View>
+                            <Text style={{ color: COLOR.grey }}>{"Tổng hóa đơn:"}</Text>
+                          </View>
+                          <View>
+                            <Text style={{ fontWeight: "bold", color: COLOR.blue }}>{ConvertMoneyV3(bill.moneyPayment)} vnđ</Text>
+                          </View>
+                        </View>
                       </View>
                     </View>
                   </View>

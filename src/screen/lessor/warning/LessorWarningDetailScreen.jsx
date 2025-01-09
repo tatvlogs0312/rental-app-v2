@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Linking, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import HeaderBarNoPlus from "./../../../components/header/HeaderBarNoPlus";
 import { useAuth } from "../../../hook/AuthProvider";
 import { useLoading } from "../../../hook/LoadingProvider";
@@ -129,9 +129,52 @@ const LessorWarningDetailScreen = ({ navigation, route }) => {
             <View>
               {/* Nút cập nhật */}
               {warning.status === "PENDING" && (
-                <TouchableOpacity onPress={complete}>
-                  <Text style={styles.btn}>Đã xử lý sự cố</Text>
-                </TouchableOpacity>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", width: "auto" }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      Linking.openURL(`tel:$${warning.tenantPhoneNumber}`);
+                    }}
+                    style={{
+                      marginVertical: 20,
+                      padding: 10,
+                      borderRadius: 5,
+                      backgroundColor: COLOR.green,
+                      width: 180,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        color: COLOR.white,
+                        fontWeight: "bold",
+                        fontSize: 18,
+                      }}
+                    >
+                      Liên hệ khách thuê
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={complete}
+                    style={{
+                      marginVertical: 20,
+                      padding: 10,
+                      borderRadius: 5,
+                      backgroundColor: COLOR.primary,
+                      width: 180,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        color: COLOR.white,
+                        fontWeight: "bold",
+                        fontSize: 18,
+                      }}
+                    >
+                      Đã xử lý sự cố
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               )}
             </View>
           </View>
@@ -148,7 +191,7 @@ const styles = StyleSheet.create({
     width: "100%",
     margin: "auto",
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 5,
     backgroundColor: COLOR.primary,
     color: COLOR.white,
     fontWeight: "bold",

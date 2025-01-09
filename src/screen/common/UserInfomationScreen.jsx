@@ -10,6 +10,7 @@ import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import LoadingModal from "react-native-loading-modal";
 import { COLOR } from "./../../constants/COLORS";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const UserInfomationScreen = ({ navigation, route }) => {
   const auth = useAuth();
@@ -26,6 +27,9 @@ const UserInfomationScreen = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [emailModalVisible, setEmailModalVisible] = useState(false);
   const [numberModalVisible, setNumberModalVisible] = useState(false);
+
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     if (auth.token !== "") {
@@ -103,6 +107,15 @@ const UserInfomationScreen = ({ navigation, route }) => {
     }
   };
 
+  const onChange = (event, selectedDate) => {
+    console.log("====================================");
+    console.log(selectedDate);
+    console.log("====================================");
+    const currentDate = selectedDate || date;
+    setShow(false);
+    setDate(currentDate);
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <LoadingModal modalVisible={load.loading} />
@@ -144,7 +157,7 @@ const UserInfomationScreen = ({ navigation, route }) => {
               </View>
             </View>
 
-            <TouchableOpacity style={styles.field}>
+            <TouchableOpacity style={styles.field} onPress={() => setShow(true)}>
               <Text style={styles.fieldLabel}>Ngày sinh</Text>
               <View>
                 <Text style={styles.fieldValue}>{convertDate(birthDate, "DD/MM/YYYY")}</Text>
@@ -189,6 +202,15 @@ const UserInfomationScreen = ({ navigation, route }) => {
             </View>
           </View> */}
         </ScrollView>
+      )}
+
+      {show && (
+        <DateTimePicker
+          value={birthDate}
+          mode="date" // 'date', 'time', hoặc 'datetime'
+          display="inline" // 'default', 'spinner', 'calendar', hoặc 'clock'
+          onChange={onChange}
+        />
       )}
 
       <Modal visible={modalVisible} transparent animationType="slide">
@@ -248,7 +270,12 @@ const UserInfomationScreen = ({ navigation, route }) => {
           <View style={styles.modalContent}>
             <View style={{ alignItems: "center", width: "100%" }}>
               <Text style={styles.modalTitle}>Cập nhật số điện thoại</Text>
-              <TextInput style={{ width: "100%", padding: 2, borderBottomWidth: 0.5, marginVertical: 10 }} value={phoneNumber} onChangeText={setPhoneNumber} />
+              <TextInput
+                style={{ width: "100%", padding: 2, borderBottomWidth: 0.5, marginVertical: 10 }}
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                keyboardType="phone-pad"
+              />
             </View>
 
             <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "center" }}>

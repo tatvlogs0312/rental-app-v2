@@ -13,6 +13,21 @@ import { CheckBox } from "@rneui/base";
 import { MonthList } from "../../../constants/Month";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
+const months = [
+  { name: "Jan", value: 1 },
+  { name: "Feb", value: 2 },
+  { name: "Mar", value: 3 },
+  { name: "Apr", value: 4 },
+  { name: "May", value: 5 },
+  { name: "Jun", value: 6 },
+  { name: "Jul", value: 7 },
+  { name: "Aug", value: 8 },
+  { name: "Sep", value: 9 },
+  { name: "Oct", value: 10 },
+  { name: "Nov", value: 11 },
+  { name: "Dec", value: 12 },
+];
+
 const LessorBillCreateScreen = ({ navigation, route }) => {
   const auth = useAuth();
   const load = useLoading();
@@ -29,6 +44,8 @@ const LessorBillCreateScreen = ({ navigation, route }) => {
   const [monthVisiable, setMonthVisiable] = useState(false);
 
   const [isContinue, setIsContinue] = useState(true);
+
+  const [selectedYear, setSelectedYear] = useState(year);
 
   useEffect(() => {
     if (auth.token !== "") {
@@ -137,6 +154,23 @@ const LessorBillCreateScreen = ({ navigation, route }) => {
     return billTotal;
   };
 
+  const changeYear = (direction) => {
+    setSelectedYear(selectedYear + direction);
+  };
+
+  const renderMonth = ({ item }) => (
+    <TouchableOpacity
+      style={styles.monthContainer}
+      onPress={async () => {
+        setMonth(item.value);
+        setYear(selectedYear);
+        setMonthVisiable(false);
+      }}
+    >
+      <Text style={styles.monthText}>{item.name}</Text>
+    </TouchableOpacity>
+  );
+
   const Row = ({ title, value }) => {
     return (
       <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 15 }}>
@@ -156,33 +190,48 @@ const LessorBillCreateScreen = ({ navigation, route }) => {
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1 }}>
           <HeaderBarNoPlus title={"Tạo hóa đơn"} back={() => navigation.goBack()} />
-          <View style={{ margin: 10, marginTop: 10, backgroundColor: COLOR.white, borderRadius: 10 }}>
-            <View style={{ margin: 5 }}>
-              <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" }}>
-                <View style={{ width: "49%" }}>
-                  <Text style={styles.inputTitle}>Tháng đóng:</Text>
-                  <Pressable onPress={() => setMonthVisiable(true)} style={{ zIndex: 10 }}>
-                    <TextInput placeholder="Chọn tháng" readOnly style={styles.input} value={month.toString()} />
-                  </Pressable>
+          <View style={{ margin: 5, backgroundColor: COLOR.white, borderRadius: 10 }}>
+            <View style={{ margin: 10 }}>
+              <TouchableOpacity
+                onPress={() => setMonthVisiable(true)}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor: "#fff",
+                  paddingVertical: 10,
+                  paddingHorizontal: 15,
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: "#ddd",
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                  elevation: 3,
+                  width: "100%",
+                  alignSelf: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View style={{ marginRight: 10, backgroundColor: "#FFF5E5", borderRadius: 5, padding: 5 }}>
+                    <FontAwesome6Icon name="calendar" size={20} color="#FFA500" />
+                  </View>
+                  <Text style={{ fontSize: 16, color: "#333", fontWeight: "bold" }}>{`Tháng ${month} - Năm ${year}`}</Text>
                 </View>
-
-                <View style={{ width: "49%" }}>
-                  <Text style={styles.inputTitle}>Năm đóng:</Text>
-                  <TextInput placeholder="Nhập năm" style={styles.input} keyboardType="number-pad" onChangeText={(t) => setYear(t)} value={String(year)} />
-                </View>
-              </View>
+                <FontAwesome6Icon name="rotate" size={20} color="#FFA500" />
+              </TouchableOpacity>
 
               <Pressable onPress={() => setContractVisiable(true)} style={{ marginTop: 10 }}>
-                <Text style={styles.inputTitle}>Phòng:</Text>
                 <TextInput placeholder="Chọn phòng" readOnly style={styles.searchInput} value={room} />
               </Pressable>
             </View>
           </View>
-          <View style={{ margin: 5, padding: 5, flex: 1 }}>
+          <View style={{ margin: 5, padding: 0, flex: 1 }}>
             <ScrollView showsVerticalScrollIndicator={false}>
               {contract !== null && (
                 <View>
-                  <View style={{ backgroundColor: COLOR.white, padding: 5, marginBottom: 10, borderRadius: 10 }}>
+                  <View style={{ backgroundColor: COLOR.white, padding: 10, marginBottom: 10, borderRadius: 10 }}>
                     <Text style={{ marginBottom: 10, fontSize: 16, color: COLOR.primary, fontWeight: "bold" }}>Thông tin khách thuê</Text>
                     <View style={{ borderColor: COLOR.grey, borderRadius: 10, borderWidth: 0.5 }}>
                       <View style={{ borderBottomWidth: 0.5, borderColor: COLOR.grey, marginHorizontal: 15 }}>
@@ -194,7 +243,7 @@ const LessorBillCreateScreen = ({ navigation, route }) => {
                     </View>
                   </View>
 
-                  <View style={{ backgroundColor: COLOR.white, padding: 5, borderRadius: 10 }}>
+                  <View style={{ backgroundColor: COLOR.white, padding: 10, borderRadius: 10 }}>
                     <Text style={{ marginBottom: 10, fontSize: 16, color: COLOR.primary, fontWeight: "bold" }}>Hóa đơn</Text>
                     <FlatList
                       data={utilities}
@@ -240,7 +289,7 @@ const LessorBillCreateScreen = ({ navigation, route }) => {
                   </View>
 
                   <View style={{ padding: 10 }}>
-                    <TouchableOpacity onPress={createBill }>
+                    <TouchableOpacity onPress={createBill}>
                       <Text style={styles.btn}>Tạo hóa đơn</Text>
                     </TouchableOpacity>
                   </View>
@@ -286,7 +335,7 @@ const LessorBillCreateScreen = ({ navigation, route }) => {
         </View>
       </Modal>
 
-      <Modal visible={monthVisiable} transparent={true} animationType="slide">
+      {/* <Modal visible={monthVisiable} transparent={true} animationType="slide">
         <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center" }}>
           <View style={{ width: "80%", height: 400, backgroundColor: "white", borderRadius: 8, padding: 20 }}>
             <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Chọn tháng:</Text>
@@ -312,6 +361,41 @@ const LessorBillCreateScreen = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </View>
+      </Modal> */}
+
+      <Modal visible={monthVisiable} transparent={true} animationType="slide">
+        <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "flex-end" }}>
+          <View style={{ width: "100%", height: 400, backgroundColor: "white", borderRadius: 8, padding: 20 }}>
+            <View>
+              <View style={styles.header}>
+                <TouchableOpacity onPress={() => changeYear(-1)}>
+                  <Text style={styles.arrow}>&lt;</Text>
+                </TouchableOpacity>
+                <Text style={styles.yearText}>{selectedYear}</Text>
+                <TouchableOpacity onPress={() => changeYear(1)}>
+                  <Text style={styles.arrow}>&gt;</Text>
+                </TouchableOpacity>
+              </View>
+              {/* Month Grid */}
+              <FlatList
+                data={months}
+                renderItem={renderMonth}
+                keyExtractor={(item) => item}
+                numColumns={3} // Hiển thị 3 tháng trên mỗi hàng
+                contentContainerStyle={styles.grid}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                setMonthVisiable(false);
+                setSelectedYear(year);
+              }}
+              style={{ padding: 10, marginTop: 10 }}
+            >
+              <Text style={{ color: "red", textAlign: "center" }}>Đóng</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </Modal>
     </>
   );
@@ -325,7 +409,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     color: COLOR.black,
     fontWeight: "bold",
-    borderWidth: 0.5,
+    elevation: 10,
   },
 
   input: {
@@ -433,6 +517,38 @@ const styles = StyleSheet.create({
     color: COLOR.white,
     fontWeight: "bold",
     fontSize: 17,
+  },
+
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    // width: "60%",
+    marginBottom: 20,
+  },
+  arrow: {
+    fontSize: 25,
+    padding: 5,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  yearText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  monthContainer: {
+    flex: 1,
+    margin: 5,
+    padding: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    // backgroundColor: "#E0E0E0",
+  },
+  monthText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
   },
 });
 

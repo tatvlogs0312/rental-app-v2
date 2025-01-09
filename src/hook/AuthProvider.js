@@ -1,26 +1,30 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { get } from "../api/ApiManager";
+import { useLoading } from "./LoadingProvider";
+import { err } from "react-native-svg";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState("");
-  const [loading, setLoading] = useState(true);
   const [info, setInfo] = useState(null);
+
+  const load = useLoading();
 
   const getUser = async (token) => {
     try {
       const data = await get("/rental-service/user-profile/get-information", null, token);
       setInfo(data);
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   };
 
   useEffect(() => {
     const loadUser = async () => {
+      load.isLoading();
       try {
         const storedUser = await AsyncStorage.getItem("user");
         const storedToken = await AsyncStorage.getItem("token");
@@ -33,7 +37,7 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         console.log("Error loading user:", error);
       } finally {
-        setLoading(false); // Set loading to false once data is loaded
+        load.nonLoading();
       }
     };
 
@@ -60,7 +64,7 @@ export const AuthProvider = ({ children }) => {
     setToken("");
   };
 
-  return <AuthContext.Provider value={{ user, token, info, setInfoApp, login, logout, loading }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, token, info, setInfoApp, login, logout }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

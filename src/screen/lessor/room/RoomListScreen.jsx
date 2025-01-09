@@ -195,13 +195,18 @@ const RoomListScreen = ({ navigation, route }) => {
                     </Text>
                     <Text style={{ marginTop: 10 }}>
                       <FontAwesome6 name="crop-simple" color={COLOR.grey} size={16} />
-                      <Text style={{ color: COLOR.grey, fontWeight: "bold" }}> Diện tích: </Text>
+                      <Text style={{ color: COLOR.grey, fontWeight: "bold" }}>  Diện tích: </Text>
                       <Text style={{ fontWeight: "bold" }}>{`${item.acreage}/m²`}</Text>
                     </Text>
                     <Text style={{ marginTop: 5 }}>
                       <FontAwesome6 name="bed" color={COLOR.grey} />
-                      <Text style={{ color: COLOR.grey, fontWeight: "bold" }}> Số phòng ngủ: </Text>
+                      <Text style={{ color: COLOR.grey, fontWeight: "bold" }}>  Số phòng ngủ: </Text>
                       <Text style={{ fontWeight: "bold" }}>{`${item.numberOfRom}`}</Text>
+                    </Text>
+                    <Text style={{ marginTop: 5 }}>
+                      <FontAwesome6 name="layer-group" color={COLOR.grey} />
+                      <Text style={{ color: COLOR.grey, fontWeight: "bold" }}>  Tầng: </Text>
+                      <Text style={{ fontWeight: "bold" }}>{item.floor}</Text>
                     </Text>
                     <Text style={{ marginTop: 5 }}>
                       <Text style={{ color: COLOR.grey, fontWeight: "bold" }}>Tình trạng: </Text>

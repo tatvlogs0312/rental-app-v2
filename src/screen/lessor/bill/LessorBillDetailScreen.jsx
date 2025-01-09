@@ -147,9 +147,6 @@ const LessorBillDetailScreen = ({ navigation, route }) => {
                       <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }}>
                         <Row title={"Thời gian thanh toán:"} value={bill.paymentDate} />
                       </View>
-                      <View style={{ marginHorizontal: 15 }}>
-                        <Row title={"Thời gian ký:"} value={bill.billCode} />
-                      </View>
                     </View>
                   </View>
 
@@ -170,7 +167,14 @@ const LessorBillDetailScreen = ({ navigation, route }) => {
                       />
 
                       <View style={{ marginHorizontal: 15 }}>
-                        <Row title={"Tổng hóa đơn:"} value={ConvertMoneyV3(bill.moneyPayment)} />
+                        <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 15 }}>
+                          <View>
+                            <Text style={{ color: COLOR.grey }}>{"Tổng hóa đơn:"}</Text>
+                          </View>
+                          <View>
+                            <Text style={{ fontWeight: "bold", color: COLOR.blue }}>{ConvertMoneyV3(bill.moneyPayment)} vnđ</Text>
+                          </View>
+                        </View>
                       </View>
                     </View>
                   </View>

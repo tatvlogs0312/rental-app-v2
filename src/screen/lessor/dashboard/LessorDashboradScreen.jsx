@@ -9,12 +9,13 @@ import { useLoading } from "./../../../hook/LoadingProvider";
 import { get } from "../../../api/ApiManager";
 
 const features = [
-  { id: "1", icon: "house", title: "Nhà", color: "#007bff", navigate: "HouseList" },
-  { id: "2", icon: "pen-to-square", title: "Bài đăng", color: "#f1c40f", navigate: "LessorPostList" },
-  { id: "3", icon: "file-signature", title: "Hợp đồng", color: "#6F1E51", navigate: "LessorContractList" },
-  { id: "4", icon: "file-invoice-dollar", title: "Hóa đơn", color: "#00a34c", navigate: "LessorBillList" },
-  { id: "5", icon: "triangle-exclamation", title: "Sự cố", color: "#8c7ae6", navigate: "LessorWarningList" },
-  { id: "6", icon: "user", title: "Khách thuê", color: "#c23616", navigate: "TenantRented" },
+  { id: "1", icon: "house", title: "Nhà", color: "#ff9ff3", navigate: "HouseList" },
+  { id: "2", icon: "pen-to-square", title: "Bài đăng", color: "#feca57", navigate: "LessorPostList" },
+  { id: "3", icon: "file-signature", title: "Hợp đồng", color: "#ff6b6b", navigate: "LessorContractList" },
+  { id: "4", icon: "file-invoice-dollar", title: "Hóa đơn", color: "#48dbfb", navigate: "LessorBillList" },
+  { id: "5", icon: "triangle-exclamation", title: "Sự cố", color: "#1dd1a1", navigate: "LessorWarningList" },
+  { id: "6", icon: "user", title: "Khách thuê", color: "#5f27cd", navigate: "TenantRented" },
+  { id: "6", icon: "chart-simple", title: "Thống kê", color: "#eb3b5a", navigate: "Statistical" },
 ];
 
 const LessorDashboradScreen = ({ navigation }) => {
