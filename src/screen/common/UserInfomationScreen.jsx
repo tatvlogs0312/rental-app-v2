@@ -107,13 +107,11 @@ const UserInfomationScreen = ({ navigation, route }) => {
     }
   };
 
-  const onChange = (event, selectedDate) => {
-    console.log("====================================");
-    console.log(selectedDate);
-    console.log("====================================");
+  const updateBirthDate = async (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(false);
     setDate(currentDate);
+    await updateInfo();
   };
 
   return (
@@ -157,14 +155,14 @@ const UserInfomationScreen = ({ navigation, route }) => {
               </View>
             </View>
 
-            <TouchableOpacity style={styles.field} onPress={() => setShow(true)}>
+            <TouchableOpacity style={styles.field} onPress={() => setShow(false)}>
               <Text style={styles.fieldLabel}>Ngày sinh</Text>
               <View>
                 <Text style={styles.fieldValue}>{convertDate(birthDate, "DD/MM/YYYY")}</Text>
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.field} onPress={() => setModalVisible(true)}>
+            <TouchableOpacity style={styles.field} onPress={() => setModalVisible(false)}>
               <Text style={styles.fieldLabel}>Giới tính</Text>
               <View>
                 <Text style={styles.fieldValue}>{gender || ""}</Text>
@@ -204,14 +202,27 @@ const UserInfomationScreen = ({ navigation, route }) => {
         </ScrollView>
       )}
 
-      {show && (
-        <DateTimePicker
-          value={birthDate}
-          mode="date" // 'date', 'time', hoặc 'datetime'
-          display="inline" // 'default', 'spinner', 'calendar', hoặc 'clock'
-          onChange={onChange}
-        />
-      )}
+      <Modal visible={show} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={{ alignItems: "center", width: "100%" }}>
+              <Text style={styles.modalTitle}>Chọn ngày sinh</Text>
+              <DateTimePicker
+                value={birthDate === null ? new Date() : new Date(birthDate)}
+                mode="date" // 'date', 'time', hoặc 'datetime'
+                display="inline" // 'default', 'spinner', 'calendar', hoặc 'clock'
+                onChange={updateBirthDate}
+              />
+            </View>
+
+            <View style={{ marginTop: 20 }}>
+              <TouchableOpacity onPress={() => setShow(false)}>
+                <Text style={{ color: COLOR.red }}>Đóng</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       <Modal visible={modalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
@@ -258,7 +269,7 @@ const UserInfomationScreen = ({ navigation, route }) => {
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.accessButton} onPress={updateInfo}>
-                <Text style={styles.cancelText}>Xác nhận</Text>
+                <Text style={styles.cancelText}>Cập nhật</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -290,7 +301,7 @@ const UserInfomationScreen = ({ navigation, route }) => {
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.accessButton} onPress={updateInfo}>
-                <Text style={styles.cancelText}>Xác nhận</Text>
+                <Text style={styles.cancelText}>Cập nhật</Text>
               </TouchableOpacity>
             </View>
           </View>

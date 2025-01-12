@@ -120,6 +120,7 @@ const RoomListScreen = ({ navigation, route }) => {
     setRoomName(null);
     setAcreage(null);
     setNumber(null);
+    setFloor(null);
   };
 
   const clearDataMsg = () => {

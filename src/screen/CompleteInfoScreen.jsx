@@ -80,9 +80,10 @@ const CompleteInfoScreen = ({ navigation, route }) => {
   };
 
   const completeInfo = async () => {
+    load.isLoading();
     if (validateInput()) {
       try {
-        const res = await post(
+        await post(
           "/rental-service/user-profile/complete-information",
           {
             firstName: firstName,
@@ -92,13 +93,11 @@ const CompleteInfoScreen = ({ navigation, route }) => {
           },
           user.token,
         );
-        if (res) {
-          var info = await get("/rental-service/user-profile/get-information", {}, data.token);
-          auth.setInfoApp(info);
-          auth.login(user);
-        }
+        auth.login(user);
       } catch (error) {
         console.log(error);
+      } finally {
+        load.nonLoading();
       }
     }
   };
@@ -107,9 +106,10 @@ const CompleteInfoScreen = ({ navigation, route }) => {
     <SafeAreaView
       style={{
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
         backgroundColor: "#fff",
+        paddingVertical: 60,
       }}
     >
       <LoadingModal modalVisible={load.loading} />
@@ -136,13 +136,12 @@ const CompleteInfoScreen = ({ navigation, route }) => {
             {msgPhoneNumber !== "" && <Text style={{ color: "red", fontSize: 12, textAlign: "left" }}>{msgPhoneNumber}</Text>}
           </View>
         </View>
-
-        <TouchableOpacity style={styles.btnLogin} onPress={completeInfo}>
-          <View>
-            <Text style={{ color: COLOR.lightBlue, fontSize: 17, fontWeight: "600" }}>Cập nhật thông tin</Text>
-          </View>
-        </TouchableOpacity>
       </View>
+      <TouchableOpacity style={styles.btnLogin} onPress={completeInfo}>
+        <View>
+          <Text style={{ color: COLOR.white, fontSize: 17, fontWeight: "600" }}>Cập nhật thông tin</Text>
+        </View>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -151,9 +150,9 @@ const styles = StyleSheet.create({
   loginTxt: {
     textAlign: "center",
     fontSize: 30,
-    color: COLOR.lightBlue,
+    color: COLOR.primary,
     fontWeight: "600",
-    marginTop: 200,
+    // marginTop: 200,
   },
 
   textInput: {
@@ -174,8 +173,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
     alignItems: "center",
     borderRadius: 20,
-    borderColor: COLOR.lightBlue,
-    borderWidth: 2,
+    backgroundColor: COLOR.primary,
   },
 });
 

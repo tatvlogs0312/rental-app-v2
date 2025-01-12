@@ -100,14 +100,12 @@ const HouseListScreen = ({ navigation, route }) => {
                       setDeleteVisiable(true);
                     }}
                   >
-                    <FontAwesome6 name="x" size={13} color={COLOR.red}/>
+                    <FontAwesome6 name="x" size={13} color={COLOR.red} />
                   </TouchableOpacity>
                   <View>
                     <Image source={{ uri: IMAGE_DOMAIN + "/" + item.image }} style={styles.cardNewImg} />
-                    <Text style={{ fontSize: 20, fontWeight: "bold", paddingBottom: 1, borderBottomWidth: StyleSheet.hairlineWidth, color: COLOR.primary }}>
-                      {item.houseName}
-                    </Text>
-                    <Text style={{ marginTop: 10 }}>
+                    <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 5, color: COLOR.primary }}>{item.houseName}</Text>
+                    <Text style={{ marginTop: 5 }}>
                       <FontAwesome6 name="house" />
                       {` ${item.totalEmptyRoom} phòng trống/${item.totalRoom} phòng`}
                     </Text>
@@ -121,7 +119,9 @@ const HouseListScreen = ({ navigation, route }) => {
             />
           </View>
         ) : (
-          <NoData message={"Không có dữ liệu"} />
+          <View style={{ marginTop: 20 }}>
+            <NoData message={"Không có dữ liệu"} />
+          </View>
         )}
       </View>
 
