@@ -115,7 +115,7 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         justifyContent: "center",
@@ -238,7 +238,7 @@ const RegisterScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </HideWithKeyboard>
-    </SafeAreaView>
+    </View>
   );
 };
 

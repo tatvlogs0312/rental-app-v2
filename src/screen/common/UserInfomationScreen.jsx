@@ -80,10 +80,28 @@ const UserInfomationScreen = ({ navigation, route }) => {
     }
   };
 
-  const updateGender = async (gender) => {
-    setGender(gender);
-    setModalVisible(false);
-    await updateInfo();
+  const updateGender = async (genderReq) => {
+    try {
+      load.isLoading();
+      await post(
+        "/rental-service/user-profile/update-information",
+        {
+          gender: genderReq,
+        },
+        auth.token,
+      );
+
+      setGender(genderReq);
+      await getUser();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      load.nonLoading();
+      setEmailModalVisible(false);
+      setNumberModalVisible(false);
+      setModalVisible(false);
+      setShow(false);
+    }
   };
 
   const updateInfo = async () => {
@@ -104,6 +122,9 @@ const UserInfomationScreen = ({ navigation, route }) => {
       console.log(error);
     } finally {
       load.nonLoading();
+      setEmailModalVisible(false);
+      setNumberModalVisible(false);
+      setShow(false);
     }
   };
 
@@ -162,7 +183,7 @@ const UserInfomationScreen = ({ navigation, route }) => {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.field} onPress={() => setModalVisible(false)}>
+            <TouchableOpacity style={styles.field} onPress={() => setModalVisible(true)}>
               <Text style={styles.fieldLabel}>Giới tính</Text>
               <View>
                 <Text style={styles.fieldValue}>{gender || ""}</Text>

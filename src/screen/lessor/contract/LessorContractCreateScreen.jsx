@@ -254,7 +254,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
 
   const renderItem = ({ item }) => (
     <View style={styles.rowFront}>
-      <Row title={item.utilityName + ":"} value={item.utilityPrice + "/" + item.utilityUnit} />
+      <Row title={item.utilityName + ":"} value={ConvertMoneyV3(item.utilityPrice) + "/" + item.utilityUnit} />
     </View>
   );
 
@@ -374,27 +374,7 @@ const LessorContractCreateScreen = ({ navigation, route }) => {
                           <FontAwesome6 name="plus" solid size={20} color={COLOR.primary} />
                         </TouchableOpacity>
                       </View>
-                      <View style={{ borderColor: COLOR.grey, borderRadius: 0, borderWidth: 0.5, backgroundColor: COLOR.white }}>
-                        {/* {utilities.map((item, index) => (
-                          <View
-                            style={
-                              index === utilities.length - 1
-                                ? { borderColor: COLOR.grey, marginHorizontal: 15 }
-                                : { borderBottomWidth: StyleSheet.hairlineWidth, borderColor: COLOR.grey, marginHorizontal: 15 }
-                            }
-                          >
-                            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                              <View style={{ width: "90%" }}>
-                                <Row title={item.utilityName + ":"} value={item.utilityPrice + "/" + item.utilityUnit} />
-                              </View>
-                              <TouchableOpacity
-                                style={{ width: 25, height: 25, borderRadius: 25, backgroundColor: COLOR.grey, justifyContent: "center", alignItems: "center" }}
-                              >
-                                <Text style={{ color: COLOR.red, fontWeight: "bold" }}>X</Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        ))} */}
+                      <View style={{ borderRadius: 5, borderWidth: 0, backgroundColor: COLOR.white }}>
                         <SwipeListView
                           data={utilities}
                           renderItem={renderItem}
@@ -646,7 +626,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.white,
     borderColor: COLOR.grey,
     paddingHorizontal: 15,
-    borderBottomWidth: 0.5,
+    // borderBottomWidth: 0.5,
     height: 50,
   },
 

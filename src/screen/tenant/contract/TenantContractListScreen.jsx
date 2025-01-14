@@ -70,7 +70,7 @@ const TenantContractListScreen = ({ navigation, route }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <LoadingModal modalVisible={load.loading}/>
+      <LoadingModal modalVisible={load.loading} />
       <HeaderBarNoPlus title={"Hợp đồng"} back={() => navigation.goBack()} plus={() => navigation.goBack()} />
       <View style={{ backgroundColor: COLOR.white, flexDirection: "row" }}>
         <Pressable style={[styles.button, selectedButton === "PENDING_SIGNED" && styles.selectedButton]} onPress={() => setSelectedButton("PENDING_SIGNED")}>
@@ -81,6 +81,10 @@ const TenantContractListScreen = ({ navigation, route }) => {
           <Text style={[styles.text, selectedButton === "SIGNED" && styles.selectedText]}>Đã ký</Text>
         </Pressable>
 
+        <Pressable style={[styles.button, selectedButton === "END" && styles.selectedButton]} onPress={() => setSelectedButton("END")}>
+          <Text style={[styles.text, selectedButton === "END" && styles.selectedText]}>Hết hạn</Text>
+        </Pressable>
+        
         <Pressable style={[styles.button, selectedButton === "REJECT" && styles.selectedButton]} onPress={() => setSelectedButton("REJECT")}>
           <Text style={[styles.text, selectedButton === "REJECT" && styles.selectedText]}>Từ chối</Text>
         </Pressable>
@@ -178,7 +182,7 @@ const TenantContractListScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   button: {
-    width: witdhScreen / 3,
+    width: "25%",
     padding: 10,
   },
   selectedButton: {

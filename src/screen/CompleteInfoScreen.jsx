@@ -103,7 +103,7 @@ const CompleteInfoScreen = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         justifyContent: "space-between",
@@ -142,7 +142,7 @@ const CompleteInfoScreen = ({ navigation, route }) => {
           <Text style={{ color: COLOR.white, fontSize: 17, fontWeight: "600" }}>Cập nhật thông tin</Text>
         </View>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

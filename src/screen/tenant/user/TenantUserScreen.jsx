@@ -49,7 +49,7 @@ const TenantUserScreen = ({ navigation }) => {
               />
               <Text style={styles.name}>{auth.info.firstName + " " + auth.info.lastName}</Text>
               <Text style={styles.email}>{auth.info.email}</Text>
-              <TouchableOpacity style={styles.editButton}>
+              <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate("UserInfomation")}>
                 <Text style={styles.editButtonText}>Chỉnh sửa</Text>
               </TouchableOpacity>
             </View>

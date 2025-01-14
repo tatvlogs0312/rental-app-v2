@@ -76,7 +76,7 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         justifyContent: "center",
@@ -174,7 +174,7 @@ const LoginScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </HideWithKeyboard>
-    </SafeAreaView>
+    </View>
   );
 };
 
