@@ -93,7 +93,7 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
   const handleInputEnd = () => {
     let isValid = true;
     if (dateEnd === null || dateEnd === "") {
-      setDateEndMsg("Vui lòng chọn ngày trả phòng dự kiến");
+      setDateEndMsg("Vui lòng chọn ngày trả phòng");
       isValid = false;
     }
 
@@ -171,6 +171,30 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
                     </View>
                     <View>
                       <Text style={{ color: COLOR.red }}>Hợp đồng bị hủy/từ chối</Text>
+                      {contract.statusMessage !== null && (
+                        <Text>
+                          Lý do: <Text>{contract.statusMessage}</Text>
+                        </Text>
+                      )}
+                    </View>
+                  </View>
+                )}
+                {contract.contractStatusCode === "END" && (
+                  <View
+                    style={{
+                      paddingHorizontal: 5,
+                      paddingVertical: 10,
+                      backgroundColor: "rgba(220, 221, 134, 0.5)",
+                      borderRadius: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View style={{ marginHorizontal: 10 }}>
+                      <FontAwesome6Icon name="triangle-exclamation" color={COLOR.orange} light size={20} />
+                    </View>
+                    <View>
+                      <Text style={{ color: COLOR.orange }}>Hợp đồng đã kết thúc</Text>
                       {contract.statusMessage !== null && (
                         <Text>
                           Lý do: <Text>{contract.statusMessage}</Text>
@@ -317,7 +341,6 @@ const LessorContractDetailScreen = ({ navigation, route }) => {
                 style={styles.cancelButton}
                 onPress={() => {
                   setEndVisiable(false);
-                  setReasonMsg(null);
                   setDateEndMsg(null);
                 }}
               >

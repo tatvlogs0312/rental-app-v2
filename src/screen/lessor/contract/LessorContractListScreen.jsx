@@ -28,7 +28,7 @@ const contractStauts = [
 
   {
     code: "END",
-    name: "Hết hạn",
+    name: "Kết thúc",
   },
 
   {

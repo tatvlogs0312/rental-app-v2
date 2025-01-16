@@ -82,7 +82,7 @@ const TenantContractListScreen = ({ navigation, route }) => {
         </Pressable>
 
         <Pressable style={[styles.button, selectedButton === "END" && styles.selectedButton]} onPress={() => setSelectedButton("END")}>
-          <Text style={[styles.text, selectedButton === "END" && styles.selectedText]}>Hết hạn</Text>
+          <Text style={[styles.text, selectedButton === "END" && styles.selectedText]}>Kết thúc</Text>
         </Pressable>
         
         <Pressable style={[styles.button, selectedButton === "REJECT" && styles.selectedButton]} onPress={() => setSelectedButton("REJECT")}>

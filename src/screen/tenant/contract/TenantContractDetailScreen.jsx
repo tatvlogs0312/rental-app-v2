@@ -183,6 +183,30 @@ const TenantContractDetailScreen = ({ navigation, route }) => {
                     </View>
                   </View>
                 )}
+                {contract.contractStatusCode === "END" && (
+                  <View
+                    style={{
+                      paddingHorizontal: 5,
+                      paddingVertical: 10,
+                      backgroundColor: "rgba(220, 221, 134, 0.5)",
+                      borderRadius: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View style={{ marginHorizontal: 10 }}>
+                      <FontAwesome6Icon name="triangle-exclamation" color={COLOR.orange} light size={20} />
+                    </View>
+                    <View>
+                      <Text style={{ color: COLOR.orange }}>Hợp đồng hết hạn</Text>
+                      {contract.statusMessage !== null && (
+                        <Text>
+                          Lý do: <Text>{contract.statusMessage}</Text>
+                        </Text>
+                      )}
+                    </View>
+                  </View>
+                )}
                 <View style={{ marginBottom: 15 }}>
                   <Text style={{ fontSize: 16, padding: 5, color: COLOR.primary }}>Thông tin hợp đồng</Text>
                   <View style={{ backgroundColor: COLOR.white, borderRadius: 10 }}>

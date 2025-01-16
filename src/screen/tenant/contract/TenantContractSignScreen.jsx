@@ -39,11 +39,11 @@ const TenantContractSignScreen = ({ navigation, route }) => {
     return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   };
 
-  const retryOtp = () => {
+  const retryOtp = async () => {
     try {
       setTimeLeft(5 * 60);
       load.isLoading();
-      const res = get("/rental-service/contract/get-otp/" + contractId, {}, auth.token);
+      await get("/rental-service/contract/get-otp/" + contractId, {}, auth.token);
 
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
@@ -60,7 +60,7 @@ const TenantContractSignScreen = ({ navigation, route }) => {
   const confirmOtp = async () => {
     try {
       load.isLoading();
-      const res = await post(
+      await post(
         "/rental-service/contract/sign",
         {
           contractId: contractId,
