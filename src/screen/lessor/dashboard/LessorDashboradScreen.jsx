@@ -115,7 +115,6 @@ const LessorDashboradScreen = ({ navigation }) => {
                     <Text style={styles.icon}>💵</Text>
                   </View>
                   <View>
-                    <Text style={styles.date}>12/2024</Text>
                     <Text style={styles.title2}>Hóa đơn chưa gửi</Text>
                     <Text style={styles.count}>{dashboard.billDraft}</Text>
                   </View>
@@ -131,7 +130,6 @@ const LessorDashboradScreen = ({ navigation }) => {
                     <Text style={styles.icon}>💴</Text>
                   </View>
                   <View>
-                    <Text style={styles.date}>12/2024</Text>
                     <Text style={styles.title2}>Hóa đơn chờ thanh toán</Text>
                     <Text style={styles.count}>{dashboard.billPending}</Text>
                   </View>
